@@ -1,0 +1,1049 @@
+{
+  "which": "baseline",
+  "capturedAt": "2026-06-28T17:13:03.058Z",
+  "total": 130,
+  "ok": 130,
+  "fail": 0,
+  "results": [
+    {
+      "app": "polls",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2687
+    },
+    {
+      "app": "polls",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1709
+    },
+    {
+      "app": "polls",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1530
+    },
+    {
+      "app": "polls",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1458
+    },
+    {
+      "app": "polls",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1561
+    },
+    {
+      "app": "polls",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1488
+    },
+    {
+      "app": "polls",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1847
+    },
+    {
+      "app": "polls",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1524
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-polls",
+      "path": "/dashboard/polls",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1682
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-polls",
+      "path": "/dashboard/polls",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1527
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-analytics",
+      "path": "/dashboard/analytics",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1758
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-analytics",
+      "path": "/dashboard/analytics",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1516
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-standup",
+      "path": "/dashboard/standup",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1818
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-standup",
+      "path": "/dashboard/standup",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1592
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-digest",
+      "path": "/dashboard/digest",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1657
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-digest",
+      "path": "/dashboard/digest",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1508
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-settings",
+      "path": "/dashboard/settings",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1610
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-settings",
+      "path": "/dashboard/settings",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1573
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1693
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1488
+    },
+    {
+      "app": "polls",
+      "route": "dev",
+      "path": "/dev",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1522
+    },
+    {
+      "app": "polls",
+      "route": "dev",
+      "path": "/dev",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1498
+    },
+    {
+      "app": "proof",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2140
+    },
+    {
+      "app": "proof",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1722
+    },
+    {
+      "app": "proof",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1649
+    },
+    {
+      "app": "proof",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1454
+    },
+    {
+      "app": "proof",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1580
+    },
+    {
+      "app": "proof",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1574
+    },
+    {
+      "app": "proof",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1846
+    },
+    {
+      "app": "proof",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1570
+    },
+    {
+      "app": "proof",
+      "route": "dashboard-collections",
+      "path": "/dashboard/collections",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1688
+    },
+    {
+      "app": "proof",
+      "route": "dashboard-collections",
+      "path": "/dashboard/collections",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1516
+    },
+    {
+      "app": "proof",
+      "route": "dashboard-analytics",
+      "path": "/dashboard/analytics",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1691
+    },
+    {
+      "app": "proof",
+      "route": "dashboard-analytics",
+      "path": "/dashboard/analytics",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1496
+    },
+    {
+      "app": "proof",
+      "route": "dashboard-settings",
+      "path": "/dashboard/settings",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1673
+    },
+    {
+      "app": "proof",
+      "route": "dashboard-settings",
+      "path": "/dashboard/settings",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1505
+    },
+    {
+      "app": "proof",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1696
+    },
+    {
+      "app": "proof",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1571
+    },
+    {
+      "app": "metrics",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2298
+    },
+    {
+      "app": "metrics",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1708
+    },
+    {
+      "app": "metrics",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1557
+    },
+    {
+      "app": "metrics",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1494
+    },
+    {
+      "app": "metrics",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1612
+    },
+    {
+      "app": "metrics",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1465
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1988
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1769
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-analytics",
+      "path": "/dashboard/analytics",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2195
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-analytics",
+      "path": "/dashboard/analytics",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1781
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-links",
+      "path": "/dashboard/links",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1678
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-links",
+      "path": "/dashboard/links",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1533
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-quota",
+      "path": "/dashboard/quota",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1911
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-quota",
+      "path": "/dashboard/quota",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1515
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-settings",
+      "path": "/dashboard/settings",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1898
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-settings",
+      "path": "/dashboard/settings",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1528
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1715
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 3032
+    },
+    {
+      "app": "hook",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2101
+    },
+    {
+      "app": "hook",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1678
+    },
+    {
+      "app": "hook",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1612
+    },
+    {
+      "app": "hook",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1466
+    },
+    {
+      "app": "hook",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1571
+    },
+    {
+      "app": "hook",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1471
+    },
+    {
+      "app": "hook",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1724
+    },
+    {
+      "app": "hook",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1566
+    },
+    {
+      "app": "hook",
+      "route": "dashboard-inboxes",
+      "path": "/dashboard/inboxes",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1742
+    },
+    {
+      "app": "hook",
+      "route": "dashboard-inboxes",
+      "path": "/dashboard/inboxes",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1511
+    },
+    {
+      "app": "hook",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1675
+    },
+    {
+      "app": "hook",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1482
+    },
+    {
+      "app": "release",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2069
+    },
+    {
+      "app": "release",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1664
+    },
+    {
+      "app": "release",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1535
+    },
+    {
+      "app": "release",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1463
+    },
+    {
+      "app": "release",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1537
+    },
+    {
+      "app": "release",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1428
+    },
+    {
+      "app": "release",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1693
+    },
+    {
+      "app": "release",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1543
+    },
+    {
+      "app": "vault",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2123
+    },
+    {
+      "app": "vault",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1625
+    },
+    {
+      "app": "vault",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1531
+    },
+    {
+      "app": "vault",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1495
+    },
+    {
+      "app": "vault",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1539
+    },
+    {
+      "app": "vault",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1453
+    },
+    {
+      "app": "vault",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1777
+    },
+    {
+      "app": "vault",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1562
+    },
+    {
+      "app": "links",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2194
+    },
+    {
+      "app": "links",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1713
+    },
+    {
+      "app": "links",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1578
+    },
+    {
+      "app": "links",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1528
+    },
+    {
+      "app": "links",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1637
+    },
+    {
+      "app": "links",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1551
+    },
+    {
+      "app": "links",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2408
+    },
+    {
+      "app": "links",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1645
+    },
+    {
+      "app": "snippets",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1934
+    },
+    {
+      "app": "snippets",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1553
+    },
+    {
+      "app": "snippets",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1531
+    },
+    {
+      "app": "snippets",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1459
+    },
+    {
+      "app": "snippets",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1497
+    },
+    {
+      "app": "snippets",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1428
+    },
+    {
+      "app": "snippets",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1829
+    },
+    {
+      "app": "snippets",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1496
+    },
+    {
+      "app": "status",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1964
+    },
+    {
+      "app": "status",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1584
+    },
+    {
+      "app": "status",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1535
+    },
+    {
+      "app": "status",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1459
+    },
+    {
+      "app": "status",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1549
+    },
+    {
+      "app": "status",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1456
+    },
+    {
+      "app": "status",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1689
+    },
+    {
+      "app": "status",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1512
+    },
+    {
+      "app": "regex",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1999
+    },
+    {
+      "app": "regex",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1564
+    },
+    {
+      "app": "regex",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1521
+    },
+    {
+      "app": "regex",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1459
+    },
+    {
+      "app": "regex",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1522
+    },
+    {
+      "app": "regex",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1438
+    },
+    {
+      "app": "regex",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1640
+    },
+    {
+      "app": "regex",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1511
+    },
+    {
+      "app": "regex",
+      "route": "dashboard-cheat-sheet",
+      "path": "/dashboard/cheat-sheet",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2407
+    },
+    {
+      "app": "regex",
+      "route": "dashboard-cheat-sheet",
+      "path": "/dashboard/cheat-sheet",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1603
+    },
+    {
+      "app": "postmortem",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1945
+    },
+    {
+      "app": "postmortem",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1553
+    },
+    {
+      "app": "postmortem",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1593
+    },
+    {
+      "app": "postmortem",
+      "route": "privacy",
+      "path": "/privacy",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1426
+    },
+    {
+      "app": "postmortem",
+      "route": "login",
+      "path": "/login",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1489
+    },
+    {
+      "app": "postmortem",
+      "route": "login",
+      "path": "/login",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1423
+    },
+    {
+      "app": "postmortem",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1611
+    },
+    {
+      "app": "postmortem",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1494
+    },
+    {
+      "app": "postmortem",
+      "route": "dashboard-new",
+      "path": "/dashboard/new",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1605
+    },
+    {
+      "app": "postmortem",
+      "route": "dashboard-new",
+      "path": "/dashboard/new",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1464
+    },
+    {
+      "app": "postmortem",
+      "route": "dashboard-recurrence",
+      "path": "/dashboard/recurrence",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1789
+    },
+    {
+      "app": "postmortem",
+      "route": "dashboard-recurrence",
+      "path": "/dashboard/recurrence",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1469
+    }
+  ]
+}

@@ -45,6 +45,10 @@ test-results
 playwright-report
 e2e/.e2e-stack-state.json
 
+# Screenshot artifacts (baselines + after captures) — keep manifests, ignore PNGs
+screens/**/*.png
+screens-*.log
+
 # Cursor local plans (session scratchpads — not for version control)
 # Note: .cursor/rules/ is NOT excluded so shared Cursor rules can be committed
 .cursor/plans

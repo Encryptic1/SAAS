@@ -386,3 +386,149 @@
   border: 1px dashed var(--hairline);
   background: var(--bg-deep);
 }
+
+/* Skeletons */
+
+.ms-dash-skeleton {
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    rgba(20, 20, 30, 0.6) 0%,
+    rgba(40, 40, 55, 0.7) 50%,
+    rgba(20, 20, 30, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  animation: ms-dash-skeleton-shimmer 1.6s var(--ease-out) infinite;
+}
+
+@keyframes ms-dash-skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Frequency + source cards (digest config) */
+
+.ms-dash-frequency-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.ms-dash-frequency-card:hover {
+  border-color: rgba(57, 255, 20, 0.22);
+  background: rgba(57, 255, 20, 0.04);
+}
+
+.ms-dash-frequency-card-active {
+  border-color: rgba(57, 255, 20, 0.45);
+  background: rgba(57, 255, 20, 0.08);
+  box-shadow: 0 0 20px var(--flood-pressure);
+}
+
+.ms-dash-frequency-label {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-foam);
+}
+
+.ms-dash-frequency-hint {
+  font-size: 0.75rem;
+  color: var(--text-mist);
+}
+
+.ms-dash-source-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.125rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.ms-dash-source-card:hover {
+  border-color: rgba(57, 255, 20, 0.22);
+  background: rgba(57, 255, 20, 0.04);
+}
+
+.ms-dash-source-card-active {
+  border-color: rgba(57, 255, 20, 0.45);
+  background: rgba(57, 255, 20, 0.08);
+  box-shadow: 0 0 20px var(--flood-pressure);
+}
+
+.ms-dash-source-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ms-dash-source-card-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-foam);
+}
+
+.ms-dash-source-card-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--bg-shoal);
+  border: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+
+.ms-dash-source-card-dot-on {
+  background: var(--color-flood);
+  border-color: var(--color-flood);
+  box-shadow: 0 0 10px var(--flood-glow);
+}
+
+.ms-dash-source-card-desc {
+  font-size: 0.8125rem;
+  color: var(--text-mist);
+  line-height: 1.5;
+}
+
+.ms-dash-pre {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-abyss);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--text-foam);
+  overflow-x: auto;
+  max-height: 28rem;
+  overflow-y: auto;
+}
+
+.ms-app-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-flood);
+}
+
+.ms-app-mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}

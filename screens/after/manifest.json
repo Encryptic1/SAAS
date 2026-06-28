@@ -1,0 +1,25 @@
+{
+  "which": "after",
+  "capturedAt": "2026-06-28T17:15:14.310Z",
+  "total": 2,
+  "ok": 2,
+  "fail": 0,
+  "results": [
+    {
+      "app": "polls",
+      "route": "dashboard-digest",
+      "path": "/dashboard/digest",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2415
+    },
+    {
+      "app": "polls",
+      "route": "dashboard-digest",
+      "path": "/dashboard/digest",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1673
+    }
+  ]
+}
