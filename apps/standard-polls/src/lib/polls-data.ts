@@ -142,3 +142,61 @@ export async function countPollsThisMonth(): Promise<number> {
 
   return row?.count ?? 0;
 }
+
+/** Returns polls-per-day for the last `days` days (oldest first). */
+export async function loadPollsTrend(days = 14): Promise<Array<number>> {
+  if (isLocalGatewayMode()) {
+    const list = await fetchGateway<Array<{ createdAt: string }>>("/polls/list").catch(() => []);
+    const buckets = new Array(days).fill(0);
+    const now = Date.now();
+    for (const p of list) {
+      const t = new Date(p.createdAt).getTime();
+      const ageDays = Math.floor((now - t) / (24 * 60 * 60 * 1000));
+      if (ageDays >= 0 && ageDays < days) buckets[days - 1 - ageDays]++;
+    }
+    return buckets;
+  }
+
+  const db = await getDbAsync();
+  const start = new Date();
+  start.setDate(start.getDate() - (days - 1));
+  start.setHours(0, 0, 0, 0);
+
+  const rows = await db
+    .select({ createdAt: polls.createdAt })
+    .from(polls)
+    .where(sql`${polls.createdAt} >= ${start}`);
+
+  const buckets = new Array(days).fill(0);
+  const now = Date.now();
+  for (const r of rows) {
+    const ageDays = Math.floor((now - r.createdAt.getTime()) / (24 * 60 * 60 * 1000));
+    if (ageDays >= 0 && ageDays < days) buckets[days - 1 - ageDays]++;
+  }
+  return buckets;
+}
+
+/** Returns votes-per-day for the last `days` days (oldest first). */
+export async function loadVotesTrend(days = 14): Promise<Array<number>> {
+  if (isLocalGatewayMode()) {
+    return new Array(days).fill(0);
+  }
+
+  const db = await getDbAsync();
+  const start = new Date();
+  start.setDate(start.getDate() - (days - 1));
+  start.setHours(0, 0, 0, 0);
+
+  const rows = await db
+    .select({ votedAt: votes.votedAt })
+    .from(votes)
+    .where(sql`${votes.votedAt} >= ${start}`);
+
+  const buckets = new Array(days).fill(0);
+  const now = Date.now();
+  for (const r of rows) {
+    const ageDays = Math.floor((now - r.votedAt.getTime()) / (24 * 60 * 60 * 1000));
+    if (ageDays >= 0 && ageDays < days) buckets[days - 1 - ageDays]++;
+  }
+  return buckets;
+}

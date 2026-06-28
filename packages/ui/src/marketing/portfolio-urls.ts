@@ -34,6 +34,7 @@ const SIBLING_KEYS: Record<MarketingProduct, Array<keyof ReturnType<typeof getPo
   "standard-status": ["hook", "release", "cron", "snippets", "vault"],
   "standard-regex": ["snippets", "hook", "vault"],
   "standard-postmortem": ["hook", "status", "snippets", "vault"],
+  "standard-workspace": ["polls", "proof", "metrics", "hook", "release", "vault", "links", "snippets", "status", "regex", "postmortem", "lens", "cron", "floodg8", "syncdevtime"],
 };
 
 const SIBLING_LABELS: Record<string, string> = {

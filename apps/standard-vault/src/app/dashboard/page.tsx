@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { VaultDashboardShell } from "@/components/vault-dashboard-shell";
 import { CreateProjectForm } from "@/components/create-project-form";
+import { Badge, KpiCard, PageHeader } from "@market-standard/ui";
 import { getOwnerId } from "@/lib/owner";
 import { listOwnerProjects } from "@/lib/vault-data";
 
@@ -11,20 +12,25 @@ async function OverviewContent() {
   const projects = ownerId ? await listOwnerProjects(ownerId) : [];
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="ms-dash-h1">Vault</h1>
-        <p className="ms-mono text-sm text-[var(--text-fog)] mt-1">
-          Encrypted secrets with env-injection, .env/Doppler import, and AI-agent reference mode.
-        </p>
-      </header>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow="Standard Vault"
+        title="Vault"
+        subtitle="Encrypted secrets with env-injection, .env/Doppler import, and AI-agent reference mode."
+        breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Vault" }]}
+        actions={
+          <Badge variant="gilt" dot>
+            AES-256-GCM
+          </Badge>
+        }
+      />
 
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Stat label="Projects" value={projects.length} />
-        <Stat label="Environments" value={new Set(projects.map((p) => p.environment)).size} />
-        <Stat label="With GitHub repo" value={projects.filter((p) => p.githubRepo).length} />
-        <Stat label="Production" value={projects.filter((p) => p.environment === "production").length} />
-      </section>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard label="Projects" value={String(projects.length)} hint="Total vault projects" />
+        <KpiCard label="Environments" value={String(new Set(projects.map((p) => p.environment)).size)} hint="Distinct envs" />
+        <KpiCard label="With GitHub repo" value={String(projects.filter((p) => p.githubRepo).length)} hint="Linked repos" />
+        <KpiCard label="Production" value={String(projects.filter((p) => p.environment === "production").length)} hint="Prod envs" />
+      </div>
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="ms-card p-4">
@@ -65,15 +71,6 @@ async function OverviewContent() {
 → { references: [{ key: "DATABASE_URL", version: 3, notes: "primary DB" }] }`}
         </pre>
       </section>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="ms-card p-3">
-      <div className="ms-mono-eyebrow">{label}</div>
-      <div className="text-2xl font-semibold mt-1">{value}</div>
     </div>
   );
 }

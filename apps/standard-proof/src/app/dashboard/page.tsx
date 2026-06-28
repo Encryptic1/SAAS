@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatCard } from "@market-standard/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState, KpiCard, PageHeader } from "@market-standard/ui";
 import { getDashboardStats, listOwnerCollections } from "@/lib/proof-data";
 
 export const dynamic = "force-dynamic";
@@ -10,18 +10,22 @@ export default async function DashboardOverviewPage() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3002";
 
   return (
-    <>
-      <h1 className="ms-app-title">Overview</h1>
-      <p className="mt-2 ms-app-muted">Your testimonial collections at a glance.</p>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow="Standard Proof"
+        title="Overview"
+        subtitle="Your testimonial collections at a glance."
+        breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Overview" }]}
+      />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Collections" value={String(stats.collections)} />
-        <StatCard label="Approved" value={String(stats.approved)} />
-        <StatCard label="Pending review" value={String(stats.pending)} />
-        <StatCard label="Featured" value={String(stats.featured)} />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard label="Collections" value={String(stats.collections)} hint="Total boards" />
+        <KpiCard label="Approved" value={String(stats.approved)} hint="Ready to feature" />
+        <KpiCard label="Pending review" value={String(stats.pending)} hint="Awaiting moderation" />
+        <KpiCard label="Featured" value={String(stats.featured)} hint="Pinned on public pages" />
       </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Recent collections</CardTitle>
@@ -33,7 +37,16 @@ export default async function DashboardOverviewPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {collections.length === 0 ? (
-              <p className="text-sm ms-app-muted">No collections yet.</p>
+              <EmptyState
+                preset="list"
+                title="No collections yet"
+                description="Create your first testimonial collection to start gathering social proof."
+                action={
+                  <Link href="/dashboard/collections" className="ms-btn ms-btn-primary no-underline">
+                    Create collection
+                  </Link>
+                }
+              />
             ) : (
               collections.slice(0, 5).map((c) => (
                 <div key={c.id} className="ms-app-card-inner">
@@ -82,6 +95,6 @@ export default async function DashboardOverviewPage() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </div>
   );
 }

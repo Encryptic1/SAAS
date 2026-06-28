@@ -1,38 +1,73 @@
 import Link from "next/link";
 import { getPlan } from "@market-standard/billing";
 import {
+  Badge,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  KpiCard,
+  PageHeader,
+  PlanBadge,
   PoweredByBadge,
-  StatCard,
   UsageMeter,
 } from "@market-standard/ui";
-import { countPollsThisMonth, loadPollsOverview } from "../../lib/polls-data";
+import { countPollsThisMonth, loadPollsOverview, loadPollsTrend, loadVotesTrend } from "../../lib/polls-data";
 
 export const dynamic = "force-dynamic";
 
 export default async function PollsDashboardPage() {
-  const stats = await loadPollsOverview();
-  const pollsThisMonth = await countPollsThisMonth();
+  const [stats, pollsThisMonth, pollsTrend, votesTrend] = await Promise.all([
+    loadPollsOverview(),
+    countPollsThisMonth(),
+    loadPollsTrend(14),
+    loadVotesTrend(14),
+  ]);
   const plan = getPlan("standard-polls", "free");
   const limit = plan.limits.pollsPerMonth as number;
+  const usagePct = limit > 0 ? Math.round((pollsThisMonth / limit) * 100) : 0;
+  const pollsLast = pollsTrend[pollsTrend.length - 1] ?? 0;
+  const pollsPrev = pollsTrend[pollsTrend.length - 2] ?? 0;
+  const votesLast = votesTrend[votesTrend.length - 1] ?? 0;
+  const votesPrev = votesTrend[votesTrend.length - 2] ?? 0;
+  const pollsDelta = pollsLast - pollsPrev;
+  const votesDelta = votesLast - votesPrev;
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="ms-dash-page-title">Overview</h1>
-        <p className="mt-1 text-sm text-[var(--text-mist)]">
-          Slack workspace poll activity at a glance.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Standard Polls"
+        title="Overview"
+        subtitle="Slack workspace poll activity at a glance."
+        breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Overview" }]}
+        actions={<PlanBadge plan={plan.tier} />}
+      />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="Workspaces" value={String(stats.workspaces)} />
-        <StatCard label="Polls" value={String(stats.polls)} />
-        <StatCard label="Votes" value={String(stats.votes ?? 0)} />
+        <KpiCard
+          label="Workspaces"
+          value={String(stats.workspaces)}
+          hint="Connected Slack teams"
+          spark={[1, 1, 1, 1, 1, 1, 1]}
+          sparkBinary
+        />
+        <KpiCard
+          label="Polls"
+          value={String(stats.polls)}
+          delta={pollsDelta !== 0 ? `${pollsDelta > 0 ? "+" : ""}${pollsDelta} today` : undefined}
+          comparison="vs yesterday"
+          spark={pollsTrend}
+          hint="Last 14 days"
+        />
+        <KpiCard
+          label="Votes"
+          value={String(stats.votes ?? 0)}
+          delta={votesDelta !== 0 ? `${votesDelta > 0 ? "+" : ""}${votesDelta} today` : undefined}
+          comparison="vs yesterday"
+          spark={votesTrend}
+          hint="Last 14 days"
+        />
       </div>
 
       <Card>
@@ -42,6 +77,14 @@ export default async function PollsDashboardPage() {
         </CardHeader>
         <CardContent>
           <UsageMeter label="Polls created" used={pollsThisMonth} limit={limit} />
+          {usagePct >= 80 && (
+            <p className="mt-3 text-xs text-[var(--color-caution)]">
+              You&apos;ve used {usagePct}% of your monthly limit.{" "}
+              <Link href="/dashboard/billing" className="ms-app-link">
+                Upgrade for unlimited polls →
+              </Link>
+            </p>
+          )}
         </CardContent>
       </Card>
 

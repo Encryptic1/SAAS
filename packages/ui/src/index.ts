@@ -6,6 +6,7 @@ export { MarketingLanding, type MarketingLandingProps } from "./marketing/market
 export { MarketingShell } from "./marketing/marketing-shell";
 export { AppSurface } from "./marketing/app-surface";
 export { PrivacyPage } from "./marketing/privacy-page";
+export { SuiteSwitcher, getSuiteApps, type SuiteSwitcherProps } from "./marketing/suite-switcher";
 export {
   DashboardShell,
   type DashboardShellProps,
@@ -31,4 +32,30 @@ export {
 export { DataTable, type DataTableProps, type DataTableColumn } from "./dashboard/data-table";
 export { BillingPanel, type BillingPanelProps, type BillingPlanOption } from "./dashboard/billing-panel";
 export { LoginPage } from "./dashboard/login-page";
+export { Skeleton, SkeletonCard, SkeletonRow, SkeletonList, type SkeletonProps } from "./dashboard/skeleton";
+export {
+  ToastProvider,
+  useToast,
+  type Toast,
+  type ToastInput,
+  type ToastVariant,
+  type ToastContextValue,
+} from "./dashboard/toast";
+export {
+  Badge,
+  SeverityBadge,
+  StatusBadge,
+  PlanBadge,
+  type BadgeProps,
+  type BadgeVariant,
+} from "./dashboard/badge";
+export { Sparkline, type SparklineProps } from "./dashboard/sparkline";
+export { KpiCard, type KpiCardProps } from "./dashboard/kpi-card";
+export { PageHeader, type PageHeaderProps, type BreadcrumbItem } from "./dashboard/page-header";
+export {
+  CommandPalette,
+  type CommandPaletteProps,
+  type CommandItem,
+} from "./dashboard/command-palette";
+export { CommandPaletteHint, KeyboardHint } from "./dashboard/keyboard-hint";
 export { cn } from "./lib/utils";

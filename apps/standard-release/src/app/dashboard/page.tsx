@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatCard } from "@market-standard/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState, KpiCard, PageHeader } from "@market-standard/ui";
 import { getDashboardStats, listOwnerNotes, listOwnerRepos } from "@/lib/release-data";
 
 export const dynamic = "force-dynamic";
@@ -10,17 +10,21 @@ export default async function DashboardOverviewPage() {
   const notes = await listOwnerNotes();
 
   return (
-    <>
-      <h1 className="ms-app-title">Overview</h1>
-      <p className="mt-2 ms-app-muted">Your release notes workflow at a glance.</p>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow="Standard Release"
+        title="Overview"
+        subtitle="Your release notes workflow at a glance."
+        breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Overview" }]}
+      />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard label="Repos" value={String(stats.repos)} />
-        <StatCard label="Release notes" value={String(stats.notes)} />
-        <StatCard label="Published" value={String(stats.published)} />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <KpiCard label="Repos" value={String(stats.repos)} hint="Connected GitHub repos" />
+        <KpiCard label="Release notes" value={String(stats.notes)} hint="Drafts + published" />
+        <KpiCard label="Published" value={String(stats.published)} hint="Live on changelog" />
       </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Connected repos</CardTitle>
@@ -32,7 +36,11 @@ export default async function DashboardOverviewPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {repos.length === 0 ? (
-              <p className="text-sm ms-app-muted">No repos connected yet.</p>
+              <EmptyState
+                preset="list"
+                title="No repos connected"
+                description="Connect a GitHub repo to start generating release notes from merged PRs."
+              />
             ) : (
               repos.slice(0, 5).map((repo) => (
                 <div key={repo.id} className="ms-app-card-inner">
@@ -55,7 +63,11 @@ export default async function DashboardOverviewPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {notes.length === 0 ? (
-              <p className="text-sm ms-app-muted">Generate your first release notes from a repo.</p>
+              <EmptyState
+                preset="list"
+                title="No notes yet"
+                description="Generate your first release notes from a connected repo."
+              />
             ) : (
               notes.slice(0, 5).map((note) => (
                 <div key={note.id} className="ms-app-card-inner">
@@ -74,6 +86,6 @@ export default async function DashboardOverviewPage() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </div>
   );
 }

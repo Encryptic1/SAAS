@@ -2,6 +2,7 @@ import { StatusDashboardShell } from "@/components/status-dashboard-shell";
 import { CreatePipelineForm } from "@/components/create-pipeline-form";
 import { PipelinesList } from "@/components/pipelines-list";
 import { IncidentsList } from "@/components/incidents-list";
+import { Badge, KpiCard, PageHeader, StatusBadge } from "@market-standard/ui";
 import { getOwnerId } from "@/lib/owner";
 import { listPipelines, listIncidents } from "@/lib/status-data";
 
@@ -16,27 +17,57 @@ export default async function DashboardPage() {
     listIncidents(ownerId),
   ]);
 
-  const activeIncidents = incidents.filter((i) => i.status !== "resolved").length;
+  const activeIncidents = incidents.filter((i) => i.status !== "resolved");
   const successRate = computeSuccessRate(pipelines);
+  const allRuns = collectRuns(pipelines);
+  const recentRuns = allRuns.slice(-30);
 
   return (
     <StatusDashboardShell>
       <div className="space-y-6">
-        <header className="flex items-end justify-between gap-3 flex-wrap">
-          <div>
-            <h1 className="text-2xl font-semibold">Build &amp; Deploy Health</h1>
-            <p className="text-sm ms-app-muted">
-              GitHub Actions · Vercel · FloodG8 runner — unified view.
-            </p>
-          </div>
-          <div className="flex gap-2 text-xs">
-            <span className="ms-badge ms-badge-neutral">{pipelines.length} pipelines</span>
-            <span className={`ms-badge ${activeIncidents > 0 ? "ms-badge-strong ms-status-failed" : "ms-badge-strong ms-status-success"}`}>
-              {activeIncidents} active incidents
-            </span>
-            <span className="ms-badge ms-badge-neutral">30-run success: {successRate}%</span>
-          </div>
-        </header>
+        <PageHeader
+          eyebrow="Standard Status"
+          title="Build & Deploy Health"
+          subtitle="GitHub Actions · Vercel · FloodG8 runner — unified view."
+          breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Overview" }]}
+          actions={
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="neutral">{pipelines.length} pipelines</Badge>
+              {activeIncidents.length > 0 ? (
+                <Badge variant="danger" dot>{activeIncidents.length} active incident{activeIncidents.length === 1 ? "" : "s"}</Badge>
+              ) : (
+                <Badge variant="success" dot>All clear</Badge>
+              )}
+              <Badge variant={successRate >= 90 ? "success" : successRate >= 70 ? "warning" : "danger"}>
+                30-run: {successRate}%
+              </Badge>
+            </div>
+          }
+        />
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <KpiCard
+            label="Pipelines"
+            value={String(pipelines.length)}
+            hint="Connected CI sources"
+            spark={[1, 1, 1, 1, 1, 1, 1].slice(0, Math.max(pipelines.length, 1))}
+            sparkBinary
+          />
+          <KpiCard
+            label="Active incidents"
+            value={String(activeIncidents.length)}
+            hint={activeIncidents.length > 0 ? "Needs triage" : "No open incidents"}
+            spark={activeIncidents.map(() => 0)}
+            sparkBinary
+          />
+          <KpiCard
+            label="30-run success"
+            value={`${successRate}%`}
+            hint={`${allRuns.length} total runs`}
+            spark={recentRuns.map((r) => (r.status === "success" || r.status === "ready" ? 1 : 0))}
+            sparkBinary
+          />
+        </div>
 
         <section className="grid gap-6 lg:grid-cols-[1fr_360px]">
           <div className="space-y-6">
@@ -73,4 +104,12 @@ function computeSuccessRate(pipelines: Array<{ last30Runs: Array<{ status: strin
   }
   if (total === 0) return 100;
   return Math.round((success / total) * 100);
+}
+
+function collectRuns(pipelines: Array<{ last30Runs: Array<{ status: string; at: string }> | null }>): Array<{ status: string; at: string }> {
+  const all: Array<{ status: string; at: string }> = [];
+  for (const p of pipelines) {
+    if (p.last30Runs) all.push(...p.last30Runs);
+  }
+  return all.sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime());
 }

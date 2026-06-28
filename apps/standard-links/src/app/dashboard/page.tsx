@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, StatCard, PoweredByBadge } from "@market-standard/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState, KpiCard, PageHeader, PoweredByBadge } from "@market-standard/ui";
 import { getDashboardStats, listOwnerLinks } from "@/lib/links-data";
 import { MetricsCrossSellWidget } from "@/components/metrics-cross-sell-widget";
 
@@ -12,16 +12,18 @@ export default async function DashboardOverviewPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="ms-app-title">Overview</h1>
-        <p className="mt-2 ms-app-muted">Your payment links at a glance.</p>
-      </div>
+      <PageHeader
+        eyebrow="Standard Links"
+        title="Overview"
+        subtitle="Your payment links at a glance."
+        breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Overview" }]}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total links" value={String(stats.totalLinks)} />
-        <StatCard label="Active" value={String(stats.activeLinks)} />
-        <StatCard label="Total clicks" value={stats.totalClicks.toLocaleString()} />
-        <StatCard label="Clicks (7d)" value={stats.clicksLast7d.toLocaleString()} />
+        <KpiCard label="Total links" value={String(stats.totalLinks)} hint="All branded short links" />
+        <KpiCard label="Active" value={String(stats.activeLinks)} hint="Currently redirecting" />
+        <KpiCard label="Total clicks" value={stats.totalClicks.toLocaleString()} hint="All-time" />
+        <KpiCard label="Clicks (7d)" value={stats.clicksLast7d.toLocaleString()} hint="Last 7 days" />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -49,7 +51,16 @@ export default async function DashboardOverviewPage() {
                 </p>
               </div>
             ) : (
-              <p className="text-sm ms-app-muted">No links yet — add one to see top performer.</p>
+              <EmptyState
+                preset="list"
+                title="No links yet"
+                description="Add your first Stripe payment link to start tracking clicks."
+                action={
+                  <Link href="/dashboard/links" className="ms-btn ms-btn-primary no-underline">
+                    Add a link
+                  </Link>
+                }
+              />
             )}
           </CardContent>
         </Card>

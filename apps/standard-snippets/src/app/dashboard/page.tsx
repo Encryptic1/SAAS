@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { SnippetsDashboardShell } from "@/components/snippets-dashboard-shell";
+import { Badge, EmptyState, KpiCard, PageHeader } from "@market-standard/ui";
 import { getOwnerId } from "@/lib/owner";
 import { listOwnerSnippets } from "@/lib/snippets-data";
 
@@ -12,20 +13,25 @@ async function OverviewContent() {
   for (const s of snippets) for (const t of s.tags) allTags.add(t);
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="ms-dash-h1">Snippets</h1>
-        <p className="ms-mono text-sm text-[var(--text-fog)] mt-1">
-          Save, tag, version, and share code snippets. VSIX save-from-selection + FloodG8 Plan Editor insert.
-        </p>
-      </header>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow="Standard Snippets"
+        title="Snippets"
+        subtitle="Save, tag, version, and share code snippets. VSIX save-from-selection + FloodG8 Plan Editor insert."
+        breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Snippets" }]}
+        actions={
+          <a href="/dashboard/new" className="ms-btn ms-btn-primary no-underline">
+            + New snippet
+          </a>
+        }
+      />
 
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Stat label="Snippets" value={snippets.length} />
-        <Stat label="Tags" value={allTags.size} />
-        <Stat label="Languages" value={new Set(snippets.map((s) => s.language)).size} />
-        <Stat label="Shared" value={0} />
-      </section>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard label="Snippets" value={String(snippets.length)} hint="Saved snippets" />
+        <KpiCard label="Tags" value={String(allTags.size)} hint="Distinct tags" />
+        <KpiCard label="Languages" value={String(new Set(snippets.map((s) => s.language)).size)} hint="Languages used" />
+        <KpiCard label="Shared" value={String(0)} hint="Public share URLs" />
+      </div>
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-3">
@@ -34,11 +40,16 @@ async function OverviewContent() {
             <a href="/dashboard/new" className="ms-btn-sm">+ New</a>
           </div>
           {snippets.length === 0 ? (
-            <div className="ms-card p-6 text-center">
-              <p className="ms-mono text-sm text-[var(--text-fog)]">
-                No snippets yet. Create one to get started.
-              </p>
-            </div>
+            <EmptyState
+              preset="list"
+              title="No snippets yet"
+              description="Create your first snippet — paste code, set language + tags, and it's auto-versioned."
+              action={
+                <a href="/dashboard/new" className="ms-btn ms-btn-primary no-underline">
+                  Create snippet
+                </a>
+              }
+            />
           ) : (
             <ul className="space-y-2">
               {snippets.map((s) => (
@@ -46,7 +57,7 @@ async function OverviewContent() {
                   <a href={`/dashboard/${s.id}`} className="block">
                     <div className="flex items-baseline justify-between gap-3">
                       <span className="font-semibold">{s.title}</span>
-                      <span className="ms-chip">{s.language}</span>
+                      <Badge variant="neutral">{s.language}</Badge>
                     </div>
                     {s.tags.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
@@ -89,15 +100,6 @@ async function OverviewContent() {
           </div>
         </aside>
       </section>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="ms-card p-3">
-      <div className="ms-mono-eyebrow">{label}</div>
-      <div className="text-2xl font-semibold mt-1">{value}</div>
     </div>
   );
 }

@@ -36,6 +36,7 @@ export type MarketingProduct =
   | "standard-vault"
   | "standard-lens"
   | "standard-cron"
+  | "standard-workspace"
   | "standard-snippets"
   | "standard-status"
   | "standard-regex"

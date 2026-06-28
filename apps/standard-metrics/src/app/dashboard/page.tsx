@@ -1,12 +1,14 @@
 import Link from "next/link";
 import {
+  Badge,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  KpiCard,
+  PageHeader,
   PoweredByBadge,
-  StatCard,
 } from "@market-standard/ui";
 import { MetricsTrendChart } from "../../components/metrics-trend-chart";
 import { formatDelta, loadMetricsOverview } from "../../lib/metrics-data";
@@ -28,6 +30,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     arr: s.arr,
   }));
 
+  const mrrSpark = series.slice(-14).map((s) => s.mrr);
+  const arrSpark = series.slice(-14).map((s) => s.arr);
+  const churnSpark = series.slice(-14).map((s) => s.churnRate * 100);
+  const subsSpark = series.slice(-14).map((s) => s.activeSubscriptions);
+
   const mrrDelta = latest && previous ? formatDelta(latest.mrr, previous.mrr) : undefined;
   const arrDelta = latest && previous ? formatDelta(latest.arr, previous.arr) : undefined;
   const churnDelta =
@@ -38,51 +45,83 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       ? formatDelta(latest.activeSubscriptions, previous.activeSubscriptions)
       : undefined;
 
+  const statusActions = (
+    <>
+      {connected && latest && (
+        <Badge variant="success" dot>
+          {process.env.NEXT_PUBLIC_LOCAL_DEV === "true" ? "Local dev" : "Connected"}
+        </Badge>
+      )}
+      {!latest && process.env.NEXT_PUBLIC_LOCAL_DEV === "true" && (
+        <Badge variant="warning" dot>
+          No data
+        </Badge>
+      )}
+    </>
+  );
+
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="ms-dash-page-title">Overview</h1>
-        {connected && latest && (
-          <p className="mt-2 text-sm text-[var(--color-flood)]">
-            {process.env.NEXT_PUBLIC_LOCAL_DEV === "true"
-              ? "Showing seeded PGlite metrics (local dev)."
-              : "Stripe account connected successfully."}
-          </p>
-        )}
-        {!latest && process.env.NEXT_PUBLIC_LOCAL_DEV === "true" && (
-          <p className="mt-2 text-sm text-[var(--color-caution)]">
-            No metrics yet — run <code className="ms-app-pre inline px-1 py-0.5">pnpm db:setup</code> and ensure the
-            gateway is running.
-          </p>
-        )}
-        {latest && (
-          <p className="mt-1 text-xs text-[var(--text-mist)]">
-            Latest snapshot: {latest.snapshotDate.toLocaleString()}
-            {accountId ? ` · ${accountId}` : ""}
-          </p>
-        )}
-      </div>
+      <PageHeader
+        eyebrow="Standard Metrics"
+        title="Overview"
+        subtitle={
+          latest
+            ? `Latest snapshot: ${latest.snapshotDate.toLocaleString()}${accountId ? ` · ${accountId}` : ""}`
+            : connected
+              ? "Connect Stripe to start pulling MRR, ARR, and churn snapshots."
+              : "Stripe MRR/ARR dashboard — connect your account to begin."
+        }
+        breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Overview" }]}
+        actions={statusActions}
+      />
+
+      {connected && latest && process.env.NEXT_PUBLIC_LOCAL_DEV === "true" && (
+        <p className="text-sm text-[var(--color-flood)]">
+          Showing seeded PGlite metrics (local dev).
+        </p>
+      )}
+      {!latest && process.env.NEXT_PUBLIC_LOCAL_DEV === "true" && (
+        <p className="text-sm text-[var(--color-caution)]">
+          No metrics yet — run <code className="ms-app-pre inline px-1 py-0.5">pnpm db:setup</code> and ensure the
+          gateway is running.
+        </p>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
+        <KpiCard
           label="MRR"
           value={latest ? `$${latest.mrr.toLocaleString()}` : "—"}
-          trend={mrrDelta ? { value: mrrDelta.text, positive: mrrDelta.positive } : undefined}
+          delta={mrrDelta?.text}
+          comparison="vs prior snapshot"
+          invertDelta={false}
+          spark={mrrSpark}
+          hint="Monthly recurring revenue"
         />
-        <StatCard
+        <KpiCard
           label="ARR"
           value={latest ? `$${latest.arr.toLocaleString()}` : "—"}
-          trend={arrDelta ? { value: arrDelta.text, positive: arrDelta.positive } : undefined}
+          delta={arrDelta?.text}
+          comparison="vs prior snapshot"
+          spark={arrSpark}
+          hint="Annualized recurring revenue"
         />
-        <StatCard
+        <KpiCard
           label="Churn"
           value={latest ? `${(latest.churnRate * 100).toFixed(1)}%` : "—"}
-          trend={churnDelta ? { value: churnDelta.text, positive: churnDelta.positive } : undefined}
+          delta={churnDelta?.text}
+          comparison="vs prior snapshot"
+          invertDelta
+          spark={churnSpark}
+          hint="Lower is better"
         />
-        <StatCard
+        <KpiCard
           label="LTV"
           value={latest ? `$${Math.round(latest.ltv).toLocaleString()}` : "—"}
-          trend={ltvDelta ? { value: ltvDelta.text, positive: ltvDelta.positive } : undefined}
+          delta={ltvDelta?.text}
+          comparison="vs prior snapshot"
+          spark={subsSpark}
+          hint="Lifetime value per customer"
         />
       </div>
 

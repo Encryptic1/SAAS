@@ -532,3 +532,1007 @@
   font-family: var(--font-mono);
   font-size: 0.8125rem;
 }
+
+/* =========================================================================
+   Top bar (desktop)
+   ========================================================================= */
+
+.ms-dash-topbar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--hairline);
+  background: rgba(8, 8, 12, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+@media (min-width: 768px) {
+  .ms-dash-topbar {
+    display: flex;
+  }
+}
+
+.ms-dash-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Mobile top bar (visible < 768px) */
+
+.ms-dash-mobile-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid var(--hairline);
+  background: rgba(8, 8, 12, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+@media (min-width: 768px) {
+  .ms-dash-mobile-topbar {
+    display: none;
+  }
+}
+
+.ms-dash-mobile-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ms-dash-mobile-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  color: var(--text-foam);
+  cursor: pointer;
+}
+
+.ms-dash-mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 25;
+}
+
+@media (min-width: 768px) {
+  .ms-dash-mobile-backdrop {
+    display: none;
+  }
+}
+
+/* Sidebar collapse (desktop) */
+
+.ms-dash-collapse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-mist);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+
+.ms-dash-collapse-btn:hover {
+  color: var(--text-foam);
+  background: rgba(20, 20, 30, 0.5);
+}
+
+@media (min-width: 768px) {
+  .ms-dash-collapsed .ms-dash-sidebar {
+    grid-template-columns: 0;
+    width: 0;
+    padding: 0;
+    border-right: none;
+    overflow: hidden;
+  }
+  .ms-dash-collapsed .ms-dash-collapse-label {
+    display: none;
+  }
+}
+
+/* Sidebar cross-sell section */
+
+.ms-dash-sidebar-crosssell {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.ms-dash-sidebar-crosssell-label {
+  margin: 0 0 0.5rem;
+  padding: 0 0.75rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gilt-light);
+}
+
+.ms-dash-nav-item-crosssell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--text-fog);
+  font-size: 0.8125rem;
+}
+
+.ms-dash-nav-item-crosssell-arrow {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.ms-dash-nav-item-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 0.375rem;
+  border-radius: 999px;
+  background: rgba(57, 255, 20, 0.12);
+  color: var(--color-flood);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+/* =========================================================================
+   Suite switcher
+   ========================================================================= */
+
+.ms-suite-switcher {
+  position: relative;
+  display: inline-block;
+}
+
+.ms-suite-switcher-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  color: var(--text-foam);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+
+.ms-suite-switcher-trigger:hover {
+  border-color: rgba(57, 255, 20, 0.22);
+  background: rgba(57, 255, 20, 0.04);
+}
+
+.ms-suite-switcher-glyph {
+  display: inline-flex;
+  color: var(--color-flood);
+}
+
+.ms-suite-switcher-compact .ms-suite-switcher-trigger {
+  padding: 0.4375rem 0.5rem;
+}
+
+.ms-suite-switcher-chevron {
+  color: var(--text-mist);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.ms-suite-switcher-chevron-open {
+  transform: rotate(180deg);
+}
+
+.ms-suite-switcher-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  min-width: 22rem;
+  max-width: min(28rem, 90vw);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  box-shadow: var(--shadow-panel);
+  z-index: 50;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .ms-suite-switcher-panel {
+    left: -0.5rem;
+    min-width: min(20rem, 90vw);
+  }
+}
+
+.ms-suite-switcher-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.875rem;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--text-mist);
+}
+
+.ms-suite-switcher-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-foam);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.ms-suite-switcher-group {
+  padding: 0.5rem 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.ms-suite-switcher-group + .ms-suite-switcher-group {
+  border-top: 1px solid var(--hairline);
+}
+
+.ms-suite-switcher-group-label {
+  margin: 0;
+  padding: 0.5rem 0.875rem 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-fog);
+}
+
+.ms-suite-switcher-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ms-suite-switcher-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  text-decoration: none;
+  color: var(--text-foam);
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.ms-suite-switcher-item:hover {
+  background: rgba(57, 255, 20, 0.05);
+}
+
+.ms-suite-switcher-item-current {
+  background: rgba(57, 255, 20, 0.08);
+}
+
+.ms-suite-switcher-item-glyph {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-shoal);
+  flex-shrink: 0;
+}
+
+.ms-suite-switcher-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.ms-suite-switcher-item-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.ms-suite-switcher-external {
+  font-size: 0.75rem;
+  color: var(--text-mist);
+}
+
+.ms-suite-switcher-item-blurb {
+  font-size: 0.75rem;
+  color: var(--text-mist);
+}
+
+.ms-suite-switcher-item-current-mark {
+  color: var(--color-flood);
+  font-size: 0.625rem;
+}
+
+.ms-suite-switcher-empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--text-mist);
+}
+
+/* =========================================================================
+   Command palette
+   ========================================================================= */
+
+.ms-dash-cp-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4375rem 0.625rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  color: var(--text-mist);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+
+.ms-dash-cp-hint:hover {
+  border-color: rgba(57, 255, 20, 0.22);
+  background: rgba(57, 255, 20, 0.04);
+  color: var(--text-foam);
+}
+
+.ms-dash-cp-hint-text {
+  font-size: 0.75rem;
+}
+
+.ms-dash-kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 4px;
+  border: 1px solid var(--hairline);
+  background: var(--bg-shoal);
+  color: var(--text-foam);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ms-dash-kbd-esc {
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-mist);
+}
+
+.ms-dash-cp-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(1rem, 10vh, 12vh) 1rem 1rem;
+  z-index: 100;
+}
+
+.ms-dash-cp {
+  width: 100%;
+  max-width: 36rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.ms-dash-cp-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--text-mist);
+}
+
+.ms-dash-cp-input-icon {
+  flex-shrink: 0;
+}
+
+.ms-dash-cp-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-foam);
+  font-size: 1rem;
+  outline: none;
+}
+
+.ms-dash-cp-input::placeholder {
+  color: var(--text-fog);
+}
+
+.ms-dash-cp-list {
+  max-height: min(60vh, 28rem);
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.ms-dash-cp-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--text-mist);
+  font-size: 0.875rem;
+}
+
+.ms-dash-cp-group {
+  padding: 0.25rem 0;
+}
+
+.ms-dash-cp-group-label {
+  margin: 0;
+  padding: 0.5rem 1rem 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-fog);
+}
+
+.ms-dash-cp-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-foam);
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.ms-dash-cp-item:hover,
+.ms-dash-cp-item-active {
+  background: rgba(57, 255, 20, 0.06);
+}
+
+.ms-dash-cp-item-active {
+  box-shadow: inset 2px 0 0 var(--color-flood);
+}
+
+.ms-dash-cp-item-icon {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-mist);
+}
+
+.ms-dash-cp-item-icon-default {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.ms-dash-cp-item-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ms-dash-cp-item-hint {
+  font-size: 0.6875rem;
+  color: var(--text-fog);
+  font-family: var(--font-mono);
+}
+
+.ms-dash-cp-foot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.625rem 1rem;
+  border-top: 1px solid var(--hairline);
+  background: var(--bg-abyss);
+  font-size: 0.6875rem;
+  color: var(--text-fog);
+}
+
+.ms-dash-cp-foot-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ms-dash-cp-foot-brand {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gilt-light);
+}
+
+/* =========================================================================
+   Toast viewport
+   ========================================================================= */
+
+.ms-dash-toast-viewport {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 90;
+  pointer-events: none;
+  max-width: min(24rem, calc(100vw - 2rem));
+}
+
+.ms-dash-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+  animation: ms-dash-toast-in 220ms var(--ease-out);
+}
+
+@keyframes ms-dash-toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ms-dash-toast-success { border-color: rgba(57, 255, 20, 0.35); }
+.ms-dash-toast-success .ms-dash-toast-icon { color: var(--color-flood); }
+.ms-dash-toast-error { border-color: rgba(255, 99, 99, 0.35); }
+.ms-dash-toast-error .ms-dash-toast-icon { color: var(--color-breach); }
+.ms-dash-toast-info .ms-dash-toast-icon { color: var(--text-mist); }
+.ms-dash-toast-loading .ms-dash-toast-icon { color: var(--color-flood); }
+
+.ms-dash-toast-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  margin-top: 0.0625rem;
+}
+
+.ms-dash-toast-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(57, 255, 20, 0.2);
+  border-top-color: var(--color-flood);
+  border-radius: 999px;
+  animation: ms-dash-toast-spin 0.8s linear infinite;
+}
+
+@keyframes ms-dash-toast-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ms-dash-toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ms-dash-toast-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-foam);
+}
+
+.ms-dash-toast-desc {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--text-mist);
+}
+
+.ms-dash-toast-action {
+  border: none;
+  background: transparent;
+  color: var(--color-flood);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.ms-dash-toast-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-fog);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ms-dash-toast-close:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-foam);
+}
+
+/* =========================================================================
+   Badges
+   ========================================================================= */
+
+.ms-dash-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.ms-dash-badge-neutral { background: var(--bg-shoal); border-color: var(--hairline); color: var(--text-mist); }
+.ms-dash-badge-info { background: rgba(99, 179, 255, 0.1); border-color: rgba(99, 179, 255, 0.3); color: #99c3ff; }
+.ms-dash-badge-success { background: rgba(57, 255, 20, 0.1); border-color: rgba(57, 255, 20, 0.3); color: var(--color-flood); }
+.ms-dash-badge-warning { background: rgba(245, 196, 83, 0.1); border-color: rgba(245, 196, 83, 0.3); color: var(--color-caution); }
+.ms-dash-badge-danger { background: rgba(255, 99, 99, 0.1); border-color: rgba(255, 99, 99, 0.3); color: var(--color-breach); }
+.ms-dash-badge-flood { background: rgba(57, 255, 20, 0.12); border-color: rgba(57, 255, 20, 0.35); color: var(--color-flood); box-shadow: 0 0 12px var(--flood-pressure); }
+.ms-dash-badge-gilt { background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.35); color: var(--color-gilt-light); }
+
+.ms-dash-badge-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--text-mist);
+}
+
+.ms-dash-badge-dot-mark {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.ms-dash-badge-dot-neutral { background: var(--text-fog); }
+.ms-dash-badge-dot-info { background: #99c3ff; }
+.ms-dash-badge-dot-success { background: var(--color-flood); box-shadow: 0 0 8px var(--flood-glow); }
+.ms-dash-badge-dot-warning { background: var(--color-caution); }
+.ms-dash-badge-dot-danger { background: var(--color-breach); }
+.ms-dash-badge-dot-flood { background: var(--color-flood); box-shadow: 0 0 8px var(--flood-glow); }
+.ms-dash-badge-dot-gilt { background: var(--color-gilt); }
+
+/* =========================================================================
+   KPI card
+   ========================================================================= */
+
+.ms-dash-kpi-card {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: linear-gradient(180deg, rgba(20, 20, 30, 0.5), rgba(14, 14, 20, 0.8));
+  box-shadow: var(--shadow-panel);
+}
+
+.ms-dash-kpi-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.ms-dash-kpi-label {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mist);
+}
+
+.ms-dash-kpi-value {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-foam);
+  line-height: 1.1;
+}
+
+.ms-dash-kpi-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-top: 0.5rem;
+}
+
+.ms-dash-kpi-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.ms-dash-kpi-delta-up { color: var(--color-flood); }
+.ms-dash-kpi-delta-down { color: var(--color-breach); }
+
+.ms-dash-kpi-comparison {
+  font-size: 0.6875rem;
+  color: var(--text-fog);
+}
+
+.ms-dash-kpi-hint {
+  margin: 0.625rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-mist);
+}
+
+/* =========================================================================
+   Page header
+   ========================================================================= */
+
+.ms-dash-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.ms-dash-page-header-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.ms-dash-page-header-eyebrow {
+  margin: 0 0 0.375rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gilt-light);
+}
+
+.ms-dash-page-header-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 1.875rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-foam);
+}
+
+.ms-dash-page-header-subtitle {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--text-mist);
+  max-width: 48rem;
+  line-height: 1.55;
+}
+
+.ms-dash-page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.ms-dash-breadcrumbs {
+  margin: 0 0 0.75rem;
+}
+
+.ms-dash-breadcrumbs ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--text-fog);
+}
+
+.ms-dash-breadcrumb-link {
+  color: var(--text-mist);
+  text-decoration: none;
+}
+
+.ms-dash-breadcrumb-link:hover {
+  color: var(--color-flood-soft);
+}
+
+.ms-dash-breadcrumb-current {
+  color: var(--text-foam);
+  font-weight: 500;
+}
+
+.ms-dash-breadcrumb-sep {
+  color: var(--text-fog);
+  opacity: 0.6;
+}
+
+/* =========================================================================
+   Sparkline
+   ========================================================================= */
+
+.ms-dash-sparkline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.ms-dash-sparkline-empty {
+  display: inline-block;
+  background: var(--bg-shoal);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+/* =========================================================================
+   Skeleton variants
+   ========================================================================= */
+
+.ms-dash-skeleton-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.ms-dash-skeleton-text {
+  height: 0.75rem;
+  border-radius: 2px;
+}
+
+.ms-dash-skeleton-card {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ms-dash-skeleton-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.ms-dash-skeleton-row:last-child {
+  border-bottom: none;
+}
+
+.ms-dash-skeleton-list {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  overflow: hidden;
+}
+
+/* =========================================================================
+   Data table upgrades (sorting + actions + clickable rows)
+   ========================================================================= */
+
+.ms-dash-table-th-sortable {
+  padding: 0;
+}
+
+.ms-dash-table-th-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ms-dash-table-th-button:hover {
+  color: var(--color-flood-soft);
+}
+
+.ms-dash-table-th-arrow {
+  font-size: 0.625rem;
+  opacity: 0.4;
+}
+
+.ms-dash-table-th-arrow-active {
+  opacity: 1;
+  color: var(--color-flood);
+}
+
+.ms-dash-table-thead-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.ms-dash-table-th-action {
+  width: 1%;
+}
+
+.ms-dash-table-td-action {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.ms-dash-table-row-clickable {
+  cursor: pointer;
+}
+
+.ms-dash-table-foot {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.6875rem;
+  color: var(--text-fog);
+  font-family: var(--font-mono);
+}
+
+/* Keyboard hint chip */
+
+.ms-dash-kbd-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--text-mist);
+}
+
+.ms-dash-kbd-hint-label {
+  font-size: 0.75rem;
+}

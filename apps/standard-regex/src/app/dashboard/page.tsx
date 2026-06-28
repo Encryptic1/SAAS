@@ -1,5 +1,6 @@
 import { RegexDashboardShell } from "@/components/regex-dashboard-shell";
 import { PatternsList } from "@/components/patterns-list";
+import { Badge, KpiCard, PageHeader } from "@market-standard/ui";
 import { getOwnerId } from "@/lib/owner";
 import { listPatterns } from "@/lib/regex-data";
 
@@ -11,17 +12,29 @@ export default async function DashboardPage() {
   const patterns = await listPatterns(ownerId);
 
   const allTags = Array.from(new Set(patterns.flatMap((p) => p.tags ?? []))).slice(0, 12);
+  const publicCount = patterns.filter((p) => p.isPublic).length;
+  const tagCount = new Set(patterns.flatMap((p) => p.tags ?? [])).size;
 
   return (
     <RegexDashboardShell>
-      <div className="space-y-6">
-        <header className="flex items-end justify-between gap-3 flex-wrap">
-          <div>
-            <h1 className="text-2xl font-semibold">Regex library</h1>
-            <p className="text-sm ms-app-muted">{patterns.length} pattern(s) saved.</p>
-          </div>
-          <a href="/dashboard/new" className="ms-btn">New pattern</a>
-        </header>
+      <div className="space-y-8">
+        <PageHeader
+          eyebrow="Standard Regex"
+          title="Regex library"
+          subtitle={`${patterns.length} pattern(s) saved.`}
+          breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Library" }]}
+          actions={
+            <a href="/dashboard/new" className="ms-btn ms-btn-primary no-underline">
+              New pattern
+            </a>
+          }
+        />
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <KpiCard label="Patterns" value={String(patterns.length)} hint="Saved patterns" />
+          <KpiCard label="Public" value={String(publicCount)} hint="Shareable + forkable" />
+          <KpiCard label="Tags" value={String(tagCount)} hint="Distinct tags" />
+        </div>
 
         {allTags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
