@@ -166,6 +166,27 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </Link>
           </CardContent>
         </Card>
+
+        <Card className="border-l-2 border-[var(--color-gilt)]/60">
+          <CardHeader>
+            <CardTitle>Track payment-link clicks</CardTitle>
+            <CardDescription>Cross-sell from Standard Links</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm ms-app-muted">
+              See which Stripe payment links drive revenue. Standard Links shortens, brands, and
+              instruments every payment link — then reports clicks back here.
+            </p>
+            <a
+              href={`${process.env.NEXT_PUBLIC_LINKS_URL ?? "http://localhost:3007"}/dashboard?source=metrics`}
+              className="ms-btn ms-btn-secondary no-underline text-sm"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open Standard Links →
+            </a>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--hairline)] pt-6">

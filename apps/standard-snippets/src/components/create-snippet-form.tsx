@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Snippet {
   id: string;
@@ -11,15 +11,33 @@ interface Snippet {
   tags: string[];
 }
 
-/** Form to create a new snippet. On success, navigates to the editor. */
+/** Form to create a new snippet. On success, navigates to the editor.
+ *  Reads `?code=`, `?language=`, `?title=`, `?source=` query params for cross-sell pre-fill
+ *  (e.g. from Standard Regex "Save as Snippet"). */
 export function CreateSnippetForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [title, setTitle] = useState("");
   const [language, setLanguage] = useState("typescript");
   const [body, setBody] = useState("");
   const [tagsInput, setTagsInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [prefillNote, setPrefillNote] = useState<string | null>(null);
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+    const lang = searchParams.get("language");
+    const ttl = searchParams.get("title");
+    const src = searchParams.get("source");
+    if (code) setBody(code);
+    if (lang) setLanguage(lang);
+    if (ttl) setTitle(ttl);
+    if (src === "regex") {
+      setPrefillNote("Pre-filled from Standard Regex");
+      if (!tagsInput) setTagsInput("regex");
+    }
+  }, [searchParams, tagsInput]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -58,6 +76,12 @@ export function CreateSnippetForm() {
   return (
     <form onSubmit={handleSubmit} className="ms-card p-4 space-y-3">
       <h3 className="font-semibold">New snippet</h3>
+      {prefillNote && (
+        <div className="ms-app-card-inner border-l-2 border-[var(--color-flood)] px-3 py-2 text-xs">
+          <span className="text-[var(--color-flood)] font-medium">{prefillNote}</span>
+          <span className="ms-app-muted"> — fields pre-filled, edit and save.</span>
+        </div>
+      )}
       <Field label="Title">
         <input
           value={title}

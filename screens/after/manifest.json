@@ -1,185 +1,201 @@
 {
   "which": "after",
-  "capturedAt": "2026-06-28T17:33:38.423Z",
-  "total": 22,
-  "ok": 22,
+  "capturedAt": "2026-06-28T17:40:23.089Z",
+  "total": 24,
+  "ok": 24,
   "fail": 0,
   "results": [
     {
-      "app": "polls",
-      "route": "home",
-      "path": "/",
+      "app": "metrics",
+      "route": "dashboard",
+      "path": "/dashboard",
       "viewport": "desktop",
       "status": "ok",
-      "ms": 2668
-    },
-    {
-      "app": "polls",
-      "route": "home",
-      "path": "/",
-      "viewport": "mobile",
-      "status": "ok",
-      "ms": 1681
-    },
-    {
-      "app": "proof",
-      "route": "home",
-      "path": "/",
-      "viewport": "desktop",
-      "status": "ok",
-      "ms": 3118
-    },
-    {
-      "app": "proof",
-      "route": "home",
-      "path": "/",
-      "viewport": "mobile",
-      "status": "ok",
-      "ms": 1728
+      "ms": 6908
     },
     {
       "app": "metrics",
-      "route": "home",
-      "path": "/",
-      "viewport": "desktop",
+      "route": "dashboard",
+      "path": "/dashboard",
+      "viewport": "mobile",
       "status": "ok",
-      "ms": 1955
+      "ms": 2053
     },
     {
       "app": "metrics",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard-analytics",
+      "path": "/dashboard/analytics",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 3329
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-analytics",
+      "path": "/dashboard/analytics",
       "viewport": "mobile",
       "status": "ok",
-      "ms": 1729
+      "ms": 1791
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-links",
+      "path": "/dashboard/links",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2675
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-links",
+      "path": "/dashboard/links",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1632
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-quota",
+      "path": "/dashboard/quota",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2525
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-quota",
+      "path": "/dashboard/quota",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1545
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-settings",
+      "path": "/dashboard/settings",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2346
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-settings",
+      "path": "/dashboard/settings",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1525
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2555
+    },
+    {
+      "app": "metrics",
+      "route": "dashboard-billing",
+      "path": "/dashboard/billing",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1532
     },
     {
       "app": "hook",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard-inboxes",
+      "path": "/dashboard/inboxes",
       "viewport": "desktop",
       "status": "ok",
-      "ms": 2142
+      "ms": 2937
     },
     {
       "app": "hook",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard-inboxes",
+      "path": "/dashboard/inboxes",
       "viewport": "mobile",
       "status": "ok",
-      "ms": 1691
-    },
-    {
-      "app": "release",
-      "route": "home",
-      "path": "/",
-      "viewport": "desktop",
-      "status": "ok",
-      "ms": 2429
-    },
-    {
-      "app": "release",
-      "route": "home",
-      "path": "/",
-      "viewport": "mobile",
-      "status": "ok",
-      "ms": 1702
-    },
-    {
-      "app": "vault",
-      "route": "home",
-      "path": "/",
-      "viewport": "desktop",
-      "status": "ok",
-      "ms": 2535
-    },
-    {
-      "app": "vault",
-      "route": "home",
-      "path": "/",
-      "viewport": "mobile",
-      "status": "ok",
-      "ms": 1687
-    },
-    {
-      "app": "links",
-      "route": "home",
-      "path": "/",
-      "viewport": "desktop",
-      "status": "ok",
-      "ms": 2627
-    },
-    {
-      "app": "links",
-      "route": "home",
-      "path": "/",
-      "viewport": "mobile",
-      "status": "ok",
-      "ms": 1670
+      "ms": 1512
     },
     {
       "app": "snippets",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard-new",
+      "path": "/dashboard/new",
       "viewport": "desktop",
       "status": "ok",
-      "ms": 2516
+      "ms": 2593
     },
     {
       "app": "snippets",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard-new",
+      "path": "/dashboard/new",
       "viewport": "mobile",
       "status": "ok",
-      "ms": 1604
+      "ms": 1507
     },
     {
       "app": "status",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard",
+      "path": "/dashboard",
       "viewport": "desktop",
       "status": "ok",
-      "ms": 2782
+      "ms": 2616
     },
     {
       "app": "status",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard",
+      "path": "/dashboard",
       "viewport": "mobile",
       "status": "ok",
-      "ms": 1604
+      "ms": 1520
     },
     {
       "app": "regex",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard",
+      "path": "/dashboard",
       "viewport": "desktop",
       "status": "ok",
-      "ms": 3318
+      "ms": 2499
     },
     {
       "app": "regex",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard",
+      "path": "/dashboard",
       "viewport": "mobile",
       "status": "ok",
-      "ms": 1621
+      "ms": 1530
     },
     {
-      "app": "postmortem",
-      "route": "home",
-      "path": "/",
+      "app": "regex",
+      "route": "dashboard-cheat-sheet",
+      "path": "/dashboard/cheat-sheet",
       "viewport": "desktop",
       "status": "ok",
-      "ms": 2604
+      "ms": 2650
+    },
+    {
+      "app": "regex",
+      "route": "dashboard-cheat-sheet",
+      "path": "/dashboard/cheat-sheet",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1559
     },
     {
       "app": "postmortem",
-      "route": "home",
-      "path": "/",
+      "route": "dashboard-new",
+      "path": "/dashboard/new",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2403
+    },
+    {
+      "app": "postmortem",
+      "route": "dashboard-new",
+      "path": "/dashboard/new",
       "viewport": "mobile",
       "status": "ok",
-      "ms": 1606
+      "ms": 1515
     }
   ]
 }

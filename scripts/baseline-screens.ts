@@ -87,6 +87,7 @@ const ROUTES: RouteSpec[] = [
   { app: "snippets", name: "privacy", path: "/privacy" },
   { app: "snippets", name: "login", path: "/login" },
   { app: "snippets", name: "dashboard", path: "/dashboard" },
+  { app: "snippets", name: "dashboard-new", path: "/dashboard/new" },
 
   { app: "status", name: "home", path: "/" },
   { app: "status", name: "privacy", path: "/privacy" },

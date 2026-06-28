@@ -26,6 +26,7 @@ Standard Vault is the **secrets manager** in the Market Standard portfolio:
 | AES-256-GCM encryption | ✅ `/api/projects/[id]/decrypt` |
 | .env / Doppler import | ✅ `/api/projects/[id]/import` |
 | AI-agent reference mode | ✅ `/api/projects/[id]/references` |
+| Masked inject map (CLI) | ✅ `/api/projects/[id]/inject` |
 | Per-project tokens | ✅ `/api/projects/[id]/tokens` |
 | Audit log | ✅ `/api/projects/[id]/audit` |
 | Stripe subscription webhooks | ✅ |

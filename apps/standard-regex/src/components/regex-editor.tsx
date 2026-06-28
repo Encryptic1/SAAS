@@ -301,18 +301,20 @@ export function RegexEditor({
             </div>
             <div className="flex gap-2 flex-wrap text-xs">
               <a
-                href={`https://hook.marketstandard.app/?pattern=${encodeURIComponent(pattern)}`}
+                href={`${process.env.NEXT_PUBLIC_HOOK_URL ?? "http://localhost:3004"}/dashboard/inboxes?source=regex&pattern=${encodeURIComponent(pattern)}`}
                 className="ms-btn-ghost"
                 target="_blank"
                 rel="noreferrer"
+                title="Open Standard Hook with this regex as a filter expression"
               >
                 Save as Hook filter →
               </a>
               <a
-                href={`https://snippets.marketstandard.app/?pattern=${encodeURIComponent(pattern)}`}
+                href={`${process.env.NEXT_PUBLIC_SNIPPETS_URL ?? "http://localhost:3008"}/dashboard/new?source=regex&code=${encodeURIComponent(pattern)}&language=regex&title=${encodeURIComponent(name || "Regex pattern")}`}
                 className="ms-btn-ghost"
                 target="_blank"
                 rel="noreferrer"
+                title="Save this regex as a Standard Snippet"
               >
                 Save as Snippet →
               </a>

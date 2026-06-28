@@ -17,6 +17,7 @@ export default async function InboxEventsPage({ params }: InboxEventsPageProps) 
 
   const { inbox, events } = data;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3004";
+  const postmortemUrl = process.env.NEXT_PUBLIC_POSTMORTEM_URL ?? "http://localhost:3011";
 
   return (
     <>
@@ -75,7 +76,16 @@ export default async function InboxEventsPage({ params }: InboxEventsPageProps) 
                   </pre>
                 </div>
 
-                <ReplayEventButton eventId={event.id} />
+                <div className="flex flex-wrap items-center gap-2 border-t border-[var(--hairline)] pt-3">
+                  <ReplayEventButton eventId={event.id} />
+                  <a
+                    href={`${postmortemUrl}/dashboard/new?source=hook&event_id=${event.id}&inbox_slug=${inbox.slug}`}
+                    className="ms-btn ms-btn-secondary no-underline text-xs"
+                    title="Start a blameless postmortem from this webhook event"
+                  >
+                    Create postmortem →
+                  </a>
+                </div>
               </div>
             ))
           )}
