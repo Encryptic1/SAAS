@@ -723,6 +723,53 @@ CREATE TABLE IF NOT EXISTS teams.roles (
   permissions jsonb NOT NULL DEFAULT '{}',
   created_at timestamptz NOT NULL DEFAULT now()
 );
+
+-- Standard Workspace (portfolio control panel: sessions, health, tunnels)
+CREATE SCHEMA IF NOT EXISTS workspace;
+CREATE TABLE IF NOT EXISTS workspace.sessions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  owner_id text NOT NULL,
+  label text NOT NULL,
+  apps text NOT NULL DEFAULT '',
+  pid integer,
+  status text NOT NULL DEFAULT 'starting',
+  log_cursor text,
+  metadata jsonb,
+  started_at timestamptz NOT NULL DEFAULT now(),
+  stopped_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_workspace_sessions_owner ON workspace.sessions (owner_id);
+CREATE INDEX IF NOT EXISTS idx_workspace_sessions_status ON workspace.sessions (status);
+CREATE TABLE IF NOT EXISTS workspace.health_checks (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  owner_id text NOT NULL,
+  target text NOT NULL,
+  url text NOT NULL,
+  status text NOT NULL,
+  latency_ms integer,
+  detail text,
+  checked_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_workspace_health_owner ON workspace.health_checks (owner_id);
+CREATE INDEX IF NOT EXISTS idx_workspace_health_target ON workspace.health_checks (target);
+CREATE INDEX IF NOT EXISTS idx_workspace_health_checked ON workspace.health_checks (checked_at DESC);
+CREATE TABLE IF NOT EXISTS workspace.tunnels (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  owner_id text NOT NULL,
+  name text NOT NULL,
+  target_app text NOT NULL,
+  target_path text NOT NULL DEFAULT '/',
+  public_url text,
+  provider text NOT NULL DEFAULT 'cloudflare',
+  status text NOT NULL DEFAULT 'inactive',
+  metadata jsonb,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_workspace_tunnels_owner ON workspace.tunnels (owner_id);
+CREATE INDEX IF NOT EXISTS idx_workspace_tunnels_target ON workspace.tunnels (target_app);
 `;
 
 export async function pushLocalSchema(db: Db): Promise<void> {

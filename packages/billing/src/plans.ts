@@ -11,7 +11,8 @@ export type ProductId =
   | "standard-snippets"
   | "standard-status"
   | "standard-regex"
-  | "standard-postmortem";
+  | "standard-postmortem"
+  | "standard-workspace";
 
 export type PlanTier = "free" | "starter" | "growth" | "business";
 
@@ -47,6 +48,8 @@ const snippetsStarter = envPrice("STRIPE_PRICE_SNIPPETS_STARTER");
 const statusStarter = envPrice("STRIPE_PRICE_STATUS_STARTER");
 const regexStarter = envPrice("STRIPE_PRICE_REGEX_STARTER");
 const postmortemStarter = envPrice("STRIPE_PRICE_POSTMORTEM_STARTER");
+const workspaceStarter = envPrice("STRIPE_PRICE_WORKSPACE_STARTER");
+const workspaceGrowth = envPrice("STRIPE_PRICE_WORKSPACE_GROWTH");
 
 export const PLANS: Record<ProductId, PlanDefinition[]> = {
   "standard-polls": [
@@ -325,6 +328,33 @@ export const PLANS: Record<ProductId, PlanDefinition[]> = {
       stripePriceId: postmortemStarter,
       stripeLookupKey: "standard-postmortem-starter-monthly",
       limits: { incidents: Infinity },
+      showBadge: false,
+    },
+  ],
+  "standard-workspace": [
+    {
+      tier: "free",
+      name: "Free",
+      priceMonthly: 0,
+      limits: { users: 1, sessions: 1 },
+      showBadge: true,
+    },
+    {
+      tier: "starter",
+      name: "Starter",
+      priceMonthly: 9,
+      stripePriceId: workspaceStarter,
+      stripeLookupKey: "standard-workspace-starter-monthly",
+      limits: { users: 1, sessions: 5, tunnels: -1 },
+      showBadge: false,
+    },
+    {
+      tier: "growth",
+      name: "Growth",
+      priceMonthly: 29,
+      stripePriceId: workspaceGrowth,
+      stripeLookupKey: "standard-workspace-growth-monthly",
+      limits: { users: -1, sessions: -1, tunnels: -1 },
       showBadge: false,
     },
   ],

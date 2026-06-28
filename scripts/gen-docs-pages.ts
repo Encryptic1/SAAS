@@ -23,6 +23,7 @@ const APPS: App[] = [
   { dir: "standard-postmortem", product: "standard-postmortem", productName: "Standard Postmortem", tagline: "Postmortems with action tracking + recurrence.", gettingStarted: ["Open an incident.", "Add a timeline and action items.", "Detect recurrence across incidents."] },
   { dir: "standard-lens", product: "standard-lens", productName: "Standard Lens", tagline: "Optimize slow database queries.", gettingStarted: ["Save your most-used queries.", "Paste an EXPLAIN plan for findings.", "Review the slow queries tab."] },
   { dir: "standard-cron", product: "standard-cron", productName: "Standard Cron", tagline: "Monitor cron jobs with heartbeats.", gettingStarted: ["Register a job and grab its heartbeat token.", "POST to /api/heartbeat/:token after each run.", "Inspect runs and drift."] },
+  { dir: "standard-workspace", product: "standard-workspace", productName: "Standard Workspace", tagline: "Portfolio control panel: status grid, sessions, tunnels, depsync.", gettingStarted: ["Open the dashboard to see the 14-app status grid.", "Start a dev session and tail logs over SSE.", "Create a webhook tunnel for local intake routes.", "Run depsync to check package parity across apps."] },
 ];
 
 function pageSource(app: App): string {

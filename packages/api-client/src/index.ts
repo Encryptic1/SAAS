@@ -12,3 +12,4 @@ export { RegexClient, createRegexClient } from "./clients/regex";
 export { PostmortemClient, createPostmortemClient } from "./clients/postmortem";
 export { LensClient, createLensClient } from "./clients/lens";
 export { CronClient, createCronClient } from "./clients/cron";
+export { WorkspaceClient, createWorkspaceClient } from "./clients/workspace";

@@ -27,6 +27,11 @@ import {
 } from "../packages/db/src/schema/postmortem";
 import { queries as lensQueries, slowQueries as lensSlowQueries } from "../packages/db/src/schema/lens";
 import { jobs as cronJobs, runs as cronRuns } from "../packages/db/src/schema/cron";
+import {
+  workspaceSessions,
+  workspaceHealthChecks,
+  workspaceTunnels,
+} from "../packages/db/src/schema/workspace";
 import { notifications as notifRows } from "../packages/db/src/schema/notifications";
 import {
   teams as teamRows,
@@ -2331,6 +2336,144 @@ app.post("/cron/heartbeat/:token", async (c) => {
     .set({ lastRunAt: now, lastStatus: status, lastHeartbeatAt: now, updatedAt: now })
     .where(eq(cronJobs.id, job.id));
   return c.json({ ok: true, run });
+});
+
+// ----- Workspace (sessions, health checks, tunnels) -----
+
+app.get("/workspace/sessions", async (c) => {
+  const ownerId = c.req.query("ownerId");
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const rows = await db
+    .select()
+    .from(workspaceSessions)
+    .where(eq(workspaceSessions.ownerId, ownerId))
+    .orderBy(desc(workspaceSessions.updatedAt));
+  return c.json({ sessions: rows });
+});
+
+app.post("/workspace/sessions", async (c) => {
+  const body = await c.req.json<{ ownerId?: string; label?: string; apps?: string; pid?: number | null; metadata?: Record<string, unknown> }>();
+  if (!body.ownerId || !body.label) return c.json({ error: "ownerId, label required" }, 400);
+  const db = await getPgliteDb();
+  const [row] = await db
+    .insert(workspaceSessions)
+    .values({
+      ownerId: body.ownerId,
+      label: body.label,
+      apps: body.apps ?? "",
+      pid: body.pid ?? null,
+      status: "running",
+      metadata: body.metadata ?? null,
+    })
+    .returning();
+  return c.json({ session: row }, 201);
+});
+
+app.patch("/workspace/sessions/:id", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json<{ status?: string; pid?: number | null; logCursor?: string | null; stoppedAt?: string | null; metadata?: Record<string, unknown> }>();
+  const db = await getPgliteDb();
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (body.status !== undefined) updates.status = body.status;
+  if (body.pid !== undefined) updates.pid = body.pid;
+  if (body.logCursor !== undefined) updates.logCursor = body.logCursor;
+  if (body.stoppedAt !== undefined) updates.stoppedAt = body.stoppedAt ? new Date(body.stoppedAt) : null;
+  if (body.metadata !== undefined) updates.metadata = body.metadata;
+  const [row] = await db.update(workspaceSessions).set(updates).where(eq(workspaceSessions.id, id)).returning();
+  if (!row) return c.json({ error: "Not found" }, 404);
+  return c.json({ session: row });
+});
+
+app.get("/workspace/health", async (c) => {
+  const ownerId = c.req.query("ownerId");
+  const target = c.req.query("target");
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const conds = [eq(workspaceHealthChecks.ownerId, ownerId)];
+  if (target) conds.push(eq(workspaceHealthChecks.target, target));
+  const rows = await db
+    .select()
+    .from(workspaceHealthChecks)
+    .where(conds.length === 1 ? conds[0]! : and(...conds))
+    .orderBy(desc(workspaceHealthChecks.checkedAt))
+    .limit(200);
+  return c.json({ checks: rows });
+});
+
+app.post("/workspace/health", async (c) => {
+  const body = await c.req.json<{ ownerId?: string; target?: string; url?: string; status?: string; latencyMs?: number | null; detail?: string | null }>();
+  if (!body.ownerId || !body.target || !body.url || !body.status) {
+    return c.json({ error: "ownerId, target, url, status required" }, 400);
+  }
+  const db = await getPgliteDb();
+  const [row] = await db
+    .insert(workspaceHealthChecks)
+    .values({
+      ownerId: body.ownerId,
+      target: body.target,
+      url: body.url,
+      status: body.status,
+      latencyMs: body.latencyMs ?? null,
+      detail: body.detail ?? null,
+    })
+    .returning();
+  return c.json({ check: row }, 201);
+});
+
+app.get("/workspace/tunnels", async (c) => {
+  const ownerId = c.req.query("ownerId");
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const rows = await db
+    .select()
+    .from(workspaceTunnels)
+    .where(eq(workspaceTunnels.ownerId, ownerId))
+    .orderBy(desc(workspaceTunnels.updatedAt));
+  return c.json({ tunnels: rows });
+});
+
+app.post("/workspace/tunnels", async (c) => {
+  const body = await c.req.json<{ ownerId?: string; name?: string; targetApp?: string; targetPath?: string; publicUrl?: string | null; provider?: string; status?: string; metadata?: Record<string, unknown> }>();
+  if (!body.ownerId || !body.name || !body.targetApp) {
+    return c.json({ error: "ownerId, name, targetApp required" }, 400);
+  }
+  const db = await getPgliteDb();
+  const [row] = await db
+    .insert(workspaceTunnels)
+    .values({
+      ownerId: body.ownerId,
+      name: body.name,
+      targetApp: body.targetApp,
+      targetPath: body.targetPath ?? "/",
+      publicUrl: body.publicUrl ?? null,
+      provider: body.provider ?? "cloudflare",
+      status: body.status ?? "inactive",
+      metadata: body.metadata ?? null,
+    })
+    .returning();
+  return c.json({ tunnel: row }, 201);
+});
+
+app.patch("/workspace/tunnels/:id", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json<{ publicUrl?: string | null; status?: string; provider?: string; metadata?: Record<string, unknown> }>();
+  const db = await getPgliteDb();
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (body.publicUrl !== undefined) updates.publicUrl = body.publicUrl;
+  if (body.status !== undefined) updates.status = body.status;
+  if (body.provider !== undefined) updates.provider = body.provider;
+  if (body.metadata !== undefined) updates.metadata = body.metadata;
+  const [row] = await db.update(workspaceTunnels).set(updates).where(eq(workspaceTunnels.id, id)).returning();
+  if (!row) return c.json({ error: "Not found" }, 404);
+  return c.json({ tunnel: row });
+});
+
+app.delete("/workspace/tunnels/:id", async (c) => {
+  const id = c.req.param("id");
+  const db = await getPgliteDb();
+  await db.delete(workspaceTunnels).where(eq(workspaceTunnels.id, id));
+  return c.json({ ok: true });
 });
 
 // ----- Notifications (in-app center + email/Slack delivery) -----

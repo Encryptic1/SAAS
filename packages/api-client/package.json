@@ -20,7 +20,8 @@
     "./regex": "./src/clients/regex.ts",
     "./postmortem": "./src/clients/postmortem.ts",
     "./lens": "./src/clients/lens.ts",
-    "./cron": "./src/clients/cron.ts"
+    "./cron": "./src/clients/cron.ts",
+    "./workspace": "./src/clients/workspace.ts"
   },
   "scripts": {
     "build": "tsc --noEmit",

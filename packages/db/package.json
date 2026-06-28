@@ -26,6 +26,7 @@
     "./schema/cron": "./src/schema/cron.ts",
     "./schema/notifications": "./src/schema/notifications.ts",
     "./schema/teams": "./src/schema/teams.ts",
+    "./schema/workspace": "./src/schema/workspace.ts",
     "./vault-crypto": "./src/vault-crypto.ts",
     "./query": "./src/query.ts",
     "./gateway": "./src/gateway.ts"

@@ -31,6 +31,7 @@ const APPS: App[] = [
   { dir: "standard-postmortem", title: "Standard Postmortem API", description: "Incidents + actions + recurrence API." },
   { dir: "standard-lens", title: "Standard Lens API", description: "Query library + slow queries + EXPLAIN API." },
   { dir: "standard-cron", title: "Standard Cron API", description: "Cron jobs + runs + heartbeat API." },
+  { dir: "standard-workspace", title: "Standard Workspace API", description: "Sessions + health checks + tunnels + depsync API." },
 ];
 
 async function walk(dir: string, acc: string[] = []): Promise<string[]> {

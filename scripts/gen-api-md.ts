@@ -26,6 +26,7 @@ const APPS: App[] = [
   { dir: "standard-postmortem", title: "Standard Postmortem API", description: "Incidents + actions + recurrence API.", baseUrl: "https://standard-postmortem.vercel.app" },
   { dir: "standard-lens", title: "Standard Lens API", description: "Query library + slow queries + EXPLAIN API.", baseUrl: "https://standard-lens.vercel.app" },
   { dir: "standard-cron", title: "Standard Cron API", description: "Cron jobs + runs + heartbeat API.", baseUrl: "https://standard-cron.vercel.app" },
+  { dir: "standard-workspace", title: "Standard Workspace API", description: "Sessions + health checks + tunnels + depsync API.", baseUrl: "https://standard-workspace.vercel.app" },
 ];
 
 async function walk(dir: string, acc: string[] = []): Promise<string[]> {

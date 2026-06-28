@@ -14,7 +14,8 @@ export type SuiteProductKey =
   | "regex"
   | "postmortem"
   | "lens"
-  | "cron";
+  | "cron"
+  | "workspace";
 
 type ChangeFrequency = "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 

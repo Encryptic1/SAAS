@@ -14,6 +14,7 @@ export const BASE = {
   postmortem: "http://localhost:3011",
   lens: "http://localhost:3012",
   cron: "http://localhost:3013",
+  workspace: "http://localhost:3014",
   gateway: "http://127.0.0.1:4000",
 } as const;
 
@@ -64,6 +65,13 @@ export const ROUTES = [
   { name: "Cron home", url: `${BASE.cron}/`, marketing: true },
   { name: "Cron dashboard", url: `${BASE.cron}/dashboard`, app: true },
   { name: "Cron privacy", url: `${BASE.cron}/privacy`, marketing: true },
+  { name: "Workspace home", url: `${BASE.workspace}/`, marketing: true },
+  { name: "Workspace dashboard", url: `${BASE.workspace}/dashboard`, app: true },
+  { name: "Workspace sessions", url: `${BASE.workspace}/dashboard/sessions`, app: true },
+  { name: "Workspace tunnels", url: `${BASE.workspace}/dashboard/tunnels`, app: true },
+  { name: "Workspace health", url: `${BASE.workspace}/dashboard/health`, app: true },
+  { name: "Workspace depsync", url: `${BASE.workspace}/dashboard/depsync`, app: true },
+  { name: "Workspace privacy", url: `${BASE.workspace}/privacy`, marketing: true },
 ] as const;
 
 export function collectPageErrors(page: Page): string[] {

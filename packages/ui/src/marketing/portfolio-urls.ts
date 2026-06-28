@@ -15,6 +15,7 @@ export function getPortfolioUrls() {
     postmortem: process.env.NEXT_PUBLIC_POSTMORTEM_URL ?? "http://localhost:3011",
     lens: process.env.NEXT_PUBLIC_LENS_URL ?? "http://localhost:3012",
     cron: process.env.NEXT_PUBLIC_CRON_URL ?? "http://localhost:3013",
+    workspace: process.env.NEXT_PUBLIC_WORKSPACE_URL ?? "http://localhost:3014",
     floodg8: process.env.NEXT_PUBLIC_FLOODG8_URL ?? "https://floodg8.com",
     syncdevtime: process.env.NEXT_PUBLIC_SYNCDEVTIME_URL ?? "https://syncdevtime.com",
   };
@@ -51,6 +52,7 @@ const SIBLING_LABELS: Record<string, string> = {
   postmortem: "Postmortem",
   lens: "Lens",
   cron: "Cron",
+  workspace: "Workspace",
   floodg8: "FloodG8",
   syncdevtime: "SyncDevTime",
 };

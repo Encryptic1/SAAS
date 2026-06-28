@@ -15,3 +15,4 @@ export * from "./lens";
 export * from "./cron";
 export * from "./notifications";
 export * from "./teams";
+export * from "./workspace";

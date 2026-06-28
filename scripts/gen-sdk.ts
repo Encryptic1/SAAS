@@ -27,6 +27,7 @@ const APPS: App[] = [
   { dir: "standard-postmortem", product: "standard-postmortem", className: "PostmortemClient", name: "postmortem" },
   { dir: "standard-lens", product: "standard-lens", className: "LensClient", name: "lens" },
   { dir: "standard-cron", product: "standard-cron", className: "CronClient", name: "cron" },
+  { dir: "standard-workspace", product: "standard-workspace", className: "WorkspaceClient", name: "workspace" },
 ];
 
 async function walk(dir: string, acc: string[] = []): Promise<string[]> {
