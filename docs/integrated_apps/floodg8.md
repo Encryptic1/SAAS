@@ -1,8 +1,8 @@
 # FloodG8 Integration — Market Standard SAAS Suite
 
 **Date:** 2026-06-28
-**Repo:** `F:\dev\floodg8` (commit `d666fd5` + `6dc3cec` + `fda73a9` swarm rework, pushed to `origin/main`)
-**Vercel deployment:** `dpl_ACbynrbPxt79CU51tmYDxt6hGW3L` — READY, aliased to `flood-g8.com` + `www.flood-g8.com`
+**Repo:** `F:\dev\floodg8` (commit `d666fd5` + `6dc3cec` + `fda73a9` swarm rework + `1.0.7` local↔cloud pairing, pushed to `origin/main`)
+**Vercel deployment:** `dpl_ACbynrbPxt79CU51tmYDxt6hGW3L` — READY, aliased to `flood-g8.com` + `www.flood-g8.com` (the `1.0.7` `/api/runner/pair` lambda change is in the repo; live after the next Vercel deploy)
 **Supabase project:** `opodtvblrelmpoaprmpr` (shared with all Standard apps)
 **Plan reference:** `F:\dev\floodg8\docs\SAAS_SUITE_INTEGRATION.md` (phases 3–13) + `F:\dev\floodg8\docs\SWARM.md` (agent swarm layer)
 
@@ -15,6 +15,8 @@ This file documents what the FloodG8 side of the SAAS suite integration did, so 
 FloodG8 is now the unified front door for **17 products**: 13 Standard apps + FloodG8 + SyncDevTime + Agent Skill + Standard Workspace. All 13 phases of `SAAS_SUITE_INTEGRATION.md` are complete, validated, and live on `flood-g8.com`. The FloodG8 side is production-ready; the remaining work (lens + cron + workspace app builds + cross-repo integration test harness) is owned by the sibling `SAAS-FINISH.md` plan.
 
 A parallel **agent swarm rework** (commit `fda73a9`, see `F:\dev\floodg8\docs\SWARM.md`) added row-bot's Goal Mode, Agent Profiles, child-agent delegation, an LLM-backed planner, Workflows, and Skills over the existing release pipeline — no existing surface removed. New cloud lambdas + Supabase tables for `goals` / `agent_profiles` / `workflows` / `workflow_runs` are listed below.
+
+A **`1.0.7` local↔cloud pairing** follow-up lets the VSIX local dash (the `localhost:8911` web app the extension serves) link to a `flood-g8.com` account via an 8-char code minted on the cloud `/pair` page. The local server redeems the code against the existing cloud `/api/runner/pair` lambda, stores the resulting identity (`email`, `orgName`, `runnerId`) in a new local SQLite `cloud_pairings` table, and the local dash sidebar renders "Linked to FloodG8 Cloud · {email} · {org}". No Supabase keys are baked into the VSIX bundle; the pairing code is the credential. Details in the [Local dash ↔ cloud pairing (1.0.7)](#local-dash--cloud-pairing-107) section below.
 
 ---
 
@@ -82,8 +84,22 @@ All under `https://www.flood-g8.com/api/...`. Auth-required endpoints accept `Au
 | GET | `/api/workflows` | yes | List the signed-in user's org workflows (execution stays on the paired local runner; cloud stores the definition) |
 | POST | `/api/workflows` | yes | Create a workflow |
 | POST | `/api/workflows/:id/tick` | yes | Manual workflow fire — records a `workflow_runs` row in `queued` state. The paired local runner picks it up via cloud-relay + executes the steps. Returns 202 Accepted. (If no runner is paired, the tick sits queued until one connects.) |
+| POST | `/api/runner/pair` | yes | Mint an 8-char pairing code (10-min TTL) for the signed-in user's org. Called by the cloud `/pair` page. |
+| GET | `/api/runner/pair?code=…` | no | Poll pairing status (the local server uses this to look up a code before redeeming). |
+| POST | `/api/runner/pair?code=…` | no | Redeem a pairing code. Called by the **local** VSIX server (`POST /api/cloud/pair` proxies here) with `{ deviceFingerprint, allowedRoots }`. Upserts a `runner_devices` row, marks the pairing `redeemed`, and returns `{ runnerId, runnerName, orgId, orgName, orgSlug, email, relayChannel }`. The `email` + `orgName` fields were added in `1.0.7` so the local dash can render "Linked to FloodG8 Cloud · {email} · {org}". **No tokens are returned** — the local dash gets display identity only; the cloud relay's Supabase auth still comes from the runner's env. |
 
-**Code location:** `F:\dev\floodg8\apps\web\api\portfolio\*.js` + `F:\dev\floodg8\apps\web\api\runs\summary.js` + `F:\dev\floodg8\apps\web\api\integrations\syncdevtime\summary.js` + `F:\dev\floodg8\apps\web\api\{goals,profiles,workflows}.js` + `F:\dev\floodg8\apps\web\api\workflows\[id]\tick.js`.
+### Local-runner endpoints (VSIX `localhost:8911`, not on Vercel)
+
+These live on the local Fastify server bundled into the VSIX — they are NOT deployed to `flood-g8.com`. The web SPA calls same-origin `/api/cloud/*` which the local server handles.
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/cloud/pair` | Current pairing state. Returns `{ paired: true, …CloudPairing }` or `{ paired: false, deviceFingerprint }`. |
+| POST | `/api/cloud/pair` | Body `{ code }`. Validates the 8-char code, calls `POST {FLOODG8_CLOUD_URL}/api/runner/pair?code=…` with the stable `deviceFingerprint`, stores the result in the local `cloud_pairings` SQLite table, returns the pairing. |
+| POST | `/api/cloud/unpair` | Clears the stored pairing (keeps the `deviceFingerprint` for re-pairing). |
+| GET | `/api/runner/state` | Existing relay state (paired runnerId + channel). Unchanged. |
+
+**Code location:** `F:\dev\floodg8\apps\web\api\portfolio\*.js` + `F:\dev\floodg8\apps\web\api\runs\summary.js` + `F:\dev\floodg8\apps\web\api\integrations\syncdevtime\summary.js` + `F:\dev\floodg8\apps\web\api\{goals,profiles,workflows}.js` + `F:\dev\floodg8\apps\web\api\workflows\[id]\tick.js` + `F:\dev\floodg8\apps\web\api\runner\pair.js` (cloud pairing lambda). Local pairing routes: `F:\dev\floodg8\packages\server\src\app.ts`.
 
 ---
 
@@ -230,6 +246,8 @@ All under the `Market Standard` category in the command palette.
 **Code:** `F:\dev\floodg8\apps\extension\src\extension.ts` (handlers) + `F:\dev\floodg8\apps\extension\src\standard-api.ts` (typed API client) + `F:\dev\floodg8\apps\extension\package.json` (command declarations + `floodG8.cloudToken` config).
 
 **Auth:** the extension reads the bearer token from `floodG8.cloudToken` (set via Settings → `floodG8.cloudToken`). The token is sent as `Authorization: Bearer {token}` on all Standard API calls.
+
+**`1.0.7` change:** `floodG8.connect` ("Connect to FloodG8 Cloud") now opens `https://flood-g8.com/pair` (was `/settings?focus=heartbeat`) so the command maps directly to the local↔cloud pairing flow. The `floodG8.cloudToken` setting is unchanged + orthogonal — it's for Standard suite API auth, not for linking the local dash identity. See [Local dash ↔ cloud pairing (1.0.7)](#local-dash--cloud-pairing-107) below.
 
 ---
 
@@ -424,6 +442,72 @@ The orchestrator + workflow tick fire + channels run on the paired local runner 
 
 ---
 
+## Local dash ↔ cloud pairing (`1.0.7`)
+
+The VSIX extension bundles a local Fastify server (`@floodg8/server`) that serves the same web SPA at `http://127.0.0.1:8911` that `flood-g8.com` serves on Vercel. Before `1.0.7` the local dash had no account concept — `Login.tsx` rendered "FloodG8 cloud is not configured in this environment. The local VSIX runner does not require an account." and the sidebar showed no identity. The `1.0.7` follow-up adds a pairing-code flow so a user can link their local dash to their flood-g8.com account without baking Supabase keys into the VSIX bundle or running OAuth on `localhost`.
+
+### Flow
+
+1. User opens the FloodG8 dash from the VSIX sidebar (or runs `FloodG8: Connect to FloodG8 Cloud` from the command palette, which now opens `https://flood-g8.com/pair`).
+2. The cloud `/pair` page (signed-in) calls `POST /api/runner/pair` → mints an 8-char code (10-min TTL) into `runner_pairings`.
+3. User pastes the code into the local dash's "Sign in with FloodG8 Cloud" panel (`CloudPairPanel` component, shown in the sidebar footer + on `/login` when Supabase env isn't configured).
+4. The SPA calls `POST /api/cloud/pair` (same-origin, handled by the local Fastify server) with `{ code }`.
+5. The local server validates the code, generates a stable `deviceFingerprint` (random UUID, persisted in the `cloud_pairings` table so re-pairing reuses it), and calls `POST {FLOODG8_CLOUD_URL}/api/runner/pair?code=…` with `{ deviceFingerprint, allowedRoots: [] }`.
+6. The cloud lambda upserts a `runner_devices` row, marks the pairing `redeemed`, and returns `{ runnerId, runnerName, orgId, orgName, orgSlug, email, relayChannel }`.
+7. The local server stores the response in `cloud_pairings` (single-row, `id=1`) and returns it to the SPA.
+8. The `CloudPairPanel` flips to "Linked to FloodG8 Cloud · {email} · {orgName}" with an "Unlink this dash" button. The state persists across reloads.
+
+### Ponytail: pairing is identity, relay is transport
+
+The pairing flow stores **display identity only** (`email`, `orgName`, `runnerId`, `relayChannel`). No Supabase tokens live in the local SQLite DB. The cloud relay's transport auth (`FLOODG8_RUNNER_TOKEN` — a scoped JWT) still comes from the runner's env, exactly as before. The two concerns are deliberately decoupled:
+
+- **Pairing** = "which cloud account does this local dash belong to?" → answered by the code flow.
+- **Relay** = "how does the local runner publish events to Supabase Realtime for the cloud LiveAgent page?" → answered by env vars.
+
+Ceiling: a user who wants the live cloud view to work post-pairing still sets `FLOODG8_RUNNER_TOKEN` env. Upgrade path: the cloud lambda mints a runner-scoped JWT on redemption + returns it; the local server auto-starts the relay using the stored config. Marked inline in `packages/server/src/app.ts` + `packages/reservoir/src/cloud-pairing-store.ts`.
+
+### Why no new Supabase migration
+
+The cloud side already had `runner_pairings` + `runner_devices` from migration `20260620010000_runner_pairings.sql`. The `1.0.7` change is a backward-compatible extension of the redemption response (adds `email` + `orgName` + `orgSlug` fields) — no schema change. The new `cloud_pairings` table is **local SQLite** in the runner's reservoir (schema added to `packages/reservoir/src/schema.sql.ts`), NOT a Supabase migration.
+
+### New local SQLite table
+
+`cloud_pairings` (single-row, `id=1`, enforced by `CHECK (id = 1)`):
+
+| Column | Type | Notes |
+| --- | --- | --- |
+| `id` | INTEGER PK | Always `1` |
+| `device_fingerprint` | TEXT | Stable per-machine UUID, generated once + reused across re-pairings |
+| `runner_id` | TEXT | From cloud redemption |
+| `runner_name` | TEXT | From cloud redemption |
+| `org_id` | TEXT | From cloud redemption |
+| `org_name` | TEXT | From cloud redemption (`1.0.7`) |
+| `org_slug` | TEXT | From cloud redemption (`1.0.7`) |
+| `email` | TEXT | From cloud redemption (`1.0.7`) |
+| `relay_channel` | TEXT | `runner:<runnerId>` |
+| `paired_at` | TEXT | ISO timestamp |
+
+**Code:** `F:\dev\floodg8\packages\reservoir\src\cloud-pairing-store.ts` (CRUD + `getOrCreateDeviceFingerprint`).
+
+### VSIX command change
+
+`floodG8.connect` ("Connect to FloodG8 Cloud") previously opened `https://flood-g8.com/settings?focus=heartbeat`. In `1.0.7` it now opens `https://flood-g8.com/pair` so the command maps directly to the pairing flow. The `floodG8.cloudToken` setting is unchanged — it's still the bearer token the extension uses for Standard suite API calls (Vault, Snippets, Regex) and is orthogonal to the pairing flow (which is about local-dash identity, not suite API auth).
+
+### Validation (`1.0.7`)
+
+| Check | Result |
+| --- | --- |
+| `pnpm --filter @floodg8/reservoir build` | ✅ clean |
+| `pnpm --filter @floodg8/server typecheck` | ✅ clean |
+| `pnpm --filter @floodg8/web typecheck` | ✅ clean |
+| `pnpm --filter floodg8 typecheck` | ✅ clean |
+| `pnpm --filter @floodg8/web build` | ✅ assert-bundle ok (77 assets, 38 chunks) |
+| `pnpm --filter floodg8 package` | ✅ `releases/floodg8-1.0.7.vsix` (5.09 MB) |
+| `cursor --install-extension floodg8-1.0.7.vsix` | ✅ `marketstandard.floodg8@1.0.7` installed |
+| Cloud lambda `/api/runner/pair` redemption response | ✅ now includes `email` + `orgName` + `orgSlug` (live after next Vercel deploy) |
+
+---
+
 ## Test fixtures + smoke scripts
 
 ### Test fixtures (`F:\dev\floodg8\tools\fixtures\`)
@@ -542,12 +626,15 @@ CORS is allowed from `*.marketstandard.app` + `*.marketstandard.io` so client-si
 | Swarm rework `pnpm typecheck` (22 packages, commit `fda73a9`) | ✅ clean |
 | Swarm rework `pnpm test` (incl. 6 new swarm self-checks) | ✅ all green |
 | Swarm rework `pnpm headroom:check` | ✅ ok (no ungated provider imports — LlmPlanner routes through `compressedComplete()`) |
+| `1.0.7` `pnpm --filter @floodg8/{reservoir,server,web} typecheck` + `pnpm --filter floodg8 typecheck` | ✅ clean |
+| `1.0.7` `pnpm --filter @floodg8/web build` | ✅ assert-bundle ok (77 assets, 38 chunks) |
+| `1.0.7` `pnpm --filter floodg8 package` + `cursor --install-extension` | ✅ `marketstandard.floodg8@1.0.7` installed |
 
 ---
 
 ## File index (new + modified on FloodG8 side)
 
-### New files (50)
+### New files (52)
 
 ```
 apps/extension/src/standard-api.ts                              # typed client for Standard app APIs
@@ -566,12 +653,14 @@ apps/web/api/portfolio/waitlist.js
 apps/web/api/runs/summary.js
 apps/web/src/components/AgentCostWidget.tsx
 apps/web/src/components/AgentHealthPanel.tsx
+apps/web/src/components/CloudPairPanel.tsx                       # 1.0.7 — "Sign in with FloodG8 Cloud" pairing panel
 apps/web/src/components/HybridStandupTemplate.tsx
 apps/web/src/pages/Portfolio.tsx                                # redesigned Portfolio page
 docs/SAAS_SSO.md
 docs/SAAS_SUITE.md                                              # architecture + screenshots
 docs/SAAS_SUITE_INTEGRATION.md                                  # the 13-phase plan (pre-existing, referenced)
 docs/STRIPE_WEBHOOK_MOCK.md
+packages/reservoir/src/cloud-pairing-store.ts                    # 1.0.7 — local cloud_pairings CRUD + deviceFingerprint
 packages/shared/src/pulse-event-types.ts                        # canonical 15-source registry
 packages/shared/src/pulse-event-types.test.ts
 packages/shared/src/suite-urls.ts                               # production + local-dev URL helper
@@ -598,24 +687,29 @@ tools/smoke/screenshots/portfolio/09-agent-cost.png
 tools/smoke/screenshots/portfolio/10-hybrid-standup.png
 ```
 
-### Modified files (13)
+### Modified files (22)
 
 ```
 .env.example                                                    # + FLOODG8_ENV, NEXT_PUBLIC_PORTFOLIO_CATALOG_URL
-apps/extension/package.json                                     # + 16 commands, + test script, + vitest devDep
-apps/extension/src/extension.ts                                 # + 16 command handlers
+apps/extension/package.json                                     # + 16 commands, + test script, + vitest devDep, version → 1.0.7
+apps/extension/src/extension.ts                                 # + 16 command handlers; floodG8.connect → /pair (1.0.7)
 apps/extension/README.md                                        # + Market Standard section
 apps/web/api/_lib/auth.js                                       # CORS expanded for *.marketstandard.io
 apps/web/api/integrations/syncdevtime/summary.js                # real aggregation (was stub)
+apps/web/api/runner/pair.js                                     # 1.0.7 — redemption now returns email + orgName + orgSlug
 apps/web/src/App.tsx                                            # Portfolio route
-apps/web/src/components/Shell.tsx                               # Portfolio nav item
-apps/web/src/lib/api.ts                                         # + 11 new API methods + types
+apps/web/src/components/Shell.tsx                               # Portfolio nav item; sidebar footer shows CloudPairPanel when no Supabase session (1.0.7)
+apps/web/src/lib/api.ts                                         # + 11 new API methods + types; + cloudPairState/cloudPair/cloudUnpair (1.0.7)
+apps/web/src/pages/Login.tsx                                    # 1.0.7 — show CloudPairPanel when !supabaseConfigured()
 docs/BILLING.md                                                 # + SAAS bundle grant flow section
 docs/COMPANION_PRODUCTS.md                                      # + SAAS suite section
 docs/ENV.md                                                     # + SAAS suite env vars
 docs/ROADMAP.md                                                 # + SAAS suite integration section
 packages/billing/src/bundle-grant.ts                            # + grantPortfolioBundles + revokePortfolioBundles
 packages/billing/src/webhook.ts                                 # wire bundle grant into webhook
+packages/reservoir/src/index.ts                                 # export suite-urls + pulse-event-types; + CloudPairingStore (1.0.7)
+packages/reservoir/src/schema.sql.ts                            # 1.0.7 — + cloud_pairings table
+packages/server/src/app.ts                                      # 1.0.7 — + /api/cloud/pair (GET+POST) + /api/cloud/unpair (POST) routes; + CloudPairingStore wiring
 packages/shared/src/entitlements.ts                             # + 13 Standard bundle keys on Team/Enterprise
 packages/shared/src/index.ts                                    # export suite-urls + pulse-event-types
 pnpm-lock.yaml                                                  # + vitest in extension
@@ -632,6 +726,7 @@ api/integrations/syncdevtime/summary.js                         # root-level dup
 
 ## Outstanding (owned by sibling plans)
 
+- [ ] **`1.0.7` Vercel redeploy** — the `apps/web/api/runner/pair.js` redemption-response extension (`email` + `orgName` + `orgSlug`) is committed in the floodg8 repo but NOT yet live on `flood-g8.com`. The local pairing flow will fail at the redemption step until the next Vercel deploy ships the lambda change. (The `floodG8.connect` command + local server routes + `CloudPairPanel` are all live in the VSIX `1.0.7` bundle regardless.)
 - [ ] `standard-lens` app build — FloodG8 catalog already surfaces it as `comingSoon: true` with waitlist CTA
 - [ ] `standard-cron` app build — same as `standard-lens`
 - [ ] `standard-workspace` app build + `workspace.workspace_sessions` schema migration
@@ -639,6 +734,7 @@ api/integrations/syncdevtime/summary.js                         # root-level dup
 - [ ] Each `*.marketstandard.io` app implements `/auth/callback` per the SSO contract
 - [ ] Supabase project Auth → Redirect URLs allowlist updated with each Standard app's `/auth/callback` URL
 - [ ] Each Standard Stripe product carries `metadata.product=standard-{app}` + `metadata.plan_id=starter`
+- [ ] **`1.0.7` follow-up (relay auto-start)** — the cloud lambda could mint a runner-scoped JWT on redemption + return it, so the local server can auto-start the cloud relay using the stored config instead of requiring `FLOODG8_RUNNER_TOKEN` env. Ponytail-marked ceiling in `packages/server/src/app.ts`.
 
 Once `standard-lens` and `standard-cron` ship, flip their `comingSoon` flag to `false` in `F:\dev\floodg8\apps\web\api\portfolio\catalog.js` and remove the waitlist CTA from `Portfolio.tsx` (the CTA renders automatically when `comingSoon: true`).
 
