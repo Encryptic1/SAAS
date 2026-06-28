@@ -10,23 +10,24 @@
 
 ## Architecture
 
-All 11 Market Standard apps share **one Supabase project** (`opodtvblrelmpoaprmpr`) and **one Stripe account**, but deploy as **individual Vercel projects** with their own domains + env vars. Local dev uses PGlite via `pnpm dev:local` (no Supabase needed).
+All 14 Market Standard apps share **one Supabase project** (`opodtvblrelmpoaprmpr`) and **one Stripe account**, but deploy as **individual Vercel projects** with their own domains + env vars. Local dev uses PGlite via `pnpm dev:local` (no Supabase needed).
 
-| App | Port | Domain | Stripe product |
-|-----|------|--------|----------------|
-| standard-polls | 3001 | polls.marketstandard.io | standard-polls |
-| standard-proof | 3002 | proof.marketstandard.io | standard-proof |
-| standard-metrics | 3003 | metrics.marketstandard.io | standard-metrics |
-| standard-hook | 3004 | hook.marketstandard.io | standard-hook |
-| standard-release | 3005 | release.marketstandard.io | standard-release |
-| standard-vault | 3006 | vault.marketstandard.io | standard-vault |
-| standard-links | 3007 | links.marketstandard.io | standard-links |
-| standard-snippets | 3008 | snippets.marketstandard.io | standard-snippets |
-| standard-status | 3009 | status.marketstandard.io | standard-status |
-| standard-regex | 3010 | regex.marketstandard.io | standard-regex |
-| standard-postmortem | 3011 | postmortem.marketstandard.io | standard-postmortem |
-
-> **Stub apps** (standard-lens, standard-cron) have Stripe products + prices but no app code yet.
+| App | Port | Domain | Stripe product | Tier |
+|-----|------|--------|----------------|------|
+| standard-polls | 3001 | polls.marketstandard.io | standard-polls | A |
+| standard-proof | 3002 | proof.marketstandard.io | standard-proof | A |
+| standard-metrics | 3003 | metrics.marketstandard.io | standard-metrics | A |
+| standard-hook | 3004 | hook.marketstandard.io | standard-hook | A |
+| standard-release | 3005 | release.marketstandard.io | standard-release | A |
+| standard-vault | 3006 | vault.marketstandard.io | standard-vault | A |
+| standard-links | 3007 | links.marketstandard.io | standard-links | A |
+| standard-snippets | 3008 | snippets.marketstandard.io | standard-snippets | A |
+| standard-status | 3009 | status.marketstandard.io | standard-status | A |
+| standard-regex | 3010 | regex.marketstandard.io | standard-regex | A |
+| standard-postmortem | 3011 | postmortem.marketstandard.io | standard-postmortem | A |
+| standard-lens | 3012 | lens.marketstandard.io | standard-lens | B |
+| standard-cron | 3013 | cron.marketstandard.io | standard-cron | B |
+| standard-workspace | 3014 | workspace.marketstandard.io | standard-workspace | B (portfolio control panel) |
 
 ## 1. Clone & Install
 
@@ -55,7 +56,7 @@ A `proof-media` public bucket + RLS policy are already created via the portfolio
 ## 3. Stripe Setup (shared account)
 
 ### Products & prices
-All 13 products + 16 prices are created in the shared Stripe account (live mode) with `metadata.product` + `metadata.plan_id`. See the root [`.env.example`](../.env.example) for the full list of `STRIPE_PRICE_*` IDs.
+All 14 products + their prices are created in the shared Stripe account (live mode) with `metadata.product` + `metadata.plan_id`. See the root [`.env.example`](../.env.example) for the full list of `STRIPE_PRICE_*` IDs.
 
 | Product | Free | Starter | Growth |
 |---------|------|---------|--------|
@@ -70,8 +71,9 @@ All 13 products + 16 prices are created in the shared Stripe account (live mode)
 | standard-status | $0 | $19/mo | — |
 | standard-regex | $0 | $9/mo | — |
 | standard-postmortem | $0 | $19/mo | — |
-| standard-lens (stub) | $0 | $29/mo | — |
-| standard-cron (stub) | $0 | $15/mo | — |
+| standard-lens | $0 | $29/mo | — |
+| standard-cron | $0 | $15/mo | — |
+| standard-workspace | $0 | $29/mo | $99/mo |
 
 ### Webhooks
 Create one webhook endpoint per Vercel project:
@@ -97,7 +99,7 @@ Create one webhook endpoint per Vercel project:
 
 ## 5. Vercel Projects (one per app)
 
-Create **11 separate Vercel projects** from the same Git repo, each with:
+Create **14 separate Vercel projects** from the same Git repo, each with:
 
 | Setting | Value |
 |---------|-------|
@@ -137,7 +139,7 @@ Configure custom domains in each Vercel project's settings (see the table in the
 ## 6. Local Development
 
 ```bash
-# All 11 apps + db-gateway (via Turborepo, uses local PGlite)
+# All 14 apps + db-gateway (via Turborepo, uses local PGlite)
 pnpm dev:local
 
 # Or sync .env.local files from .env.example first:
@@ -157,16 +159,21 @@ pnpm db:setup   # writes .env.local for all apps + seeds local PGlite
 | standard-status | http://localhost:3009 |
 | standard-regex | http://localhost:3010 |
 | standard-postmortem | http://localhost:3011 |
+| standard-lens | http://localhost:3012 |
+| standard-cron | http://localhost:3013 |
+| standard-workspace | http://localhost:3014 |
 
 Local dev uses PGlite (a local Postgres in-process) via the db-gateway on port 4000. No Supabase connection needed for local dev.
 
 ## 7. Build Verification
 
 ```bash
-pnpm build
-pnpm lint
-pnpm typecheck
-pnpm test:e2e   # Playwright E2E across all 11 apps
+pnpm build         # production build across all 14 apps
+pnpm lint          # ESLint across all packages
+pnpm typecheck     # TypeScript across all packages
+pnpm bundle:check  # enforce 3 MB per-app bundle budget
+pnpm test:e2e:local        # Playwright E2E across all 14 apps
+pnpm test:e2e:cross-repo   # cross-repo integration tests (18 scenarios)
 ```
 
 ## 8. Observability (optional)
@@ -178,11 +185,12 @@ pnpm test:e2e   # Playwright E2E across all 11 apps
 
 ## 9. FloodG8 Suite Integration
 
-The FloodG8 portfolio hub (Vercel project `floodg8`) bundles all 11 Market Standard apps via Stripe metadata:
+The FloodG8 portfolio hub (Vercel project `floodg8`) bundles all 14 Market Standard apps via Stripe metadata:
 
-- **TEAM_BUNDLE** + **ENTERPRISE_BUNDLE** in `floodg8/packages/shared/src/entitlements.ts` include `standard-*-starter` for all 11 apps.
+- **TEAM_BUNDLE** + **ENTERPRISE_BUNDLE** in `floodg8/packages/shared/src/entitlements.ts` include `standard-*-starter` for all 14 apps.
 - `PORTFOLIO_BUNDLE_MAP` in `floodg8/packages/billing/src/bundle-grant.ts` maps each bundle entitlement to its product + plan.
 - SSO codes in `shared.sso_codes` enable cross-app login from FloodG8.
+- `standard-workspace` serves as the portfolio control panel (status grid, dev sessions, tunnels, health probes, dependency parity report).
 
 ## No deploys without approval
 This document describes setup only. Do not deploy to production or commit secrets without explicit approval.
