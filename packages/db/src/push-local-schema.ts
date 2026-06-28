@@ -650,6 +650,79 @@ CREATE TABLE IF NOT EXISTS cron.runs (
 CREATE INDEX IF NOT EXISTS idx_cron_runs_job ON cron.runs (job_id, started_at DESC);
 CREATE INDEX IF NOT EXISTS idx_cron_runs_started ON cron.runs (started_at DESC);
 CREATE INDEX IF NOT EXISTS idx_cron_runs_status ON cron.runs (status);
+
+-- Standard Notifications (in-app center + email/Slack delivery)
+CREATE SCHEMA IF NOT EXISTS notifications;
+CREATE TABLE IF NOT EXISTS notifications.notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  owner_id text NOT NULL,
+  app text NOT NULL,
+  title text NOT NULL,
+  body text,
+  href text,
+  level text NOT NULL DEFAULT 'info',
+  read_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_notifications_owner ON notifications.notifications (owner_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_notifications_created ON notifications.notifications (created_at DESC);
+-- Migrate owner_id from uuid -> text (local gateway mode stores "local-dev").
+ALTER TABLE IF EXISTS notifications.notifications ALTER COLUMN owner_id TYPE text;
+CREATE TABLE IF NOT EXISTS notifications.deliveries (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  notification_id uuid NOT NULL REFERENCES notifications.notifications(id) ON DELETE CASCADE,
+  channel text NOT NULL,
+  status text NOT NULL DEFAULT 'pending',
+  external_id text,
+  error text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_deliveries_notification ON notifications.deliveries (notification_id);
+
+-- Standard Teams (teams + members + invitations + roles)
+CREATE SCHEMA IF NOT EXISTS teams;
+CREATE TABLE IF NOT EXISTS teams.teams (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug text NOT NULL UNIQUE,
+  name text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS teams.team_members (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  team_id uuid NOT NULL REFERENCES teams.teams(id) ON DELETE CASCADE,
+  owner_id text NOT NULL,
+  role text NOT NULL DEFAULT 'member',
+  invited_at timestamptz NOT NULL DEFAULT now(),
+  accepted_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_team_members_team ON teams.team_members (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_members_owner ON teams.team_members (owner_id);
+-- Migrate owner-style columns from uuid -> text (local gateway mode stores "local-dev").
+ALTER TABLE IF EXISTS teams.team_members ALTER COLUMN owner_id TYPE text;
+CREATE TABLE IF NOT EXISTS teams.invitations (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  team_id uuid NOT NULL REFERENCES teams.teams(id) ON DELETE CASCADE,
+  email text NOT NULL,
+  role text NOT NULL DEFAULT 'member',
+  token text NOT NULL UNIQUE,
+  invited_by text NOT NULL,
+  accepted_by text,
+  expires_at timestamptz NOT NULL,
+  accepted_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_invitations_team ON teams.invitations (team_id);
+CREATE INDEX IF NOT EXISTS idx_invitations_email ON teams.invitations (email);
+ALTER TABLE IF EXISTS teams.invitations ALTER COLUMN invited_by TYPE text;
+ALTER TABLE IF EXISTS teams.invitations ALTER COLUMN accepted_by TYPE text;
+CREATE TABLE IF NOT EXISTS teams.roles (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  key text NOT NULL UNIQUE,
+  name text NOT NULL,
+  permissions jsonb NOT NULL DEFAULT '{}',
+  created_at timestamptz NOT NULL DEFAULT now()
+);
 `;
 
 export async function pushLocalSchema(db: Db): Promise<void> {

@@ -27,6 +27,13 @@ import {
 } from "../packages/db/src/schema/postmortem";
 import { queries as lensQueries, slowQueries as lensSlowQueries } from "../packages/db/src/schema/lens";
 import { jobs as cronJobs, runs as cronRuns } from "../packages/db/src/schema/cron";
+import { notifications as notifRows } from "../packages/db/src/schema/notifications";
+import {
+  teams as teamRows,
+  teamMembers as teamMemberRows,
+  invitations as teamInvitationRows,
+  roles as teamRoleRows,
+} from "../packages/db/src/schema/teams";
 import { randomBytes } from "node:crypto";
 
 type TestCase = { input: string; expectedMatches: number | null; note?: string };
@@ -2324,6 +2331,193 @@ app.post("/cron/heartbeat/:token", async (c) => {
     .set({ lastRunAt: now, lastStatus: status, lastHeartbeatAt: now, updatedAt: now })
     .where(eq(cronJobs.id, job.id));
   return c.json({ ok: true, run });
+});
+
+// ----- Notifications (in-app center + email/Slack delivery) -----
+
+app.get("/notifications", async (c) => {
+  const ownerId = c.req.query("ownerId");
+  const limit = Math.min(100, Number(c.req.query("limit") ?? 50));
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const rows = await db
+    .select()
+    .from(notifRows)
+    .where(eq(notifRows.ownerId, ownerId))
+    .orderBy(desc(notifRows.createdAt))
+    .limit(limit);
+  return c.json({ notifications: rows });
+});
+
+app.post("/notifications", async (c) => {
+  const body = await c.req.json<{ ownerId?: string; app?: string; title?: string; body?: string; href?: string; level?: string }>();
+  if (!body.ownerId || !body.app || !body.title) {
+    return c.json({ error: "ownerId, app, title required" }, 400);
+  }
+  const db = await getPgliteDb();
+  const [row] = await db
+    .insert(notifRows)
+    .values({
+      ownerId: body.ownerId,
+      app: body.app,
+      title: body.title,
+      body: body.body ?? null,
+      href: body.href ?? null,
+      level: body.level ?? "info",
+    })
+    .returning();
+  return c.json({ notification: row }, 201);
+});
+
+app.patch("/notifications/:id/read", async (c) => {
+  const id = c.req.param("id");
+  const db = await getPgliteDb();
+  await db.update(notifRows).set({ readAt: new Date() }).where(eq(notifRows.id, id));
+  return c.json({ ok: true });
+});
+
+app.patch("/notifications/read-all", async (c) => {
+  const body = await c.req.json<{ ownerId?: string }>().catch(() => ({}));
+  if (!body.ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  await db.update(notifRows).set({ readAt: new Date() }).where(eq(notifRows.ownerId, body.ownerId));
+  return c.json({ ok: true });
+});
+
+// ----- Teams (teams + members + invitations + roles) -----
+
+app.get("/teams", async (c) => {
+  const ownerId = c.req.query("ownerId");
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const rows = await db
+    .select({ team: teamRows, member: teamMemberRows })
+    .from(teamMemberRows)
+    .innerJoin(teamRows, eq(teamMemberRows.teamId, teamRows.id))
+    .where(eq(teamMemberRows.ownerId, ownerId));
+  return c.json({ teams: rows.map((r) => ({ ...r.team, role: r.member.role })) });
+});
+
+app.post("/teams", async (c) => {
+  const body = await c.req.json<{ slug?: string; name?: string; ownerId?: string }>();
+  if (!body.slug || !body.name || !body.ownerId) {
+    return c.json({ error: "slug, name, ownerId required" }, 400);
+  }
+  const db = await getPgliteDb();
+  const [team] = await db.insert(teamRows).values({ slug: body.slug, name: body.name }).returning();
+  await db.insert(teamMemberRows).values({
+    teamId: team.id,
+    ownerId: body.ownerId,
+    role: "owner",
+    acceptedAt: new Date(),
+  });
+  return c.json({ team: { ...team, role: "owner" } }, 201);
+});
+
+app.get("/teams/:teamId/members", async (c) => {
+  const teamId = c.req.param("teamId");
+  const db = await getPgliteDb();
+  const members = await db.select().from(teamMemberRows).where(eq(teamMemberRows.teamId, teamId));
+  return c.json({ members });
+});
+
+app.get("/teams/:teamId/member", async (c) => {
+  const teamId = c.req.param("teamId");
+  const ownerId = c.req.query("ownerId");
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const [member] = await db
+    .select()
+    .from(teamMemberRows)
+    .where(and(eq(teamMemberRows.teamId, teamId), eq(teamMemberRows.ownerId, ownerId)))
+    .limit(1);
+  return c.json({ member: member ?? null });
+});
+
+app.patch("/teams/:teamId/members/:memberId", async (c) => {
+  const teamId = c.req.param("teamId");
+  const memberId = c.req.param("memberId");
+  const body = await c.req.json<{ role?: string }>();
+  if (!body.role) return c.json({ error: "role required" }, 400);
+  const db = await getPgliteDb();
+  await db
+    .update(teamMemberRows)
+    .set({ role: body.role })
+    .where(and(eq(teamMemberRows.id, memberId), eq(teamMemberRows.teamId, teamId)));
+  return c.json({ ok: true });
+});
+
+app.delete("/teams/:teamId/members/:memberId", async (c) => {
+  const teamId = c.req.param("teamId");
+  const memberId = c.req.param("memberId");
+  const db = await getPgliteDb();
+  await db
+    .delete(teamMemberRows)
+    .where(and(eq(teamMemberRows.id, memberId), eq(teamMemberRows.teamId, teamId)));
+  return c.json({ ok: true });
+});
+
+app.get("/teams/:teamId/invitations", async (c) => {
+  const teamId = c.req.param("teamId");
+  const db = await getPgliteDb();
+  const inv = await db.select().from(teamInvitationRows).where(eq(teamInvitationRows.teamId, teamId));
+  return c.json({ invitations: inv });
+});
+
+app.post("/teams/:teamId/invitations", async (c) => {
+  const teamId = c.req.param("teamId");
+  const body = await c.req.json<{ email?: string; role?: string; invitedBy?: string; token?: string; expiresAt?: string }>();
+  if (!body.email || !body.invitedBy || !body.token || !body.expiresAt) {
+    return c.json({ error: "email, invitedBy, token, expiresAt required" }, 400);
+  }
+  const db = await getPgliteDb();
+  const [inv] = await db
+    .insert(teamInvitationRows)
+    .values({
+      teamId,
+      email: body.email,
+      role: body.role ?? "member",
+      token: body.token,
+      invitedBy: body.invitedBy,
+      expiresAt: new Date(body.expiresAt),
+    })
+    .returning();
+  return c.json({ invitation: inv }, 201);
+});
+
+app.post("/teams/invitations/:token/accept", async (c) => {
+  const token = c.req.param("token");
+  const body = await c.req.json<{ ownerId?: string }>();
+  if (!body.ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const [inv] = await db.select().from(teamInvitationRows).where(eq(teamInvitationRows.token, token)).limit(1);
+  if (!inv) return c.json({ invitation: null });
+  if (inv.acceptedAt || inv.expiresAt < new Date()) return c.json({ invitation: null });
+  await db
+    .update(teamInvitationRows)
+    .set({ acceptedAt: new Date(), acceptedBy: body.ownerId })
+    .where(eq(teamInvitationRows.id, inv.id));
+  await db.insert(teamMemberRows).values({
+    teamId: inv.teamId,
+    ownerId: body.ownerId,
+    role: inv.role,
+    acceptedAt: new Date(),
+  });
+  return c.json({ invitation: { ...inv, acceptedAt: new Date().toISOString(), acceptedBy: body.ownerId } });
+});
+
+app.get("/teams/roles", async (c) => {
+  const db = await getPgliteDb();
+  const rows = await db.select({ key: teamRoleRows.key, name: teamRoleRows.name }).from(teamRoleRows);
+  if (rows.length > 0) return c.json({ roles: rows });
+  const defaults = [
+    { key: "owner", name: "Owner" },
+    { key: "admin", name: "Admin" },
+    { key: "member", name: "Member" },
+    { key: "viewer", name: "Viewer" },
+  ];
+  await db.insert(teamRoleRows).values(defaults);
+  return c.json({ roles: defaults });
 });
 
 async function main() {

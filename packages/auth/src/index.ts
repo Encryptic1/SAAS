@@ -1,6 +1,7 @@
 export { createSupabaseServerClient, getSession, getUser } from "./supabase";
 export { createSupabaseBrowserClient } from "./browser";
 export { createAuthMiddleware, authMiddlewareConfig } from "./middleware";
+export { getOwnerId } from "./owner";
 export {
   getSlackOAuthUrl,
   exchangeSlackCode,

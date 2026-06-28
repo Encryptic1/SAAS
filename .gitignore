@@ -51,6 +51,7 @@ screens-*.log
 
 # Local run logs (dev stack + e2e captures)
 dev-restart*.log
+dev-*.log
 e2e-*.log
 
 # Cursor local plans (session scratchpads — not for version control)

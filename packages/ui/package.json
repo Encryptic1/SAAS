@@ -17,7 +17,14 @@
     "./marketing/analytics": "./src/marketing/analytics.tsx",
     "./marketing/error-boundary": "./src/marketing/app-error-boundary.tsx",
     "./marketing/seo": "./src/marketing/seo.ts",
-    "./next-config": "./src/next-config/with-config.ts"
+    "./next-config": "./src/next-config/with-config.ts",
+    "./notifications": "./src/notifications/notification-center.tsx",
+    "./auth": "./src/auth/auth-pages.tsx",
+    "./auth.css": "./src/auth/auth.css",
+    "./onboarding": "./src/onboarding/first-run-tour.tsx",
+    "./onboarding.css": "./src/onboarding/onboarding.css",
+    "./teams": "./src/teams/team-settings-panel.tsx",
+    "./teams.css": "./src/teams/teams.css"
   },
   "scripts": {
     "build": "tsc --noEmit",

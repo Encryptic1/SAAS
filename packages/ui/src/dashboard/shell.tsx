@@ -5,12 +5,15 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { LocalDevBanner } from "../components/local-dev-banner";
 import { SuiteSwitcher } from "../marketing/suite-switcher";
+import { NotificationCenter } from "../notifications/notification-center";
+import { FirstRunTour } from "../onboarding/first-run-tour";
+import { defaultTourSteps, type TourStep } from "../onboarding/tour-steps";
 import { getSuiteApps } from "../marketing/suite-switcher";
 import { cn } from "../lib/utils";
 import { CommandPalette, type CommandItem } from "./command-palette";
 import { ToastProvider } from "./toast";
 
-export type DashboardNav = "overview" | "content" | "analytics" | "billing" | "settings";
+export type DashboardNav = "overview" | "content" | "analytics" | "billing" | "settings" | "team";
 
 export type DashboardProduct =
   | "standard-polls"
@@ -48,6 +51,8 @@ export interface DashboardShellProps {
   crossSell?: Array<{ label: string; href: string; blurb?: string }>;
   /** Right-aligned slot in the top bar (account menu, plan badge, etc). */
   topBarActions?: ReactNode;
+  /** Override the default first-run tour steps. Defaults to a per-product set. */
+  tourSteps?: TourStep[];
   className?: string;
 }
 
@@ -55,6 +60,7 @@ const DEFAULT_NAV: { id: DashboardNav; label: string; href: string }[] = [
   { id: "overview", label: "Overview", href: "/dashboard" },
   { id: "content", label: "Content", href: "/dashboard/content" },
   { id: "analytics", label: "Analytics", href: "/dashboard/analytics" },
+  { id: "team", label: "Team", href: "/dashboard/team" },
   { id: "billing", label: "Billing", href: "/dashboard/billing" },
   { id: "settings", label: "Settings", href: "/dashboard/settings" },
 ];
@@ -66,6 +72,7 @@ function contentNavLabel(product: DashboardProduct): string {
 function resolveActive(pathname: string, contentHref: string): DashboardNav {
   if (pathname === "/dashboard") return "overview";
   if (pathname.startsWith(contentHref)) return "content";
+  if (pathname.startsWith("/dashboard/team")) return "team";
   if (pathname.startsWith("/dashboard/analytics")) return "analytics";
   if (pathname.startsWith("/dashboard/billing")) return "billing";
   if (pathname.startsWith("/dashboard/settings")) return "settings";
@@ -84,6 +91,7 @@ export function DashboardShell({
   contentHref = "/dashboard/content",
   crossSell,
   topBarActions,
+  tourSteps,
   className,
 }: DashboardShellProps) {
   const pathname = usePathname();
@@ -147,7 +155,10 @@ export function DashboardShell({
             </svg>
           </button>
           <SuiteSwitcher current={product} compact />
-          <div className="ms-dash-mobile-topbar-actions">{topBarActions}</div>
+          <div className="ms-dash-mobile-topbar-actions">
+            <NotificationCenter />
+            {topBarActions}
+          </div>
         </div>
 
         {/* Sidebar — slides in on mobile when sidebarOpen */}
@@ -233,11 +244,15 @@ export function DashboardShell({
           <div className="ms-dash-topbar">
             <SuiteSwitcher current={product} />
             <div className="ms-dash-topbar-right">
+              <NotificationCenter />
               <CommandPalette commands={paletteCommands} />
               {topBarActions}
             </div>
           </div>
-          <main className="ms-dash-main">{children}</main>
+          <main className="ms-dash-main">
+            <FirstRunTour appKey={product ?? "default"} steps={tourSteps ?? defaultTourSteps(product ?? "standard-polls")} />
+            {children}
+          </main>
         </div>
       </div>
     </ToastProvider>

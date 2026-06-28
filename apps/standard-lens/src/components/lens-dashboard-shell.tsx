@@ -6,6 +6,7 @@ const NAV: DashboardNavItem[] = [
   { href: "/dashboard", label: "Query library", exact: true },
   { href: "/dashboard/slow", label: "Slow queries" },
   { href: "/dashboard/explain", label: "Explain" },
+  { href: "/dashboard/team", label: "Team" },
   { href: "/dashboard/billing", label: "Billing" },
 ];
 

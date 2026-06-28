@@ -59,4 +59,9 @@ export {
   type CommandItem,
 } from "./dashboard/command-palette";
 export { CommandPaletteHint, KeyboardHint } from "./dashboard/keyboard-hint";
+export { AuthLoadingPage, AuthErrorPage } from "./auth/auth-pages";
+export { FirstRunTour } from "./onboarding/first-run-tour";
+export { defaultTourSteps, type TourStep } from "./onboarding/tour-steps";
+export { NotificationCenter } from "./notifications/notification-center";
+export { TeamSettingsPanel } from "./teams/team-settings-panel";
 export { cn } from "./lib/utils";

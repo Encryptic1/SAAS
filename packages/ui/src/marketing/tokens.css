@@ -30,6 +30,12 @@
   --text-mist: #a8b0c2;
   --text-fog: #6b7280;
 
+  /* Aliases used across the dashboard + shared components. Resolve to the
+     token hierarchy above so `var(--text)` / `var(--text-soft)` always have
+     an explicit value (rather than falling back to inheritance). */
+  --text: var(--text-foam);
+  --text-soft: var(--text-mist);
+
   --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 

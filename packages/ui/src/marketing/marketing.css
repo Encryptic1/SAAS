@@ -536,6 +536,8 @@ select.ms-input {
 }
 
 @import "../dashboard/dashboard.css";
+@import "../auth/auth.css";
+@import "../teams/teams.css";
 
 @media (prefers-reduced-motion: reduce) {
   .ms-animate-fade-up,

@@ -37,3 +37,29 @@ export function isPgliteMode(): boolean {
 export { resolvePgliteDir } from "./local";
 export { fetchGateway, isLocalGatewayMode, patchGateway, postGateway, deleteGateway } from "./gateway";
 export { trackKpi } from "./kpi";
+export {
+  listNotifications,
+  createNotification,
+  markNotificationRead,
+  markAllRead,
+  type NotificationInput,
+  type NotificationRow,
+} from "./notifications";
+export {
+  createTeam,
+  listTeamsForOwner,
+  listMembers,
+  updateMemberRole,
+  removeMember,
+  getMember,
+  createInvitation,
+  listInvitations,
+  acceptInvitation,
+  listRoles,
+  purgeExpiredInvitations,
+  hasRole,
+  RbacError,
+  type TeamInput,
+  type InviteInput,
+  type Role,
+} from "./teams";

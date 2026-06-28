@@ -1,0 +1,86 @@
+.ms-auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+.ms-auth-card {
+  width: min(28rem, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 2.5rem 2rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(22, 26, 34, 0.96), rgba(15, 17, 23, 0.96));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.ms-auth-brand {
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-mist);
+}
+
+.ms-auth-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.ms-auth-sub {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-soft);
+  max-width: 26rem;
+}
+
+.ms-auth-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ms-auth-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  background: var(--text);
+  color: #0b0c10;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.12s, opacity 0.12s;
+}
+
+.ms-auth-cta:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.ms-auth-spinner {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-top-color: var(--text);
+  animation: ms-auth-spin 0.8s linear infinite;
+}
+
+@keyframes ms-auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

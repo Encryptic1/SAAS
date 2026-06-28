@@ -4,6 +4,7 @@ import { DashboardShell, type DashboardNavItem } from "@market-standard/ui/dashb
 
 const NAV: DashboardNavItem[] = [
   { href: "/dashboard", label: "Jobs", exact: true },
+  { href: "/dashboard/team", label: "Team" },
   { href: "/dashboard/billing", label: "Billing" },
 ];
 

@@ -22,6 +22,8 @@
     "./schema/postmortem": "./src/schema/postmortem.ts",
     "./schema/lens": "./src/schema/lens.ts",
     "./schema/cron": "./src/schema/cron.ts",
+    "./schema/notifications": "./src/schema/notifications.ts",
+    "./schema/teams": "./src/schema/teams.ts",
     "./vault-crypto": "./src/vault-crypto.ts",
     "./query": "./src/query.ts",
     "./gateway": "./src/gateway.ts"

@@ -1,0 +1,109 @@
+.ms-tour {
+  margin: 0 0 1.5rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 14px;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  background: linear-gradient(180deg, rgba(125, 211, 252, 0.08), rgba(125, 211, 252, 0.02));
+}
+
+.ms-tour-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ms-tour-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #7dd3fc;
+}
+
+.ms-tour-title {
+  margin-top: 0.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ms-tour-dismiss {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.ms-tour-dismiss:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.ms-tour-steps {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.ms-tour-step {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+.ms-tour-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: rgba(125, 211, 252, 0.16);
+  color: #7dd3fc;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ms-tour-step-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ms-tour-step-detail {
+  font-size: 0.78rem;
+  color: var(--text-mist);
+  line-height: 1.4;
+}
+
+.ms-tour-step-link {
+  font-size: 0.75rem;
+  color: #7dd3fc;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ms-tour-step-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .ms-tour-step {
+    grid-template-columns: auto 1fr;
+  }
+  .ms-tour-step-link {
+    grid-column: 2;
+  }
+}
