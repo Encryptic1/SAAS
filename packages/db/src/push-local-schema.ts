@@ -555,6 +555,29 @@ CREATE TABLE IF NOT EXISTS postmortem.recurrence_links (
 );
 CREATE INDEX IF NOT EXISTS idx_postmortem_recurrence_from ON postmortem.recurrence_links (from_incident_id);
 CREATE INDEX IF NOT EXISTS idx_postmortem_recurrence_to ON postmortem.recurrence_links (to_incident_id);
+
+-- Postmortem recurrence embeddings (pgvector on rootcause_md).
+-- Local dev stores the embedding as jsonb; Phase 5 Supabase migration adds a
+-- generated vector(1536) column for native <=> cosine similarity.
+CREATE TABLE IF NOT EXISTS postmortem.recurrence_embeddings (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  incident_id uuid NOT NULL REFERENCES postmortem.incidents(id) ON DELETE CASCADE,
+  model text DEFAULT 'text-embedding-3-small' NOT NULL,
+  embedding jsonb NOT NULL,
+  text_hash text,
+  created_at timestamptz DEFAULT now() NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_postmortem_embeddings_incident ON postmortem.recurrence_embeddings (incident_id);
+
+-- Standup blocker keywords — when a response contains these, emit a Pulse event.
+CREATE TABLE IF NOT EXISTS standup.blocker_keywords (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  workspace_id uuid NOT NULL REFERENCES polls.workspaces(id) ON DELETE CASCADE,
+  keyword text NOT NULL,
+  created_by text,
+  created_at timestamptz DEFAULT now() NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_standup_blocker_keywords_workspace ON standup.blocker_keywords (workspace_id);
 `;
 
 export async function pushLocalSchema(db: Db): Promise<void> {

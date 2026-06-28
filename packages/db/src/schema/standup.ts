@@ -24,3 +24,18 @@ export const standupResponses = standupSchema.table("responses", {
   answers: text("answers").array().notNull(),
   submittedAt: timestamp("submitted_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+/**
+ * Per-workspace blocker keywords. When a standup response contains any of
+ * these keywords, the standup bot emits a Suite Pulse event so blockers
+ * surface in the digest and can trigger a Standard Postmortem intake.
+ */
+export const standupBlockerKeywords = standupSchema.table("blocker_keywords", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id")
+    .notNull()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  keyword: text("keyword").notNull(),
+  createdBy: text("created_by"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});

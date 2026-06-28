@@ -10,6 +10,7 @@ import {
   postmortemIncidents as incidents,
   postmortemActionItems as actionItems,
   postmortemRecurrenceLinks as recurrenceLinks,
+  postmortemRecurrenceEmbeddings as embeddings,
 } from "@market-standard/db/schema/postmortem";
 import { eq, desc } from "@market-standard/db/query";
 
@@ -280,22 +281,37 @@ export async function getRecurrenceSuggestions(ownerId: string, threshold = 0.4)
     );
     return json.suggestions;
   }
-  // Remote: pgvector cosine similarity on rootcause_md embeddings (production path).
-  // For the local-dev parity path we fall back to the same Jaccard token-overlap
-  // the gateway uses; the production migration wires pgvector instead.
   const db = await getRemoteDb();
   const rows = await db.select().from(incidents).where(eq(incidents.ownerId, ownerId));
+
+  // Prefer embedding-based cosine similarity when embeddings exist; fall back
+  // to Jaccard token-overlap for incidents that haven't been embedded yet.
+  const embedRows = await db.select().from(embeddings);
+  const embedMap = new Map<string, number[]>();
+  for (const e of embedRows) {
+    if (Array.isArray(e.embedding) && e.embedding.length > 0) {
+      embedMap.set(e.incidentId, e.embedding as number[]);
+    }
+  }
+
   const tokenized = rows.map((r) => ({
     id: r.id,
     title: r.title,
     tokens: tokenize(r.rootcauseMd ?? r.summary ?? r.title),
+    embedding: embedMap.get(r.id) ?? null,
   }));
+
   const out: RecurrenceSuggestion[] = [];
   for (let i = 0; i < tokenized.length; i += 1) {
     const a = tokenized[i]!;
     for (let j = i + 1; j < tokenized.length; j += 1) {
       const b = tokenized[j]!;
-      const sim = jaccard(a.tokens, b.tokens);
+      let sim: number;
+      if (a.embedding && b.embedding) {
+        sim = cosineSimilarity(a.embedding, b.embedding);
+      } else {
+        sim = jaccard(a.tokens, b.tokens);
+      }
       if (sim >= threshold) {
         out.push({
           fromId: a.id,
@@ -309,6 +325,89 @@ export async function getRecurrenceSuggestions(ownerId: string, threshold = 0.4)
   }
   out.sort((a, b) => b.similarity - a.similarity);
   return out.slice(0, 20);
+}
+
+/**
+ * Generate + store an embedding for an incident's rootcause_md (or summary/title
+ * fallback) using OpenAI text-embedding-3-small. Only runs in remote DB mode
+ * (production with OPENAI_API_KEY). In local gateway mode the gateway handles
+ * recurrence via Jaccard token-overlap and this returns a no-op notice.
+ */
+export async function embedIncident(incidentId: string): Promise<{
+  embedded: boolean;
+  dimensions?: number;
+  reason?: string;
+}> {
+  if (isLocalGatewayMode()) {
+    return { embedded: false, reason: "Embeddings are generated in remote DB mode (production)." };
+  }
+  const db = await getRemoteDb();
+  const [row] = await db.select().from(incidents).where(eq(incidents.id, incidentId)).limit(1);
+  if (!row) return { embedded: false, reason: "Incident not found" };
+
+  const text = (row.rootcauseMd ?? row.summary ?? row.title).slice(0, 8000);
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return { embedded: false, reason: "OPENAI_API_KEY not set — skipping embedding." };
+  }
+
+  let embedding: number[];
+  try {
+    const res = await fetch("https://api.openai.com/v1/embeddings", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ model: "text-embedding-3-small", input: text }),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      return { embedded: false, reason: `OpenAI error: ${res.status} ${errText.slice(0, 200)}` };
+    }
+    const data = (await res.json()) as { data?: Array<{ embedding?: number[] }> };
+    const vec = data.data?.[0]?.embedding;
+    if (!vec || !Array.isArray(vec)) {
+      return { embedded: false, reason: "OpenAI returned no embedding." };
+    }
+    embedding = vec;
+  } catch (err) {
+    return { embedded: false, reason: `Fetch failed: ${String(err).slice(0, 200)}` };
+  }
+
+  await db.delete(embeddings).where(eq(embeddings.incidentId, incidentId));
+  await db.insert(embeddings).values({
+    incidentId,
+    model: "text-embedding-3-small",
+    embedding,
+    textHash: hashText(text),
+  });
+  return { embedded: true, dimensions: embedding.length };
+}
+
+function cosineSimilarity(a: number[], b: number[]): number {
+  const n = Math.min(a.length, b.length);
+  let dot = 0;
+  let na = 0;
+  let nb = 0;
+  for (let i = 0; i < n; i += 1) {
+    const av = a[i]!;
+    const bv = b[i]!;
+    dot += av * bv;
+    na += av * av;
+    nb += bv * bv;
+  }
+  if (na === 0 || nb === 0) return 0;
+  return dot / (Math.sqrt(na) * Math.sqrt(nb));
+}
+
+function hashText(text: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i += 1) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(16);
 }
 
 function tokenize(s: string): Set<string> {

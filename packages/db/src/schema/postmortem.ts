@@ -88,3 +88,28 @@ export const postmortemRecurrenceLinks = postmortemSchema.table(
     toIdx: index("postmortem_recurrence_to_idx").on(t.toIncidentId),
   }),
 );
+
+/**
+ * Embeddings for pgvector recurrence similarity on rootcause_md.
+ *
+ * In local dev (PGlite, no pgvector extension) the embedding is stored as a
+ * jsonb array of numbers and cosine similarity is computed in JS. In
+ * production (Supabase with pgvector enabled) Phase 5 adds a generated
+ * `vector(1536)` column and the recurrence query uses `<=>` directly.
+ */
+export const postmortemRecurrenceEmbeddings = postmortemSchema.table(
+  "recurrence_embeddings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    incidentId: uuid("incident_id")
+      .notNull()
+      .references(() => postmortemIncidents.id, { onDelete: "cascade" }),
+    model: text("model").notNull().default("text-embedding-3-small"),
+    embedding: jsonb("embedding").$type<number[]>().notNull(),
+    textHash: text("text_hash"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    incidentIdx: index("postmortem_embeddings_incident_idx").on(t.incidentId),
+  }),
+);

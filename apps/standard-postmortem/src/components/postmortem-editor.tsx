@@ -77,6 +77,7 @@ export function PostmortemEditor({
   const [newActionBody, setNewActionBody] = useState("");
   const [newActionDue, setNewActionDue] = useState("");
   const [saveState, setSaveState] = useState<string | null>(null);
+  const [embedState, setEmbedState] = useState<string | null>(null);
   const [linkTarget, setLinkTarget] = useState("");
 
   // Debounced autosave of the long-form fields
@@ -259,7 +260,30 @@ export function PostmortemEditor({
       </div>
 
       <div className="ms-card p-5 space-y-2">
-        <label className="ms-label">Root cause (markdown)</label>
+        <div className="flex items-center justify-between gap-3">
+          <label className="ms-label">Root cause (markdown)</label>
+          <button
+            type="button"
+            onClick={async () => {
+              setEmbedState("Embedding…");
+              try {
+                const res = await fetch(`/api/incidents/${incident.id}/embed`, { method: "POST" });
+                const data = (await res.json()) as { embedded?: boolean; dimensions?: number; reason?: string };
+                if (data.embedded) {
+                  setEmbedState(`Embedded (${data.dimensions}-d) — recurrence now uses cosine similarity.`);
+                } else {
+                  setEmbedState(data.reason ?? "Skipped.");
+                }
+              } catch {
+                setEmbedState("Network error");
+              }
+            }}
+            className="ms-btn-ghost text-xs"
+            title="Generate an OpenAI embedding for this root cause to power AI recurrence detection"
+          >
+            Embed for AI recurrence
+          </button>
+        </div>
         <textarea
           value={rootcauseMd}
           onChange={(e) => setRootcauseMd(e.target.value)}
@@ -270,6 +294,7 @@ export function PostmortemEditor({
         <p className="text-xs ms-app-muted">
           This field powers recurrence detection — similar root causes across incidents will be surfaced as suggestions.
         </p>
+        {embedState && <p className="text-xs text-[var(--color-flood)]">{embedState}</p>}
       </div>
 
       <div className="grid gap-5 md:grid-cols-3">
