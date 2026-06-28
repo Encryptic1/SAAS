@@ -2,6 +2,8 @@
   "name": "standard-postmortem",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
+  "author": "Market Standard",
   "scripts": {
     "dev": "next dev --port 3011",
     "build": "next build",

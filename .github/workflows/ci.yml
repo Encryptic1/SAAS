@@ -1,0 +1,127 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_PUBLIC_LOCAL_DEV: "true"
+  LOCAL_DEV: "true"
+  # Playwright keeps its own browser cache; reuse across jobs.
+  PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.cache/ms-playwright
+
+jobs:
+  quality:
+    name: Typecheck + Lint + Knip + Audit + License
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - name: Knip (unused deps/exports)
+        run: pnpm exec knip --no-exit-code
+      - name: pnpm audit (production deps)
+        run: pnpm audit --prod --audit-level=high || true
+      - name: License check
+        run: |
+          # pnpm licenses lists all deps (works with pnpm's nested node_modules;
+          # license-checker does not). Fail if any forbidden license is found.
+          pnpm licenses list --json > licenses.json
+          if grep -Ei '"GPL|"AGPL|"SSPL|"Unlicensed|"CC-BY-NC' licenses.json; then
+            echo "::error::Forbidden license detected — see licenses.json"
+            exit 1
+          fi
+          echo "All production licenses are permissive."
+
+  build:
+    name: Build all apps
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build (turbo)
+        run: pnpm build
+        env:
+          TURBO_TELEMETRY_DISABLED: "1"
+      - name: Bundle size check
+        run: pnpm exec tsx scripts/bundle-size-check.ts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            apps/*/.next
+            packages/*/.tsbuildinfo
+          retention-days: 3
+
+  e2e:
+    name: E2E (local dev stack)
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Start local dev stack (gateway + 13 apps)
+        run: |
+          pnpm db:setup
+          pnpm dev:local > dev-stack.log 2>&1 &
+          echo "DEV_PID=$!" >> "$GITHUB_ENV"
+      - name: Wait for all app health endpoints
+        run: |
+          set -e
+          for port in 3001 3002 3003 3004 3005 3006 3007 3008 3009 3010 3011 3012 3013; do
+            echo "Waiting for :$port"
+            npx wait-on -t 180000 "http://localhost:$port/api/health"
+          done
+          npx wait-on -t 30000 http://127.0.0.1:4000/health
+      - name: Run Playwright E2E
+        run: pnpm test:e2e
+      - name: Upload dev stack logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-stack-logs
+          path: dev-stack.log
+          retention-days: 3
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

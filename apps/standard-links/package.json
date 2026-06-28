@@ -2,6 +2,8 @@
   "name": "standard-links",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
+  "author": "Market Standard",
   "scripts": {
     "dev": "next dev --port 3007",
     "build": "next build",

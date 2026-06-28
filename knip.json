@@ -1,0 +1,48 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.ts", "e2e/**/*.ts"],
+      "project": ["scripts/**/*.ts", "e2e/**/*.ts", "*.ts"]
+    },
+    "apps/*": {
+      "entry": ["src/app/**/page.tsx", "src/app/**/route.ts", "src/app/**/layout.tsx"],
+      "project": ["src/**/*.ts", "src/**/*.tsx"]
+    },
+    "packages/api-client": {
+      "entry": ["src/index.ts", "src/base.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "packages/auth": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "packages/billing": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "packages/db": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "packages/ui": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts", "src/**/*.tsx"]
+    },
+    "packages/config": {
+      "entry": ["tailwind/preset.ts"],
+      "project": ["tailwind/**/*.ts"]
+    }
+  },
+  "ignoreDependencies": [
+    "@market-standard/config",
+    "@market-standard/db",
+    "@lhci/cli",
+    "tsx",
+    "drizzle-orm",
+    "playwright",
+    "license-checker",
+    "knip",
+    "pagefind"
+  ]
+}

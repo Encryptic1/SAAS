@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits", ":dependencyDashboard"],
+  "rangeStrategy": "replace",
+  "schedule": ["before 4am on Monday"],
+  "pinDigests": false,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 4am on Monday"]
+  },
+  "packageRules": [
+    {
+      "groupName": "market-standard workspace",
+      "matchPackagePatterns": ["^@market-standard/"]
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": false
+    }
+  ],
+  "ignoreDeps": ["@electric-sql/pglite"]
+}

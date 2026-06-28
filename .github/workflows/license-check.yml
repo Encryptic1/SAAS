@@ -1,0 +1,39 @@
+name: License Check
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  license:
+    name: License compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify all production licenses are permissive
+        run: |
+          pnpm licenses list --json > licenses.json
+          if grep -Ei '"GPL|"AGPL|"SSPL|"Unlicensed|"CC-BY-NC' licenses.json; then
+            echo "::error::Forbidden license detected — see licenses.json"
+            exit 1
+          fi
+          echo "All production licenses are permissive."
+          pnpm licenses list --summary > notice-inventory.txt 2>/dev/null || pnpm licenses list > notice-inventory.txt
+      - name: Upload license inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-inventory
+          path: |
+            licenses.json
+            notice-inventory.txt
+          retention-days: 14

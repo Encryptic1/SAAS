@@ -1,6 +1,8 @@
 {
   "name": "market-standard",
   "private": true,
+  "license": "MIT",
+  "author": "Market Standard",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "build": "turbo run build",
@@ -15,6 +17,7 @@
     "typecheck:e2e": "tsc -p tsconfig.e2e.json --noEmit",
     "docs:index": "pagefind --site .next/server/app --output-path public/_pagefind",
     "docs:api": "tsx scripts/gen-api-md.ts",
+    "bundle:check": "tsx scripts/bundle-size-check.ts",
     "gen:openapi": "tsx scripts/gen-openapi.ts",
     "gen:docs": "tsx scripts/gen-docs-pages.ts",
     "gen:sdk": "tsx scripts/gen-sdk.ts",
@@ -27,11 +30,14 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.3",
     "@hono/node-server": "^1.13.7",
+    "@lhci/cli": "0.14",
     "@playwright/test": "^1.61.1",
     "@types/node": "^22.10.2",
     "concurrently": "^9.1.0",
     "cross-env": "^7.0.3",
     "hono": "^4.6.12",
+    "knip": "5",
+    "license-checker": "25",
     "pagefind": "1.3.0",
     "tsx": "^4.19.2",
     "turbo": "^2.3.3",
