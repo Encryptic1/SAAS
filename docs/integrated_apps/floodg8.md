@@ -1,10 +1,10 @@
 # FloodG8 Integration — Market Standard SAAS Suite
 
 **Date:** 2026-06-28
-**Repo:** `F:\dev\floodg8` (commit `d666fd5` + `6dc3cec`, pushed to `origin/main`)
+**Repo:** `F:\dev\floodg8` (commit `d666fd5` + `6dc3cec` + `fda73a9` swarm rework, pushed to `origin/main`)
 **Vercel deployment:** `dpl_ACbynrbPxt79CU51tmYDxt6hGW3L` — READY, aliased to `flood-g8.com` + `www.flood-g8.com`
 **Supabase project:** `opodtvblrelmpoaprmpr` (shared with all Standard apps)
-**Plan reference:** `F:\dev\floodg8\docs\SAAS_SUITE_INTEGRATION.md` (phases 3–13)
+**Plan reference:** `F:\dev\floodg8\docs\SAAS_SUITE_INTEGRATION.md` (phases 3–13) + `F:\dev\floodg8\docs\SWARM.md` (agent swarm layer)
 
 This file documents what the FloodG8 side of the SAAS suite integration did, so the parallel `SAAS-FINISH.md` plan in `F:\dev\SAAS\docs\` and the marketing site plan in `marketstandard-app\docs\` can coordinate against it.
 
@@ -13,6 +13,8 @@ This file documents what the FloodG8 side of the SAAS suite integration did, so 
 ## TL;DR
 
 FloodG8 is now the unified front door for **17 products**: 13 Standard apps + FloodG8 + SyncDevTime + Agent Skill + Standard Workspace. All 13 phases of `SAAS_SUITE_INTEGRATION.md` are complete, validated, and live on `flood-g8.com`. The FloodG8 side is production-ready; the remaining work (lens + cron + workspace app builds + cross-repo integration test harness) is owned by the sibling `SAAS-FINISH.md` plan.
+
+A parallel **agent swarm rework** (commit `fda73a9`, see `F:\dev\floodg8\docs\SWARM.md`) added row-bot's Goal Mode, Agent Profiles, child-agent delegation, an LLM-backed planner, Workflows, and Skills over the existing release pipeline — no existing surface removed. New cloud lambdas + Supabase tables for `goals` / `agent_profiles` / `workflows` / `workflow_runs` are listed below.
 
 ---
 
@@ -73,8 +75,15 @@ All under `https://www.flood-g8.com/api/...`. Auth-required endpoints accept `Au
 | POST | `/api/portfolio/waitlist` | yes | Join the waitlist for a coming-soon product (lens/cron only) |
 | GET | `/api/runs/summary?days=7` | yes | Aggregated FloodG8 run stats (total/completed/failed by day) |
 | GET | `/api/integrations/syncdevtime/summary?days=7` | yes | Real aggregated SyncDevTime heartbeats (queries the SyncDevTime Supabase project via bridge) |
+| GET | `/api/goals` | yes | List the signed-in user's org swarm goals (cloud CRUD mirror; local runner stays the execution source of truth) |
+| POST | `/api/goals` | yes | Create a goal |
+| GET | `/api/profiles` | yes | List the signed-in user's org agent profiles (built-ins are seeded locally by the runner; cloud stores org overrides) |
+| POST | `/api/profiles` | yes | Create a profile |
+| GET | `/api/workflows` | yes | List the signed-in user's org workflows (execution stays on the paired local runner; cloud stores the definition) |
+| POST | `/api/workflows` | yes | Create a workflow |
+| POST | `/api/workflows/:id/tick` | yes | Manual workflow fire — records a `workflow_runs` row in `queued` state. The paired local runner picks it up via cloud-relay + executes the steps. Returns 202 Accepted. (If no runner is paired, the tick sits queued until one connects.) |
 
-**Code location:** `F:\dev\floodg8\apps\web\api\portfolio\*.js` + `F:\dev\floodg8\apps\web\api\runs\summary.js` + `F:\dev\floodg8\apps\web\api\integrations\syncdevtime\summary.js`.
+**Code location:** `F:\dev\floodg8\apps\web\api\portfolio\*.js` + `F:\dev\floodg8\apps\web\api\runs\summary.js` + `F:\dev\floodg8\apps\web\api\integrations\syncdevtime\summary.js` + `F:\dev\floodg8\apps\web\api\{goals,profiles,workflows}.js` + `F:\dev\floodg8\apps\web\api\workflows\[id]\tick.js`.
 
 ---
 
@@ -96,6 +105,7 @@ Project ref: `opodtvblrelmpoaprmpr`. All migrations applied via the Supabase MCP
 | `20260627090000_standup_blocker_keywords.sql` | `standup` | **NEW** `blocker_keywords` with RLS |
 | `20260627100000_shared_waitlist.sql` | `shared` | **NEW** `waitlist` with RLS + unique `(user_id, product)` |
 | `20260627120000_pulse_event_sources_expand.sql` | `shared` | **NEW** Drops + re-adds `CHECK` constraint on `pulse_events.source` to allow the 11 new sources |
+| `20260628120000_swarm.sql` | `public` | **NEW** `goals`, `agent_profiles`, `workflows`, `workflow_runs` tables with FK to `orgs` + RLS via `private.is_org_member(org_id)` + `private.has_org_role`. Mirrors the local swarm schema so the web dashboard can manage swarm state when no runner is paired. |
 
 **Verification:** `list_migrations` confirms all 30 migrations applied. `execute_sql` confirms all 12 expected tables present in `links`, `metrics`, `standup`, `shared` schemas. `get_advisors` reports only 2 pre-existing WARNs (`extension_in_public` for vector, `auth_leaked_password_protection` disabled) — both documented in `SAAS_SUITE_INTEGRATION.md` §4.5 as accepted risks, not regressions.
 
@@ -376,6 +386,44 @@ Both are idempotent + use `[demo]` markers / fixed IDs so they only touch demo r
 
 ---
 
+## Agent swarm layer (commit `fda73a9`, parallel to 1.0.6)
+
+A rework of FloodG8's orchestration into a goal-driven agent swarm, inspired by [siddsachar/row-bot](https://github.com/siddsachar/row-bot). Sits **over** the existing Floodgate/Sluice/Spillway/Distiller loop — no portfolio / SSO / billing / VSIX surface removed. Full design + ponytail notes: `F:\dev\floodg8\docs\SWARM.md`.
+
+### What it adds
+
+- **Goal Mode** — persistent `Goal` entity (status `draft → active → done | blocked`, progress 0..1, blockers). `reduceGoal` folds distilled insights into progress + blockers.
+- **Agent Profiles** — 4 built-ins (planner / researcher / implementer / reviewer) with system prompts, tool/channel allowlists, model overrides, `maxChildren`, `approvalMode`. `applyProfileToPlan` narrows a plan to the profile.
+- **Child delegation** — `ChildDelegator` spawns child runs with `parentRunId` set + narrowed scope + tighter steer. Child runs are normal `runs` rows (no separate table).
+- **LlmPlanner** — `Planner` impl that calls `compressedComplete()` (the headroom gate) with the compressed transcript + graphify slice. Falls back to `HeuristicPlanner` when no BYO key — the swarm still works on the free tier. `pnpm headroom:check` still passes.
+- **SwarmOrchestrator** — `orchestrate({ goal, profile, repoRoot })` stacks a plan, opens the floodgate, wires distiller updates back to the goal.
+- **Workflows** — cron (60s tick) + task-completion triggers that auto-open floods. Each step stacks a plan or opens a flood against a goal + profile.
+- **Skills** — `*.md` from `<workspaceRoot>/skills/` with frontmatter; prepended to matched plan prompts. No SQL table (ponytail).
+- **Slack approval routing** — `packages/server/src/notify/` posts approvals to Slack when `SLACK_BOT_TOKEN` + `SLACK_APPROVAL_CHANNEL` are set. Notification-only MVP (dashboard does inline resolve); Socket Mode is the upgrade path.
+
+### Cloud surfaces (visible to `*.marketstandard.io` siblings)
+
+| Surface | Where |
+| --- | --- |
+| Vercel lambdas | `apps/web/api/{goals,profiles,workflows}.js` + `apps/web/api/workflows/[id]/tick.js` — cloud CRUD mirrors so the web dashboard can manage swarm state when no runner is paired. The local runner stays the execution plane. |
+| Supabase tables | `public.goals`, `public.agent_profiles`, `public.workflows`, `public.workflow_runs` — migration `20260628120000_swarm.sql`, RLS via `private.is_org_member(org_id)`. |
+| Dashboard pages | `apps/web/src/pages/{Goals,Profiles,Workflows,Skills}.tsx` — new. `Floodgate.tsx` gains "Orchestrate a goal" mode; `Reservoir.tsx` shows goal linkage; `Tributary.tsx` renders the child-run tree; `Approvals.tsx` shows the Slack hint. |
+| Cloud-relay events | `cloud-relay-publisher.ts` forwards the curated swarm subset (`goal.updated`, `profile.applied`, `child.delegated`, `workflow.triggered`, `workflow.step.completed`, `workflow.updated`, `skill.created`) to the `runner:<id>` Realtime channel. Filesystem paths + raw stdout never leave the runner. |
+
+### Local-only (NOT on Vercel — runner execution plane)
+
+The orchestrator + workflow tick fire + channels run on the paired local runner only (SQLite + cursor-cdp + git worktrees aren't available in the cloud lambda environment). The `/api/workflows/:id/tick` lambda is a deliberate stub: it records a `queued` `workflow_runs` row + the paired runner picks it up via cloud-relay. Ceiling: if no runner is paired, the tick sits queued. Upgrade path: a cloud-side orchestrator adapter (documented in `docs/SWARM.md` ponytail notes).
+
+### Validation (commit `fda73a9`)
+
+| Check | Result |
+| --- | --- |
+| `pnpm typecheck` (22 packages) | ✅ clean |
+| `pnpm test` (incl. 6 new swarm self-checks) | ✅ all green |
+| `pnpm headroom:check` | ✅ ok (no ungated provider imports) |
+
+---
+
 ## Test fixtures + smoke scripts
 
 ### Test fixtures (`F:\dev\floodg8\tools\fixtures\`)
@@ -491,6 +539,9 @@ CORS is allowed from `*.marketstandard.app` + `*.marketstandard.io` so client-si
 | Production `curl /api/portfolio/catalog` | ✅ `count: 17`, all 17 products |
 | Production endpoint smoke | ✅ `/api/portfolio/catalog` + `/api/portfolio/agent-skill-version` both 200 |
 | Production Playwright screenshots | ✅ 10 screenshots captured + embedded in `docs/SAAS_SUITE.md` |
+| Swarm rework `pnpm typecheck` (22 packages, commit `fda73a9`) | ✅ clean |
+| Swarm rework `pnpm test` (incl. 6 new swarm self-checks) | ✅ all green |
+| Swarm rework `pnpm headroom:check` | ✅ ok (no ungated provider imports — LlmPlanner routes through `compressedComplete()`) |
 
 ---
 
