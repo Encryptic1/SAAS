@@ -1,5 +1,10 @@
-/* Market Standard marketing tokens — ported from FloodG8 @floodg8/brand */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap");
+/* Market Standard marketing tokens — ported from FloodG8 @floodg8/brand
+ * Fonts are loaded via next/font (see @market-standard/ui/marketing/fonts),
+ * which self-hosts Inter + JetBrains Mono and exposes the families through
+ * the --font-sans / --font-mono CSS variables. The fallback stacks below are
+ * used until the next/font variables resolve (and on any page that does not
+ * apply the font className). */
+
 
 :root,
 [data-theme="market-standard"] {

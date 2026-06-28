@@ -12,7 +12,12 @@
     "./badge": "./src/components/powered-by-badge.tsx",
     "./button": "./src/components/button.tsx",
     "./card": "./src/components/card.tsx",
-    "./utils": "./src/lib/utils.ts"
+    "./utils": "./src/lib/utils.ts",
+    "./marketing/fonts": "./src/marketing/fonts.ts",
+    "./marketing/analytics": "./src/marketing/analytics.tsx",
+    "./marketing/error-boundary": "./src/marketing/app-error-boundary.tsx",
+    "./marketing/seo": "./src/marketing/seo.ts",
+    "./next-config": "./src/next-config/with-config.ts"
   },
   "scripts": {
     "build": "tsc --noEmit",
@@ -20,6 +25,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^16.2.9",
+    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "recharts": "^2.15.0",
     "tailwind-merge": "^2.6.0"

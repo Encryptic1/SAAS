@@ -3,15 +3,35 @@ import * as fs from "node:fs";
 import { HEALTH_URLS, ROOT, STATE_FILE } from "./stack-constants";
 
 async function isHealthy(): Promise<boolean> {
-  for (const url of HEALTH_URLS) {
-    try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(5_000) });
-      if (!res.ok) return false;
-    } catch {
-      return false;
+  // Retry a few times so a transient HMR blip on one app does not trigger the
+  // destructive spawn branch (which reseeds PGlite while the gateway holds it).
+  for (let attempt = 0; attempt < 3; attempt++) {
+    let failed = false;
+    for (const url of HEALTH_URLS) {
+      try {
+        const res = await fetch(url, { signal: AbortSignal.timeout(8_000) });
+        if (!res.ok) {
+          failed = true;
+          break;
+        }
+      } catch {
+        failed = true;
+        break;
+      }
     }
+    if (!failed) return true;
+    await new Promise((r) => setTimeout(r, 4_000));
   }
-  return true;
+  return false;
+}
+
+async function gatewayUp(): Promise<boolean> {
+  try {
+    const res = await fetch("http://127.0.0.1:4000/health", { signal: AbortSignal.timeout(5_000) });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 const LOCAL_DEV_ENV = {
@@ -61,9 +81,14 @@ export default async function globalSetup(): Promise<void> {
   }
 
   console.log("[e2e] Starting dev stack…");
-  execSync("pnpm db:setup", { cwd: ROOT, stdio: "inherit" });
-  const gatewayPid = spawnDetached("pnpm", ["db:server"], LOCAL_DEV_ENV);
-  waitForUrls(["http://127.0.0.1:4000/health"], 30_000);
+  // Only reseed when the gateway is not already running — reseed while the
+  // gateway holds the PGlite dir can lock/crash the in-flight stack.
+  let gatewayPid = 0;
+  if (!(await gatewayUp())) {
+    execSync("pnpm db:setup", { cwd: ROOT, stdio: "inherit" });
+    gatewayPid = spawnDetached("pnpm", ["db:server"], LOCAL_DEV_ENV);
+    waitForUrls(["http://127.0.0.1:4000/health"], 30_000);
+  }
 
   const appsPid = spawnDetached(
     "pnpm",

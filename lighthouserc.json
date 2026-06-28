@@ -1,0 +1,37 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3001/",
+        "http://localhost:3001/privacy",
+        "http://localhost:3002/",
+        "http://localhost:3003/",
+        "http://localhost:3004/",
+        "http://localhost:3005/",
+        "http://localhost:3006/",
+        "http://localhost:3007/",
+        "http://localhost:3008/",
+        "http://localhost:3009/",
+        "http://localhost:3010/",
+        "http://localhost:3011/",
+        "http://localhost:3012/",
+        "http://localhost:3013/"
+      ],
+      "numberOfRuns": 1,
+      "settings": {
+        "preset": "desktop"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["warn", { "minScore": 0.7 }],
+        "categories:accessibility": ["warn", { "minScore": 0.85 }],
+        "categories:seo": ["warn", { "minScore": 0.85 }],
+        "categories:best-practices": ["warn", { "minScore": 0.85 }]
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}

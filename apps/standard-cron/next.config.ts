@@ -1,3 +1,3 @@
-import type { NextConfig } from "next";
-const config: NextConfig = {};
-export default config;
+import { withMktStdConfig } from "@market-standard/ui/next-config";
+
+export default withMktStdConfig({});

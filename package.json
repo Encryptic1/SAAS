@@ -13,9 +13,10 @@
     "test:e2e": "playwright test",
     "test:e2e:local": "pnpm db:setup && playwright test",
     "typecheck:e2e": "tsc -p tsconfig.e2e.json --noEmit",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean"
+  "lint": "turbo run lint",
+  "typecheck": "turbo run typecheck",
+  "clean": "turbo run clean",
+  "analyze": "cross-env ANALYZE=true turbo run build"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.3",
