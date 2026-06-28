@@ -1,0 +1,730 @@
+{
+  "info": {
+    "name": "Standard Polls API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "List digest",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/digest",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cron",
+            "digest"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a digest",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/digest",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cron",
+            "digest"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a standup",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/standup",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cron",
+            "standup"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a standup-digest",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/standup-digest",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cron",
+            "standup-digest"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List mock-install",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/dev/mock-install",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dev",
+            "mock-install"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a poll",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/dev/poll",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dev",
+            "poll"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List config",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/digest/config",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "digest",
+            "config"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a config",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/digest/config",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "digest",
+            "config"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List docs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/docs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "docs"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List health",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List notifications",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a notification",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a read",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/{id}/read",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "{id}",
+            "read"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a read-all",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/read-all",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "read-all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List openapi.json",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/openapi.json",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "openapi.json"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List settings",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/settings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "settings"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a setting",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/settings",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "settings"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a event",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/slack/events",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "slack",
+            "events"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List callback",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/slack/oauth/callback",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "slack",
+            "oauth",
+            "callback"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List install",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/slack/oauth/install",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "slack",
+            "oauth",
+            "install"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List prompts",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/standup/prompts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "standup",
+            "prompts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a prompt",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/standup/prompts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "standup",
+            "prompts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a prompt",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/standup/prompts/{id}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "standup",
+            "prompts",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List team",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a team",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List invitations",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/invitations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "invitations"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a invitation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/invitations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "invitations"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List members",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a member",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members/{memberId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members",
+            "{memberId}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete a member",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members/{memberId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members",
+            "{memberId}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a stripe",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/webhooks/stripe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "webhooks",
+            "stripe"
+          ]
+        }
+      }
+    }
+  ]
+}

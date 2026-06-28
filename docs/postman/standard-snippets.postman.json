@@ -1,0 +1,568 @@
+{
+  "info": {
+    "name": "Standard Snippets API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "List docs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/docs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "docs"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List json",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/export/json",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "export",
+            "json"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List health",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List notifications",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a notification",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a read",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/{id}/read",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "{id}",
+            "read"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a read-all",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/read-all",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "read-all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List openapi.json",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/openapi.json",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "openapi.json"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get a shared",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/shared/{slug}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "shared",
+            "{slug}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List snippets",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/snippets",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "snippets"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a snippet",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/snippets",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "snippets"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get a snippet",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/snippets/{id}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "snippets",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a snippet",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/snippets/{id}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "snippets",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete a snippet",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/snippets/{id}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "snippets",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List resolve",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/snippets/{id}/resolve",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "snippets",
+            "{id}",
+            "resolve"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a share",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/snippets/{id}/share",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "snippets",
+            "{id}",
+            "share"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List team",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a team",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List invitations",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/invitations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "invitations"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a invitation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/invitations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "invitations"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List members",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a member",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members/{memberId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members",
+            "{memberId}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete a member",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members/{memberId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members",
+            "{memberId}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a stripe",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/webhooks/stripe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "webhooks",
+            "stripe"
+          ]
+        }
+      }
+    }
+  ]
+}

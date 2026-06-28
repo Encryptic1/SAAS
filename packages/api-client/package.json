@@ -1,0 +1,34 @@
+{
+  "name": "@market-standard/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./base": "./src/base.ts",
+    "./polls": "./src/clients/polls.ts",
+    "./proof": "./src/clients/proof.ts",
+    "./metrics": "./src/clients/metrics.ts",
+    "./hook": "./src/clients/hook.ts",
+    "./release": "./src/clients/release.ts",
+    "./links": "./src/clients/links.ts",
+    "./vault": "./src/clients/vault.ts",
+    "./snippets": "./src/clients/snippets.ts",
+    "./status": "./src/clients/status.ts",
+    "./regex": "./src/clients/regex.ts",
+    "./postmortem": "./src/clients/postmortem.ts",
+    "./lens": "./src/clients/lens.ts",
+    "./cron": "./src/clients/cron.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@market-standard/config": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

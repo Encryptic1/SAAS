@@ -1,0 +1,587 @@
+{
+  "info": {
+    "name": "Standard Metrics API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "List sync",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/sync",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "cron",
+            "sync"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List docs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/docs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "docs"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List health",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List export",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/metrics/export",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "metrics",
+            "export"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List notifications",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a notification",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a read",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/{id}/read",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "{id}",
+            "read"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a read-all",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/notifications/read-all",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "notifications",
+            "read-all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List openapi.json",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/openapi.json",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "openapi.json"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List payment-links",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/payment-links",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "payment-links"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a payment-link",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/payment-links",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "payment-links"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a payment-link",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/payment-links/{id}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "payment-links",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete a payment-link",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/payment-links/{id}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "payment-links",
+            "{id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List quota",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/quota",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "quota"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a quota",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/quota",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "quota"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List callback",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/stripe/callback",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "stripe",
+            "callback"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List connect",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/stripe/connect",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "stripe",
+            "connect"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List team",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a team",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List invitations",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/invitations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "invitations"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a invitation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/invitations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "invitations"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List members",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update a member",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members/{memberId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members",
+            "{memberId}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete a member",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/team/{teamId}/members/{memberId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "team",
+            "{teamId}",
+            "members",
+            "{memberId}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create a stripe",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/webhooks/stripe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "webhooks",
+            "stripe"
+          ]
+        }
+      }
+    }
+  ]
+}

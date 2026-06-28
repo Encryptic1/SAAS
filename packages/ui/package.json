@@ -24,7 +24,10 @@
     "./onboarding": "./src/onboarding/first-run-tour.tsx",
     "./onboarding.css": "./src/onboarding/onboarding.css",
     "./teams": "./src/teams/team-settings-panel.tsx",
-    "./teams.css": "./src/teams/teams.css"
+    "./teams.css": "./src/teams/teams.css",
+    "./docs": "./src/docs/docs-page.tsx",
+    "./docs-search": "./src/docs/docs-search.tsx",
+    "./docs.css": "./src/docs/docs.css"
   },
   "scripts": {
     "build": "tsc --noEmit",

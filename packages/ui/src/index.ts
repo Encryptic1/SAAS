@@ -64,4 +64,6 @@ export { FirstRunTour } from "./onboarding/first-run-tour";
 export { defaultTourSteps, type TourStep } from "./onboarding/tour-steps";
 export { NotificationCenter } from "./notifications/notification-center";
 export { TeamSettingsPanel } from "./teams/team-settings-panel";
+export { DocsPage, type DocsPageProps, type DocsSection, type ChangelogEntry, type LoomVideo } from "./docs/docs-page";
+export { DocsSearch } from "./docs/docs-search";
 export { cn } from "./lib/utils";

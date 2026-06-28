@@ -62,4 +62,6 @@ export {
   type TeamInput,
   type InviteInput,
   type Role,
+  type TeamWithRole,
 } from "./teams";
+export type { Team, TeamMember, Invitation } from "./schema/teams";
