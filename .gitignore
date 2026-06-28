@@ -1,0 +1,50 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build
+.next
+dist
+.turbo
+out
+build
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Debug
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+.floodg8
+.pglite
+
+# Playwright
+test-results
+playwright-report
+e2e/.e2e-stack-state.json
+
+# Cursor local plans (session scratchpads — not for version control)
+# Note: .cursor/rules/ is NOT excluded so shared Cursor rules can be committed
+.cursor/plans

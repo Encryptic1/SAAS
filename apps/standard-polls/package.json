@@ -1,0 +1,34 @@
+{
+  "name": "standard-polls",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@market-standard/auth": "workspace:*",
+    "@market-standard/billing": "workspace:*",
+    "@market-standard/db": "workspace:*",
+    "@market-standard/ui": "workspace:*",
+    "@slack/bolt": "^4.1.0",
+    "@vercel/functions": "^1.5.2",
+    "@vercel/slack-bolt": "^0.1.0",
+    "next": "^15.1.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@market-standard/config": "workspace:*",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2"
+  }
+}

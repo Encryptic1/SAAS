@@ -1,0 +1,2 @@
+-- Copy of FloodG8 migration for Market Standard portfolio (apply via Supabase on opodtvblrelmpoaprmpr)
+-- Canonical: f:\dev\floodg8\supabase\migrations\20260627000000_market_standard_portfolio.sql

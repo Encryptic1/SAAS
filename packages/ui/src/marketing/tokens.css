@@ -1,0 +1,68 @@
+/* Market Standard marketing tokens — ported from FloodG8 @floodg8/brand */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+:root,
+[data-theme="market-standard"] {
+  --bg-abyss: #08080c;
+  --bg-deep: #0e0e14;
+  --bg-shoal: #14141e;
+  --hairline: #1f1f2e;
+
+  --color-flood: #39ff14;
+  --color-flood-soft: #7cff6c;
+  --flood-glow: rgba(57, 255, 20, 0.18);
+  --flood-pressure: rgba(57, 255, 20, 0.08);
+
+  --color-gilt: #c5a55a;
+  --color-gilt-light: #d4b96e;
+  --gilt-glow: rgba(197, 165, 90, 0.18);
+
+  --color-crest: #39ff14;
+  --color-caution: #f5c453;
+  --color-breach: #ff4d6d;
+
+  --text-foam: #ffffff;
+  --text-mist: #a8b0c2;
+  --text-fog: #6b7280;
+
+  --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
+
+  --ease-wave: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 420ms;
+
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.02), 0 24px 60px rgba(0, 0, 0, 0.45);
+  --glow-flood: 0 0 24px var(--flood-glow), 0 0 96px var(--flood-pressure);
+  --glow-gilt: 0 0 24px var(--gilt-glow);
+  --gradient-tide: linear-gradient(
+    90deg,
+    transparent,
+    rgba(57, 255, 20, 0.5),
+    rgba(197, 165, 90, 0.3),
+    transparent
+  );
+
+  /* Aliases used in Tailwind arbitrary values */
+  --ms-abyss: var(--bg-abyss);
+  --ms-deep: var(--bg-deep);
+  --ms-shoal: var(--bg-shoal);
+  --ms-hairline: var(--hairline);
+  --ms-flood: var(--color-flood);
+  --ms-flood-soft: var(--color-flood-soft);
+  --ms-gilt: var(--color-gilt);
+  --ms-gilt-light: var(--color-gilt-light);
+  --ms-foam: var(--text-foam);
+  --ms-mist: var(--text-mist);
+  --ms-fog: var(--text-fog);
+  --ms-flood-glow: var(--flood-glow);
+  --ms-gilt-glow: var(--gilt-glow);
+  --ms-ease-out: var(--ease-out);
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@market-standard/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./typescript/base": "./typescript/base.json",
+    "./typescript/nextjs": "./typescript/nextjs.json",
+    "./typescript/react-library": "./typescript/react-library.json",
+    "./tailwind": "./tailwind/preset.ts",
+    "./biome": "./biome.json"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "@market-standard/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./schema": "./src/schema/index.ts",
+    "./schema/polls": "./src/schema/polls.ts",
+    "./schema/proof": "./src/schema/proof.ts",
+    "./schema/hook": "./src/schema/hook.ts",
+    "./schema/release": "./src/schema/release.ts",
+    "./schema/metrics": "./src/schema/metrics.ts",
+    "./schema/standup": "./src/schema/standup.ts",
+    "./schema/shared": "./src/schema/shared.ts",
+    "./schema/links": "./src/schema/links.ts",
+    "./schema/vault": "./src/schema/vault.ts",
+    "./schema/snippets": "./src/schema/snippets.ts",
+    "./schema/status": "./src/schema/status.ts",
+    "./schema/regex": "./src/schema/regex.ts",
+    "./schema/postmortem": "./src/schema/postmortem.ts",
+    "./vault-crypto": "./src/vault-crypto.ts",
+    "./query": "./src/query.ts",
+    "./gateway": "./src/gateway.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push --force",
+    "db:seed": "tsx scripts/seed-local.ts",
+    "db:setup": "tsx scripts/setup-local.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.3",
+    "@supabase/supabase-js": "^2.47.10",
+    "drizzle-orm": "^0.38.2",
+    "postgres": "^3.4.5"
+  },
+  "devDependencies": {
+    "@market-standard/config": "workspace:*",
+    "@types/node": "^22.10.2",
+    "drizzle-kit": "^0.30.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

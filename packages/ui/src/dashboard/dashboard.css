@@ -1,0 +1,388 @@
+/* Dashboard layout — FloodG8 dark tokens (see tokens.css) */
+
+.ms-app-card {
+  background: linear-gradient(180deg, rgba(20, 20, 30, 0.6), rgba(14, 14, 20, 0.85));
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.ms-dash {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100dvh;
+  grid-template-columns: 1fr;
+  background-color: var(--bg-abyss);
+  color: var(--text-foam);
+}
+
+@media (min-width: 768px) {
+  .ms-dash {
+    grid-template-columns: 240px 1fr;
+  }
+}
+
+.ms-dash-sidebar {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .ms-dash-sidebar {
+    border-bottom: none;
+    border-right: 1px solid var(--hairline);
+    padding: 1.5rem 1rem;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}
+
+.ms-dash-sidebar-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem 1rem;
+}
+
+.ms-dash-sidebar-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-gilt-light);
+}
+
+.ms-dash-sidebar-title {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-foam);
+}
+
+.ms-dash-nav {
+  display: flex;
+  flex-direction: row;
+  gap: 0.375rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+  .ms-dash-nav {
+    flex-direction: column;
+    overflow-x: visible;
+    padding-bottom: 0;
+    flex: 1;
+  }
+}
+
+.ms-dash-nav-item {
+  flex-shrink: 0;
+  display: block;
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-mist);
+  text-decoration: none;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+  min-height: 40px;
+}
+
+@media (hover: hover) {
+  .ms-dash-nav-item:hover {
+    color: var(--color-flood-soft);
+    background: rgba(57, 255, 20, 0.04);
+    border-color: rgba(57, 255, 20, 0.12);
+  }
+}
+
+.ms-dash-nav-item-active {
+  color: var(--color-flood);
+  background: rgba(57, 255, 20, 0.08);
+  border-color: rgba(57, 255, 20, 0.22);
+  box-shadow: 0 0 20px var(--flood-pressure);
+}
+
+.ms-dash-sidebar-foot {
+  display: none;
+  margin-top: auto;
+  padding: 1rem 0.75rem 0;
+  border-top: 1px solid var(--hairline);
+}
+
+@media (min-width: 768px) {
+  .ms-dash-sidebar-foot {
+    display: block;
+  }
+}
+
+.ms-dash-sidebar-product {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-fog);
+}
+
+.ms-dash-body {
+  min-width: 0;
+}
+
+.ms-dash-main {
+  margin-left: auto;
+  margin-right: auto;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  max-width: 72rem;
+}
+
+.ms-dash-page-title {
+  font-size: clamp(1.5rem, 4vw, 1.875rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-foam);
+}
+
+/* Stat cards */
+
+.ms-dash-stat-card {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: linear-gradient(180deg, rgba(20, 20, 30, 0.5), rgba(14, 14, 20, 0.8));
+  box-shadow: var(--shadow-panel);
+}
+
+.ms-dash-stat-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-mist);
+}
+
+.ms-dash-stat-value {
+  margin: 0.5rem 0 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-foam);
+  line-height: 1.1;
+}
+
+.ms-dash-stat-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.625rem;
+}
+
+.ms-dash-stat-trend {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.ms-dash-stat-trend-up {
+  color: var(--color-flood);
+}
+
+.ms-dash-stat-trend-down {
+  color: var(--color-breach);
+}
+
+.ms-dash-stat-hint {
+  font-size: 0.75rem;
+  color: var(--text-fog);
+}
+
+/* Usage meter */
+
+.ms-dash-meter {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+}
+
+.ms-dash-meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.625rem;
+}
+
+.ms-dash-meter-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-mist);
+}
+
+.ms-dash-meter-count {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-fog);
+}
+
+.ms-dash-meter-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-shoal);
+  overflow: hidden;
+}
+
+.ms-dash-meter-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(57, 255, 20, 0.5), var(--color-flood));
+  box-shadow: 0 0 12px var(--flood-glow);
+  transition: width var(--dur-slow) var(--ease-out);
+}
+
+.ms-dash-meter-bar-warn {
+  background: linear-gradient(90deg, rgba(245, 196, 83, 0.6), var(--color-caution));
+  box-shadow: 0 0 12px rgba(245, 196, 83, 0.2);
+}
+
+.ms-dash-meter-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-caution);
+}
+
+/* Empty state */
+
+.ms-dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(2rem, 6vw, 3.5rem) 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--hairline);
+  background: rgba(14, 14, 20, 0.5);
+}
+
+.ms-dash-empty-icon {
+  margin-bottom: 1rem;
+  color: var(--text-fog);
+  opacity: 0.7;
+}
+
+.ms-dash-empty-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-foam);
+}
+
+.ms-dash-empty-desc {
+  margin: 0.5rem 0 0;
+  max-width: 28rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-mist);
+}
+
+.ms-dash-empty-action {
+  margin-top: 1.25rem;
+}
+
+/* Charts */
+
+.ms-dash-chart {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+  padding: 0.75rem 0.5rem 0.25rem;
+}
+
+.ms-dash-chart-tooltip {
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-shoal);
+  box-shadow: var(--shadow-panel);
+  font-size: 0.75rem;
+}
+
+.ms-dash-chart-tooltip-label {
+  margin: 0 0 0.25rem;
+  color: var(--text-mist);
+}
+
+.ms-dash-chart-tooltip-value {
+  margin: 0;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+/* Data table */
+
+.ms-dash-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-deep);
+}
+
+.ms-dash-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.ms-dash-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-fog);
+  border-bottom: 1px solid var(--hairline);
+  background: rgba(20, 20, 30, 0.4);
+  white-space: nowrap;
+}
+
+.ms-dash-table td {
+  padding: 0.875rem 1rem;
+  color: var(--text-foam);
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: middle;
+}
+
+.ms-dash-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+@media (hover: hover) {
+  .ms-dash-table tbody tr:hover td {
+    background: rgba(57, 255, 20, 0.03);
+  }
+}
+
+.ms-dash-table-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-mist);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--hairline);
+  background: var(--bg-deep);
+}

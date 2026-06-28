@@ -1,0 +1,34 @@
+{
+  "name": "@market-standard/billing",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./stripe": "./src/stripe.ts",
+    "./checkout": "./src/checkout.ts",
+    "./webhooks": "./src/webhooks.ts",
+    "./plans": "./src/plans.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@market-standard/auth": "workspace:*",
+    "@market-standard/db": "workspace:*",
+    "drizzle-orm": "^0.38.4",
+    "stripe": "^17.4.0"
+  },
+  "devDependencies": {
+    "@market-standard/config": "workspace:*",
+    "@types/node": "^22.10.2",
+    "next": "^15.1.2",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "@market-standard/auth": "workspace:*",
+    "next": "^15.0.0"
+  }
+}

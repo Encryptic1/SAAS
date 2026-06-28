@@ -1,0 +1,32 @@
+{
+  "name": "@market-standard/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./supabase": "./src/supabase.ts",
+    "./browser": "./src/browser.ts",
+    "./middleware": "./src/middleware.ts",
+    "./slack": "./src/slack.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@market-standard/db": "workspace:*",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.47.10"
+  },
+  "devDependencies": {
+    "@market-standard/config": "workspace:*",
+    "@types/node": "^22.10.2",
+    "next": "^15.1.2",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "next": "^15.0.0"
+  }
+}

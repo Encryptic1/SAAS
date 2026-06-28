@@ -1,0 +1,6 @@
+@import "@market-standard/ui/marketing/tokens.css";
+@import "@market-standard/ui/marketing.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

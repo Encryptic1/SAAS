@@ -1,0 +1,21 @@
+{
+  "name": "@market-standard/vault-cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "ms-vault — env-injection CLI shim for Standard Vault",
+  "type": "module",
+  "bin": {
+    "ms-vault": "bin/ms-vault.js"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
