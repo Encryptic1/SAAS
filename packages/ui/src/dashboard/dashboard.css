@@ -16,6 +16,7 @@
   grid-template-columns: 1fr;
   background-color: var(--bg-abyss);
   color: var(--text-foam);
+  overflow-x: hidden;
 }
 
 @media (min-width: 768px) {
@@ -30,6 +31,27 @@
   border-bottom: 1px solid var(--hairline);
   background: var(--bg-deep);
   padding: 1rem;
+}
+
+/* Mobile: sidebar becomes an off-canvas drawer so it doesn't expand the grid track. */
+@media (max-width: 767px) {
+  .ms-dash-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(18rem, 85vw);
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform var(--dur-fast) var(--ease-out);
+    overflow-y: auto;
+    border-bottom: none;
+    border-right: 1px solid var(--hairline);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+  }
+  .ms-dash-sidebar-open {
+    transform: translateX(0);
+  }
 }
 
 @media (min-width: 768px) {

@@ -18,8 +18,9 @@ test.describe("Standard Status — pipelines + incidents", () => {
     const res = await request.post(`${BASE.status}/api/intake`, {
       data: {
         source: "github",
-        pipelineSlug: "demo-api",
-        event: "deployment",
+        event: "pipeline",
+        ownerId: "local-dev",
+        pipelineName: "demo-api",
         status: "success",
         sha: "abc1234",
       },

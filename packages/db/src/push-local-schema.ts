@@ -557,8 +557,8 @@ CREATE INDEX IF NOT EXISTS idx_postmortem_recurrence_from ON postmortem.recurren
 CREATE INDEX IF NOT EXISTS idx_postmortem_recurrence_to ON postmortem.recurrence_links (to_incident_id);
 
 -- Postmortem recurrence embeddings (pgvector on rootcause_md).
--- Local dev stores the embedding as jsonb; Phase 5 Supabase migration adds a
--- generated vector(1536) column for native <=> cosine similarity.
+-- Local dev stores the embedding as jsonb. The Phase 5 Supabase migration
+-- adds a generated vector(1536) column for native <=> cosine similarity.
 CREATE TABLE IF NOT EXISTS postmortem.recurrence_embeddings (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   incident_id uuid NOT NULL REFERENCES postmortem.incidents(id) ON DELETE CASCADE,

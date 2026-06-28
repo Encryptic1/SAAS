@@ -192,18 +192,14 @@ test.describe("App tool pages", () => {
     await expect(page).toHaveURL(/poll_created=true/);
   });
 
-  test("Proof dashboard — View public page and Preview embed", async ({ page, context }) => {
+  test("Proof dashboard — View public page and Preview embed", async ({ page }) => {
     await page.goto(`${BASE.proof}/dashboard`, { waitUntil: "networkidle" });
-    await page.getByRole("link", { name: /View public page/i }).first().click();
+    await page.getByRole("link", { name: /Public page/i }).first().click();
     await expect(page).toHaveURL(/\/c\/demo/);
 
     await page.goto(`${BASE.proof}/dashboard`, { waitUntil: "networkidle" });
-    const [popup] = await Promise.all([
-      context.waitForEvent("page"),
-      page.getByRole("link", { name: /Preview embed/i }).click(),
-    ]);
-    await popup.waitForLoadState("networkidle");
-    await expect(popup).toHaveURL(/\/embed\/demo/);
+    await page.getByRole("link", { name: /preview embed/i }).click();
+    await expect(page).toHaveURL(/\/embed\/demo/);
   });
 
   test("Proof demo wall — PoweredBy badge is clickable", async ({ page }) => {

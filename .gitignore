@@ -49,6 +49,10 @@ e2e/.e2e-stack-state.json
 screens/**/*.png
 screens-*.log
 
+# Local run logs (dev stack + e2e captures)
+dev-restart*.log
+e2e-*.log
+
 # Cursor local plans (session scratchpads — not for version control)
 # Note: .cursor/rules/ is NOT excluded so shared Cursor rules can be committed
 .cursor/plans

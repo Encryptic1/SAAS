@@ -17,8 +17,8 @@ test.describe("Standard Links — list + create + redirect", () => {
   test("create link via API", async ({ request }) => {
     const res = await request.post(`${BASE.links}/api/links`, {
       data: {
-        slug: `e2e-${Date.now()}`,
-        target: "https://marketstandard.app",
+        name: `E2E ${Date.now()}`,
+        stripeUrl: "https://buy.stripe.com/test_e2e_link",
       },
     });
     expect(res.status()).toBeLessThan(400);

@@ -31,9 +31,17 @@ test.describe("Standard Vault — projects + secrets + dotenv", () => {
       test.skip(true, "no projects seeded");
       return;
     }
+    // Seed a secret so the dotenv has content to export.
+    const key = `E2E_KEY_${Date.now()}`;
+    const secretRes = await request.post(`${BASE.vault}/api/projects/${firstProject.id}/secrets`, {
+      data: { key, value: "e2e-value" },
+    });
+    expect(secretRes.status()).toBeLessThan(400);
     const dotenvRes = await request.get(`${BASE.vault}/api/projects/${firstProject.id}/dotenv`);
     expect(dotenvRes.status()).toBeLessThan(400);
+    expect(dotenvRes.headers()["content-type"] ?? "").toContain("text/plain");
     const text = await dotenvRes.text();
     expect(text.length).toBeGreaterThan(0);
+    expect(text).toContain(`${key}=`);
   });
 });

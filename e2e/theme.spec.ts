@@ -13,7 +13,7 @@ for (const route of ROUTES) {
       await expect(page.locator(".ms-app").first()).toBeVisible();
     }
     if (route.name.includes("dashboard")) {
-      await expect(page.locator(".ms-panel").first()).toBeVisible();
+      await expect(page.locator(".ms-panel, .ms-card, .ms-dash-kpi-card").first()).toBeVisible();
     }
   });
 }

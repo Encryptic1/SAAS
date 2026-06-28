@@ -332,6 +332,38 @@ export async function decryptProjectSecrets(
   return out;
 }
 
+/** Owner-authorized dotenv export — verifies ownership, returns decrypted KEY=value map. */
+export async function getProjectDotenv(
+  projectId: string,
+  ownerId: string,
+): Promise<Record<string, string> | null> {
+  const project = await getProject(projectId, ownerId);
+  if (!project) return null;
+
+  if (isLocalGatewayMode()) {
+    const data = await fetchGateway<{ values: Record<string, string> }>(`/vault/projects/${projectId}/dotenv`);
+    return data.values;
+  }
+
+  const db = await getDbAsync();
+  const rows = await db
+    .select({ key: vaultSecrets.key, ciphertext: vaultSecrets.ciphertext, nonce: vaultSecrets.nonce })
+    .from(vaultSecrets)
+    .where(eq(vaultSecrets.projectId, projectId))
+    .orderBy(vaultSecrets.key);
+  const out: Record<string, string> = {};
+  for (const r of rows) {
+    out[r.key] = decryptSecret(r.ciphertext, r.nonce);
+  }
+  await db.insert(vaultAuditLog).values({
+    projectId,
+    action: "dotenv_export",
+    actor: "owner",
+    metadata: { count: rows.length },
+  });
+  return out;
+}
+
 /** AI-agent reference mode — keys + versions only, no values. */
 export async function listProjectReferences(
   projectId: string,

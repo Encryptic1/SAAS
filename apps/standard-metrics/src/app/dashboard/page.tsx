@@ -187,6 +187,27 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             </a>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Market Standard portfolio</CardTitle>
+            <CardDescription>More tools in the suite</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-3">
+            <a
+              href={`${process.env.NEXT_PUBLIC_POLLS_URL ?? "http://localhost:3001"}/dashboard`}
+              className="ms-app-link text-sm no-underline hover:underline"
+            >
+              Polls
+            </a>
+            <a
+              href={`${process.env.NEXT_PUBLIC_PROOF_URL ?? "http://localhost:3002"}/dashboard`}
+              className="ms-app-link text-sm no-underline hover:underline"
+            >
+              Proof
+            </a>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--hairline)] pt-6">

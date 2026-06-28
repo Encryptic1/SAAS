@@ -1366,6 +1366,28 @@ app.post("/vault/projects/:id/decrypt", async (c) => {
   return c.json({ secrets: plaintext });
 });
 
+/** Owner-authorized dotenv export — decrypts all secrets for a project (no token needed; app route checks ownership). */
+app.get("/vault/projects/:id/dotenv", async (c) => {
+  const id = c.req.param("id");
+  const db = await getPgliteDb();
+  const rows = await db
+    .select({ key: vaultSecrets.key, ciphertext: vaultSecrets.ciphertext, nonce: vaultSecrets.nonce })
+    .from(vaultSecrets)
+    .where(eq(vaultSecrets.projectId, id))
+    .orderBy(vaultSecrets.key);
+  const values: Record<string, string> = {};
+  for (const r of rows) {
+    values[r.key] = decryptSecret(r.ciphertext, r.nonce);
+  }
+  await db.insert(vaultAuditLog).values({
+    projectId: id,
+    action: "dotenv_export",
+    actor: "owner",
+    metadata: { count: rows.length },
+  });
+  return c.json({ values });
+});
+
 /** AI-agent reference mode — returns keys + versions without values, no token required. */
 app.get("/vault/projects/:id/references", async (c) => {
   const id = c.req.param("id");
