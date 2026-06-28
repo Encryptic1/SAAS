@@ -1,0 +1,58 @@
+name: Cross-repo integration tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  cross-repo:
+    name: Phase 12 cross-repo suite (18 specs)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Seed local database
+        run: pnpm db:setup
+      - name: Start dev stack (14 apps + gateway)
+        run: |
+          pnpm dev:local &
+          DEV_PID=$!
+          # Wait for all 14 apps + gateway to become healthy.
+          for i in $(seq 1 60); do
+            OK=0
+            for port in 4000 3001 3002 3003 3004 3005 3006 3007 3008 3009 3010 3011 3012 3013 3014; do
+              if curl -sf "http://localhost:${port}/health" -o /dev/null 2>/dev/null || curl -sf "http://localhost:${port}/api/health" -o /dev/null 2>/dev/null; then
+                OK=$((OK+1))
+              fi
+            done
+            if [ "$OK" -ge 15 ]; then
+              echo "All 15 endpoints healthy"
+              break
+            fi
+            echo "Waiting for stack ($OK/15 healthy)…"
+            sleep 5
+          done
+      - name: Run cross-repo suite
+        env:
+          NEXT_PUBLIC_LOCAL_DEV: "true"
+          LOCAL_DEV: "true"
+          CRON_SECRET: dev
+        run: pnpm test:e2e:cross-repo
+      - name: Upload cross-repo report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-repo-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14

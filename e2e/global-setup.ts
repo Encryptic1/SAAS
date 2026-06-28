@@ -114,6 +114,7 @@ export default async function globalSetup(): Promise<void> {
       "--filter=standard-postmortem",
       "--filter=standard-lens",
       "--filter=standard-cron",
+      "--filter=standard-workspace",
     ],
     LOCAL_DEV_ENV,
   );
@@ -132,10 +133,11 @@ export default async function globalSetup(): Promise<void> {
       "http://localhost:3011",
       "http://localhost:3012",
       "http://localhost:3013",
+      "http://localhost:3014",
     ],
     240_000,
   );
 
   fs.writeFileSync(STATE_FILE, JSON.stringify({ spawned: true, pids: [gatewayPid, appsPid] }));
-  console.log("[e2e] Dev stack ready (13 apps + gateway)");
+  console.log("[e2e] Dev stack ready (14 apps + gateway)");
 }

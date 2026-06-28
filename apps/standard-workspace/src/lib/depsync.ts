@@ -1,6 +1,27 @@
-import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { readdir, readFile, stat } from "node:fs/promises";
+import { join, resolve } from "node:path";
 import type { DepsyncReport } from "@/components/depsync-viewer";
+
+/**
+ * Walk up from `startDir` until a directory containing an `apps/` subfolder is
+ * found. This lets the workspace app (which lives at `apps/standard-workspace`)
+ * locate the monorepo root regardless of `process.cwd()`.
+ */
+async function findMonorepoRoot(startDir: string): Promise<string | null> {
+  let dir = resolve(startDir);
+  for (let i = 0; i < 10; i++) {
+    try {
+      const s = await stat(join(dir, "apps"));
+      if (s.isDirectory()) return dir;
+    } catch {
+      // not here — keep walking up
+    }
+    const parent = resolve(dir, "..");
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return null;
+}
 
 /**
  * Compute a dependency-parity report across all apps by reading each app's
@@ -10,7 +31,9 @@ import type { DepsyncReport } from "@/components/depsync-viewer";
  * the build-time snapshot is used; if unavailable, returns an empty report.
  */
 export async function computeDepsyncReport(): Promise<DepsyncReport> {
-  const appsDir = join(process.cwd(), "apps");
+  const root = await findMonorepoRoot(process.cwd());
+  if (!root) return { packages: [], divergent: [], generatedAt: new Date().toISOString() };
+  const appsDir = join(root, "apps");
   let appDirs: string[];
   try {
     appDirs = (await readdir(appsDir)).filter((d) => !d.startsWith("."));
