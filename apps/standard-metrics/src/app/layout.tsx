@@ -1,9 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Metrics — Stripe Analytics by Market Standard";
+const description = "MRR, churn, and LTV dashboard for Stripe merchants. By Market Standard, LLC.";
+
 export const metadata: Metadata = {
-  title: "Standard Metrics — Stripe Analytics by Market Standard",
-  description: "MRR, churn, and LTV dashboard for Stripe merchants. By Market Standard, LLC.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-metrics", productLabel: "Standard Metrics", title, description }),
 };
 
 export const viewport: Viewport = {

@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Links — Stripe Payment Link Manager by Market Standard";
+const description =
+  "Shorten, brand, and instrument Stripe payment links with click tracking, UTM passthrough, and Metrics cross-sell.";
+
 export const metadata: Metadata = {
-  title: "Standard Links — Stripe Payment Link Manager by Market Standard",
-  description:
-    "Shorten, brand, and instrument Stripe payment links with click tracking, UTM passthrough, and Metrics cross-sell.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-links", productLabel: "Standard Links", title, description }),
 };
 
 export const viewport: Viewport = {

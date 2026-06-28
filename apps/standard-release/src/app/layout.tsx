@@ -1,9 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Release — Release Notes by Market Standard";
+const description = "Generate release notes from merged GitHub pull requests.";
+
 export const metadata: Metadata = {
-  title: "Standard Release — Release Notes by Market Standard",
-  description: "Generate release notes from merged GitHub pull requests.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-release", productLabel: "Standard Release", title, description }),
 };
 
 export const viewport: Viewport = {

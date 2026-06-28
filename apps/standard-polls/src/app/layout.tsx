@@ -1,9 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Polls — Slack Polls by Market Standard";
+const description = "Create interactive polls in Slack channels. Powered by Market Standard, LLC.";
+
 export const metadata: Metadata = {
-  title: "Standard Polls — Slack Polls by Market Standard",
-  description: "Create interactive polls in Slack channels. Powered by Market Standard, LLC.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-polls", productLabel: "Standard Polls", title, description }),
 };
 
 export const viewport: Viewport = {

@@ -1,9 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Hook — Webhook Inbox by Market Standard";
+const description = "Capture, inspect, and replay webhooks during development.";
+
 export const metadata: Metadata = {
-  title: "Standard Hook — Webhook Inbox by Market Standard",
-  description: "Capture, inspect, and replay webhooks during development.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-hook", productLabel: "Standard Hook", title, description }),
 };
 
 export const viewport: Viewport = {

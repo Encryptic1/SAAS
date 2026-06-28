@@ -1,9 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Proof — Testimonial Wall by Market Standard";
+const description = "Collect and embed customer testimonials. Every embed markets Market Standard, LLC.";
+
 export const metadata: Metadata = {
-  title: "Standard Proof — Testimonial Wall by Market Standard",
-  description: "Collect and embed customer testimonials. Every embed markets Market Standard, LLC.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-proof", productLabel: "Standard Proof", title, description }),
 };
 
 export const viewport: Viewport = {

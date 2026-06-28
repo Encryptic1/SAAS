@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Snippets — Code Snippet Manager by Market Standard";
+const description =
+  "Save, tag, version, and share code snippets. VSIX save-from-selection, FloodG8 Plan Editor insert, SyncDevTime heartbeat synergy.";
+
 export const metadata: Metadata = {
-  title: "Standard Snippets — Code Snippet Manager by Market Standard",
-  description:
-    "Save, tag, version, and share code snippets. VSIX save-from-selection, FloodG8 Plan Editor insert, SyncDevTime heartbeat synergy.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-snippets", productLabel: "Standard Snippets", title, description }),
 };
 
 export const viewport: Viewport = {

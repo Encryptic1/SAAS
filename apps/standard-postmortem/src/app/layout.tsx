@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Postmortem — Blameless incident postmortem + recurrence by Market Standard";
+const description =
+  "Blameless incident postmortem tool with recurrence tracking, action items, and intake from Hook, Status, Pulse, and Slack. Catch recurring incidents before they catch you.";
+
 export const metadata: Metadata = {
-  title: "Standard Postmortem — Blameless incident postmortem + recurrence by Market Standard",
-  description:
-    "Blameless incident postmortem tool with recurrence tracking, action items, and intake from Hook, Status, Pulse, and Slack. Catch recurring incidents before they catch you.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-postmortem", productLabel: "Standard Postmortem", title, description }),
 };
 
 export const viewport: Viewport = {

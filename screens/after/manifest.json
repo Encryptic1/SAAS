@@ -1,25 +1,185 @@
 {
   "which": "after",
-  "capturedAt": "2026-06-28T17:15:14.310Z",
-  "total": 2,
-  "ok": 2,
+  "capturedAt": "2026-06-28T17:33:38.423Z",
+  "total": 22,
+  "ok": 22,
   "fail": 0,
   "results": [
     {
       "app": "polls",
-      "route": "dashboard-digest",
-      "path": "/dashboard/digest",
+      "route": "home",
+      "path": "/",
       "viewport": "desktop",
       "status": "ok",
-      "ms": 2415
+      "ms": 2668
     },
     {
       "app": "polls",
-      "route": "dashboard-digest",
-      "path": "/dashboard/digest",
+      "route": "home",
+      "path": "/",
       "viewport": "mobile",
       "status": "ok",
-      "ms": 1673
+      "ms": 1681
+    },
+    {
+      "app": "proof",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 3118
+    },
+    {
+      "app": "proof",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1728
+    },
+    {
+      "app": "metrics",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 1955
+    },
+    {
+      "app": "metrics",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1729
+    },
+    {
+      "app": "hook",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2142
+    },
+    {
+      "app": "hook",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1691
+    },
+    {
+      "app": "release",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2429
+    },
+    {
+      "app": "release",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1702
+    },
+    {
+      "app": "vault",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2535
+    },
+    {
+      "app": "vault",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1687
+    },
+    {
+      "app": "links",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2627
+    },
+    {
+      "app": "links",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1670
+    },
+    {
+      "app": "snippets",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2516
+    },
+    {
+      "app": "snippets",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1604
+    },
+    {
+      "app": "status",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2782
+    },
+    {
+      "app": "status",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1604
+    },
+    {
+      "app": "regex",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 3318
+    },
+    {
+      "app": "regex",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1621
+    },
+    {
+      "app": "postmortem",
+      "route": "home",
+      "path": "/",
+      "viewport": "desktop",
+      "status": "ok",
+      "ms": 2604
+    },
+    {
+      "app": "postmortem",
+      "route": "home",
+      "path": "/",
+      "viewport": "mobile",
+      "status": "ok",
+      "ms": 1606
     }
   ]
 }

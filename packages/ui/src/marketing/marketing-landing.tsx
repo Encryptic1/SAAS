@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { buildMarketingRichContent } from "./marketing-rich-content";
 import { HeroField } from "./hero-field";
 import { MarketingFooter } from "./marketing-footer";
 import { MarketingNav } from "./marketing-nav";
@@ -42,6 +43,21 @@ export type MarketingProduct =
   | "standard-regex"
   | "standard-postmortem";
 
+export interface MarketingFaqItem {
+  q: string;
+  a: string;
+}
+
+export interface MarketingComparisonColumn {
+  name: string;
+  highlight?: boolean;
+}
+
+export interface MarketingComparisonRow {
+  feature: string;
+  values: string[]; // one entry per column (first column is the row label)
+}
+
 export interface MarketingLandingProps {
   product: MarketingProduct;
   productLabel: string;
@@ -64,6 +80,13 @@ export interface MarketingLandingProps {
   proofTitle: string;
   proofPoints: string[];
   dbHint?: string;
+  faq?: MarketingFaqItem[];
+  comparison?: {
+    title: string;
+    columns: MarketingComparisonColumn[];
+    rows: MarketingComparisonRow[];
+  };
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 export function MarketingLanding({
@@ -88,9 +111,27 @@ export function MarketingLanding({
   proofTitle,
   proofPoints,
   dbHint,
+  faq,
+  comparison,
+  jsonLd,
 }: MarketingLandingProps) {
+  const defaults = buildMarketingRichContent(product, productLabel);
+  const faqItems = faq ?? defaults.faq;
+  const comparisonBlock = comparison ?? defaults.comparison;
+  const jsonLdNodes = jsonLd
+    ? Array.isArray(jsonLd)
+      ? jsonLd
+      : [jsonLd]
+    : defaults.jsonLd;
   return (
     <div className="ms-marketing">
+      {jsonLdNodes.map((node, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(node) }}
+        />
+      ))}
       <MarketingNav product={product} productLabel={productLabel} primaryCta={primaryCta} />
       <section className="relative flex flex-col justify-center overflow-hidden px-4 py-12 sm:px-8 sm:py-16 md:px-12 md:py-20 lg:min-h-[calc(100vh-4rem)]">
         <HeroField />
@@ -240,6 +281,72 @@ export function MarketingLanding({
           </div>
         </div>
       </section>
+
+      {comparisonBlock && (
+        <section id="compare" className="px-5 py-20 sm:px-8 md:px-12 md:py-28">
+          <div className="mb-12">
+            <div className="ms-eyebrow mb-5">Compare</div>
+            <h2 className="ms-section-heading">{comparisonBlock.title}</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="ms-comparison-table w-full border-collapse text-sm">
+              <thead>
+                <tr>
+                  <th className="text-left p-4 border-b border-white/10">Feature</th>
+                  {comparisonBlock.columns.map((col) => (
+                    <th
+                      key={col.name}
+                      className={`text-center p-4 border-b border-white/10 ${col.highlight ? "text-[var(--ms-gilt-light)]" : ""}`}
+                    >
+                      {col.name}
+                      {col.highlight && (
+                        <div className="mt-1 text-[10px] uppercase tracking-[0.2em] text-[var(--ms-flood)]">
+                          Market Standard
+                        </div>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonBlock.rows.map((row, idx) => (
+                  <tr key={row.feature} className={idx % 2 === 0 ? "" : "bg-white/[0.02]"}>
+                    <td className="text-left p-4 border-b border-white/5 text-[var(--ms-mist)]">{row.feature}</td>
+                    {row.values.map((val, i) => (
+                      <td
+                        key={i}
+                        className={`text-center p-4 border-b border-white/5 ${comparisonBlock.columns[i]?.highlight ? "text-[var(--ms-gilt-light)] font-medium" : "text-[var(--ms-mist)]"}`}
+                      >
+                        {val}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {faqItems.length > 0 && (
+        <section id="faq" className="px-5 py-20 sm:px-8 md:px-12 md:py-28">
+          <div className="grid grid-cols-1 gap-10 xl:grid-cols-[0.8fr_1.2fr] xl:gap-16">
+            <div>
+              <div className="ms-eyebrow mb-5">FAQ</div>
+              <h2 className="ms-section-heading">Common questions</h2>
+              <p className="ms-lede">Everything you need to know before signing up.</p>
+            </div>
+            <dl className="space-y-3">
+              {faqItems.map((item) => (
+                <div key={item.q} className="ms-panel p-5">
+                  <dt className="font-semibold text-[var(--ms-foam)]">{item.q}</dt>
+                  <dd className="mt-2 text-sm leading-7 text-[var(--ms-mist)]">{item.a}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      )}
 
       <MarketingFooter product={product} />
     </div>

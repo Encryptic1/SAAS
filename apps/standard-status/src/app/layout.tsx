@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Status — Build/CI Status Dashboard by Market Standard";
+const description =
+  "Build/CI status dashboard pulling GitHub Actions, Vercel deployments, and FloodG8 runner relay. Incident feed with severity + deploy health.";
+
 export const metadata: Metadata = {
-  title: "Standard Status — Build/CI Status Dashboard by Market Standard",
-  description:
-    "Build/CI status dashboard pulling GitHub Actions, Vercel deployments, and FloodG8 runner relay. Incident feed with severity + deploy health.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-status", productLabel: "Standard Status", title, description }),
 };
 
 export const viewport: Viewport = {

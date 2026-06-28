@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import { buildMarketingMetadata } from "@market-standard/ui";
 import "./globals.css";
 
+const title = "Standard Vault — AI-Agent-Safe Secrets Manager by Market Standard";
+const description =
+  "Encrypted secrets with env-injection CLI, .env/Doppler import, GitHub Actions sync, and an AI-agent reference mode that lets agents see keys without seeing values.";
+
 export const metadata: Metadata = {
-  title: "Standard Vault — AI-Agent-Safe Secrets Manager by Market Standard",
-  description:
-    "Encrypted secrets with env-injection CLI, .env/Doppler import, GitHub Actions sync, and an AI-agent reference mode that lets agents see keys without seeing values.",
+  title,
+  description,
+  ...buildMarketingMetadata({ product: "standard-vault", productLabel: "Standard Vault", title, description }),
 };
 
 export const viewport: Viewport = {

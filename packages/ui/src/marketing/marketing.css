@@ -108,6 +108,33 @@ button:focus-visible {
   -webkit-backdrop-filter: blur(8px);
 }
 
+.ms-comparison-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 640px;
+}
+
+.ms-comparison-table th,
+.ms-comparison-table td {
+  vertical-align: middle;
+}
+
+.ms-comparison-table thead th {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.ms-comparison-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ms-comparison-table td:first-child,
+.ms-comparison-table th:first-child {
+  text-align: left;
+}
+
 .ms-card {
   position: relative;
   overflow: hidden;
