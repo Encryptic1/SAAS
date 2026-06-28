@@ -64,3 +64,19 @@ test("Postmortem GET /api/health", async ({ request }) => {
   expect(json.status).toBe("ok");
   expect(json.product).toBe("standard-postmortem");
 });
+
+test("Lens GET /api/health", async ({ request }) => {
+  const res = await request.get(`${BASE.lens}/api/health`);
+  expect(res.status()).toBe(200);
+  const json = await res.json();
+  expect(json.status).toBe("ok");
+  expect(json.product).toBe("standard-lens");
+});
+
+test("Cron GET /api/health", async ({ request }) => {
+  const res = await request.get(`${BASE.cron}/api/health`);
+  expect(res.status()).toBe(200);
+  const json = await res.json();
+  expect(json.status).toBe("ok");
+  expect(json.product).toBe("standard-cron");
+});

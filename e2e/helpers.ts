@@ -12,6 +12,8 @@ export const BASE = {
   status: "http://localhost:3009",
   regex: "http://localhost:3010",
   postmortem: "http://localhost:3011",
+  lens: "http://localhost:3012",
+  cron: "http://localhost:3013",
   gateway: "http://127.0.0.1:4000",
 } as const;
 
@@ -54,6 +56,14 @@ export const ROUTES = [
   { name: "Postmortem new", url: `${BASE.postmortem}/dashboard/new`, app: true },
   { name: "Postmortem recurrence", url: `${BASE.postmortem}/dashboard/recurrence`, app: true },
   { name: "Postmortem privacy", url: `${BASE.postmortem}/privacy`, marketing: true },
+  { name: "Lens home", url: `${BASE.lens}/`, marketing: true },
+  { name: "Lens dashboard", url: `${BASE.lens}/dashboard`, app: true },
+  { name: "Lens slow queries", url: `${BASE.lens}/dashboard/slow`, app: true },
+  { name: "Lens explain", url: `${BASE.lens}/dashboard/explain`, app: true },
+  { name: "Lens privacy", url: `${BASE.lens}/privacy`, marketing: true },
+  { name: "Cron home", url: `${BASE.cron}/`, marketing: true },
+  { name: "Cron dashboard", url: `${BASE.cron}/dashboard`, app: true },
+  { name: "Cron privacy", url: `${BASE.cron}/privacy`, marketing: true },
 ] as const;
 
 export function collectPageErrors(page: Page): string[] {

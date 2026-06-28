@@ -20,6 +20,8 @@
     "./schema/status": "./src/schema/status.ts",
     "./schema/regex": "./src/schema/regex.ts",
     "./schema/postmortem": "./src/schema/postmortem.ts",
+    "./schema/lens": "./src/schema/lens.ts",
+    "./schema/cron": "./src/schema/cron.ts",
     "./vault-crypto": "./src/vault-crypto.ts",
     "./query": "./src/query.ts",
     "./gateway": "./src/gateway.ts"

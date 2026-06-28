@@ -40,7 +40,9 @@ const releaseStarter = envPrice("STRIPE_PRICE_RELEASE_STARTER");
 const linksStarter = envPrice("STRIPE_PRICE_LINKS_STARTER");
 const vaultStarter = envPrice("STRIPE_PRICE_VAULT_STARTER");
 const lensStarter = envPrice("STRIPE_PRICE_LENS_STARTER");
+const lensGrowth = envPrice("STRIPE_PRICE_LENS_GROWTH");
 const cronStarter = envPrice("STRIPE_PRICE_CRON_STARTER");
+const cronGrowth = envPrice("STRIPE_PRICE_CRON_GROWTH");
 const snippetsStarter = envPrice("STRIPE_PRICE_SNIPPETS_STARTER");
 const statusStarter = envPrice("STRIPE_PRICE_STATUS_STARTER");
 const regexStarter = envPrice("STRIPE_PRICE_REGEX_STARTER");
@@ -205,7 +207,7 @@ export const PLANS: Record<ProductId, PlanDefinition[]> = {
       tier: "free",
       name: "Free",
       priceMonthly: 0,
-      limits: { queriesPerMonth: 50 },
+      limits: { queriesPerDay: 100, slowQueryRetentionDays: 7 },
       showBadge: true,
     },
     {
@@ -214,7 +216,16 @@ export const PLANS: Record<ProductId, PlanDefinition[]> = {
       priceMonthly: 29,
       stripePriceId: lensStarter,
       stripeLookupKey: "standard-lens-starter-monthly",
-      limits: { queriesPerMonth: -1 },
+      limits: { queriesPerDay: -1, slowQueryRetentionDays: 30 },
+      showBadge: false,
+    },
+    {
+      tier: "growth",
+      name: "Growth",
+      priceMonthly: 99,
+      stripePriceId: lensGrowth,
+      stripeLookupKey: "standard-lens-growth-monthly",
+      limits: { queriesPerDay: -1, slowQueryRetentionDays: -1 },
       showBadge: false,
     },
   ],
@@ -223,16 +234,25 @@ export const PLANS: Record<ProductId, PlanDefinition[]> = {
       tier: "free",
       name: "Free",
       priceMonthly: 0,
-      limits: { monitors: 3 },
+      limits: { monitors: 3, runHistoryDays: 7 },
       showBadge: true,
     },
     {
       tier: "starter",
       name: "Starter",
-      priceMonthly: 15,
+      priceMonthly: 19,
       stripePriceId: cronStarter,
       stripeLookupKey: "standard-cron-starter-monthly",
-      limits: { monitors: -1 },
+      limits: { monitors: 25, runHistoryDays: 30 },
+      showBadge: false,
+    },
+    {
+      tier: "growth",
+      name: "Growth",
+      priceMonthly: 49,
+      stripePriceId: cronGrowth,
+      stripeLookupKey: "standard-cron-growth-monthly",
+      limits: { monitors: -1, runHistoryDays: -1 },
       showBadge: false,
     },
   ],

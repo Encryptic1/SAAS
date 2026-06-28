@@ -75,7 +75,7 @@ export default async function globalSetup(): Promise<void> {
       "turbo",
       "run",
       "dev",
-      "--concurrency=12",
+      "--concurrency=14",
       "--filter=standard-polls",
       "--filter=standard-proof",
       "--filter=standard-metrics",
@@ -87,6 +87,8 @@ export default async function globalSetup(): Promise<void> {
       "--filter=standard-status",
       "--filter=standard-regex",
       "--filter=standard-postmortem",
+      "--filter=standard-lens",
+      "--filter=standard-cron",
     ],
     LOCAL_DEV_ENV,
   );
@@ -103,10 +105,12 @@ export default async function globalSetup(): Promise<void> {
       "http://localhost:3009",
       "http://localhost:3010",
       "http://localhost:3011",
+      "http://localhost:3012",
+      "http://localhost:3013",
     ],
     240_000,
   );
 
   fs.writeFileSync(STATE_FILE, JSON.stringify({ spawned: true, pids: [gatewayPid, appsPid] }));
-  console.log("[e2e] Dev stack ready (11 apps + gateway)");
+  console.log("[e2e] Dev stack ready (13 apps + gateway)");
 }

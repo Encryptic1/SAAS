@@ -5,7 +5,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "dev:local": "pnpm db:setup && cross-env NEXT_PUBLIC_LOCAL_DEV=true LOCAL_DEV=true concurrently -k -n db,apps -c blue,green \"pnpm db:server\" \"wait-on -t 30000 http://127.0.0.1:4000/health && cross-env NEXT_PUBLIC_LOCAL_DEV=true LOCAL_DEV=true turbo run dev --concurrency=12 --filter=standard-polls --filter=standard-proof --filter=standard-metrics --filter=standard-hook --filter=standard-release --filter=standard-vault --filter=standard-links --filter=standard-snippets --filter=standard-status --filter=standard-regex --filter=standard-postmortem\"",
+    "dev:local": "pnpm db:setup && cross-env NEXT_PUBLIC_LOCAL_DEV=true LOCAL_DEV=true concurrently -k -n db,apps -c blue,green \"pnpm db:server\" \"wait-on -t 30000 http://127.0.0.1:4000/health && cross-env NEXT_PUBLIC_LOCAL_DEV=true LOCAL_DEV=true turbo run dev --concurrency=14 --filter=standard-polls --filter=standard-proof --filter=standard-metrics --filter=standard-hook --filter=standard-release --filter=standard-vault --filter=standard-links --filter=standard-snippets --filter=standard-status --filter=standard-regex --filter=standard-postmortem --filter=standard-lens --filter=standard-cron\"",
     "db:setup": "tsx scripts/sync-local-env.ts && pnpm --filter @market-standard/db db:setup",
     "db:server": "cross-env LOCAL_DEV=true NEXT_PUBLIC_LOCAL_DEV=true tsx scripts/db-gateway.ts",
     "vercel:setup-envs": "tsx scripts/setup-vercel-envs.ts",

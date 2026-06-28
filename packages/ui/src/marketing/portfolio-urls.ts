@@ -13,8 +13,8 @@ export function getPortfolioUrls() {
     status: process.env.NEXT_PUBLIC_STATUS_URL ?? "http://localhost:3009",
     regex: process.env.NEXT_PUBLIC_REGEX_URL ?? "http://localhost:3010",
     postmortem: process.env.NEXT_PUBLIC_POSTMORTEM_URL ?? "http://localhost:3011",
-    lens: process.env.NEXT_PUBLIC_LENS_URL ?? "https://lens.marketstandard.app",
-    cron: process.env.NEXT_PUBLIC_CRON_URL ?? "https://cron.marketstandard.app",
+    lens: process.env.NEXT_PUBLIC_LENS_URL ?? "http://localhost:3012",
+    cron: process.env.NEXT_PUBLIC_CRON_URL ?? "http://localhost:3013",
     floodg8: process.env.NEXT_PUBLIC_FLOODG8_URL ?? "https://floodg8.com",
     syncdevtime: process.env.NEXT_PUBLIC_SYNCDEVTIME_URL ?? "https://syncdevtime.com",
   };

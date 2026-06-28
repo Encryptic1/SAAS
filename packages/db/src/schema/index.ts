@@ -11,3 +11,5 @@ export * from "./snippets";
 export * from "./status";
 export * from "./regex";
 export * from "./postmortem";
+export * from "./lens";
+export * from "./cron";

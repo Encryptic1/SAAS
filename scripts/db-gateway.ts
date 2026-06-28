@@ -25,6 +25,9 @@ import {
   postmortemActionItems as pmActionItems,
   postmortemRecurrenceLinks as pmRecurrenceLinks,
 } from "../packages/db/src/schema/postmortem";
+import { queries as lensQueries, slowQueries as lensSlowQueries } from "../packages/db/src/schema/lens";
+import { jobs as cronJobs, runs as cronRuns } from "../packages/db/src/schema/cron";
+import { randomBytes } from "node:crypto";
 
 type TestCase = { input: string; expectedMatches: number | null; note?: string };
 type TimelineEntry = { at: string; text: string };
@@ -2081,6 +2084,247 @@ function jaccard(a: Set<string>, b: Set<string>): number {
   const union = a.size + b.size - intersection;
   return union === 0 ? 0 : intersection / union;
 }
+
+// ----- Lens (DB query optimizer + slow query detection) -----
+
+app.get("/lens/queries", async (c) => {
+  const ownerId = c.req.query("ownerId");
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const rows = await db
+    .select()
+    .from(lensQueries)
+    .where(eq(lensQueries.ownerId, ownerId))
+    .orderBy(desc(lensQueries.updatedAt));
+  return c.json({ queries: rows });
+});
+
+app.post("/lens/queries", async (c) => {
+  const body = await c.req.json<{ ownerId?: string; name?: string; sqlText?: string; databaseLabel?: string; tags?: string[]; isPinned?: boolean }>();
+  if (!body.ownerId || !body.name || !body.sqlText) {
+    return c.json({ error: "ownerId, name, sqlText required" }, 400);
+  }
+  const db = await getPgliteDb();
+  const [row] = await db
+    .insert(lensQueries)
+    .values({
+      ownerId: body.ownerId,
+      name: body.name,
+      sqlText: body.sqlText,
+      databaseLabel: body.databaseLabel ?? "default",
+      tags: body.tags ?? [],
+      isPinned: body.isPinned ?? false,
+    })
+    .returning();
+  return c.json({ query: row }, 201);
+});
+
+app.get("/lens/queries/:id", async (c) => {
+  const id = c.req.param("id");
+  const db = await getPgliteDb();
+  const [row] = await db.select().from(lensQueries).where(eq(lensQueries.id, id)).limit(1);
+  if (!row) return c.json({ error: "Not found" }, 404);
+  return c.json({ query: row });
+});
+
+app.patch("/lens/queries/:id", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json<{ name?: string; sqlText?: string; databaseLabel?: string; avgMs?: number | string | null; lastRunAt?: string | null; lastExplain?: unknown; tags?: string[]; isPinned?: boolean }>();
+  const db = await getPgliteDb();
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (body.name !== undefined) updates.name = body.name;
+  if (body.sqlText !== undefined) updates.sqlText = body.sqlText;
+  if (body.databaseLabel !== undefined) updates.databaseLabel = body.databaseLabel;
+  if (body.avgMs !== undefined) updates.avgMs = body.avgMs === null ? null : String(body.avgMs);
+  if (body.lastRunAt !== undefined) updates.lastRunAt = body.lastRunAt ? new Date(body.lastRunAt) : null;
+  if (body.lastExplain !== undefined) updates.lastExplain = body.lastExplain;
+  if (body.tags !== undefined) updates.tags = body.tags;
+  if (body.isPinned !== undefined) updates.isPinned = body.isPinned;
+  const [row] = await db.update(lensQueries).set(updates).where(eq(lensQueries.id, id)).returning();
+  if (!row) return c.json({ error: "Not found" }, 404);
+  return c.json({ query: row });
+});
+
+app.delete("/lens/queries/:id", async (c) => {
+  const id = c.req.param("id");
+  const db = await getPgliteDb();
+  await db.delete(lensQueries).where(eq(lensQueries.id, id));
+  return c.json({ ok: true });
+});
+
+app.get("/lens/slow", async (c) => {
+  const ownerId = c.req.query("ownerId");
+  const limit = Math.min(100, Number(c.req.query("limit") ?? 50));
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const rows = await db
+    .select()
+    .from(lensSlowQueries)
+    .where(eq(lensSlowQueries.ownerId, ownerId))
+    .orderBy(desc(lensSlowQueries.capturedAt))
+    .limit(limit);
+  return c.json({ slowQueries: rows });
+});
+
+app.post("/lens/slow", async (c) => {
+  const body = await c.req.json<{ ownerId?: string; queryHash?: string; sqlText?: string; durationMs?: number | string; thresholdMs?: number | string; source?: string; databaseLabel?: string; metadata?: Record<string, unknown> }>();
+  if (!body.ownerId || !body.queryHash || !body.sqlText || body.durationMs === undefined || body.thresholdMs === undefined) {
+    return c.json({ error: "ownerId, queryHash, sqlText, durationMs, thresholdMs required" }, 400);
+  }
+  const db = await getPgliteDb();
+  const [row] = await db
+    .insert(lensSlowQueries)
+    .values({
+      ownerId: body.ownerId,
+      queryHash: body.queryHash,
+      sqlText: body.sqlText,
+      durationMs: String(body.durationMs),
+      thresholdMs: String(body.thresholdMs),
+      source: body.source ?? "postgres",
+      databaseLabel: body.databaseLabel ?? "default",
+      metadata: body.metadata ?? null,
+    })
+    .returning();
+  return c.json({ slowQuery: row }, 201);
+});
+
+// ----- Cron (cron monitor + alerting) -----
+
+function generateHeartbeatToken(): string {
+  return randomBytes(18).toString("base64url");
+}
+
+app.get("/cron/jobs", async (c) => {
+  const ownerId = c.req.query("ownerId");
+  if (!ownerId) return c.json({ error: "ownerId required" }, 400);
+  const db = await getPgliteDb();
+  const rows = await db
+    .select()
+    .from(cronJobs)
+    .where(eq(cronJobs.ownerId, ownerId))
+    .orderBy(desc(cronJobs.updatedAt));
+  return c.json({ jobs: rows });
+});
+
+app.post("/cron/jobs", async (c) => {
+  const body = await c.req.json<{ ownerId?: string; name?: string; scheduleCron?: string; source?: string; expectedWindowMinutes?: number; graceMinutes?: number; alertChannel?: string | null; metadata?: Record<string, unknown> }>();
+  if (!body.ownerId || !body.name || !body.scheduleCron) {
+    return c.json({ error: "ownerId, name, scheduleCron required" }, 400);
+  }
+  const db = await getPgliteDb();
+  const [row] = await db
+    .insert(cronJobs)
+    .values({
+      ownerId: body.ownerId,
+      name: body.name,
+      scheduleCron: body.scheduleCron,
+      source: body.source ?? "custom",
+      expectedWindowMinutes: body.expectedWindowMinutes ?? 5,
+      graceMinutes: body.graceMinutes ?? 2,
+      alertChannel: body.alertChannel ?? null,
+      heartbeatToken: generateHeartbeatToken(),
+      metadata: body.metadata ?? null,
+    })
+    .returning();
+  return c.json({ job: row }, 201);
+});
+
+app.get("/cron/jobs/:id", async (c) => {
+  const id = c.req.param("id");
+  const db = await getPgliteDb();
+  const [row] = await db.select().from(cronJobs).where(eq(cronJobs.id, id)).limit(1);
+  if (!row) return c.json({ error: "Not found" }, 404);
+  const recentRuns = await db
+    .select()
+    .from(cronRuns)
+    .where(eq(cronRuns.jobId, id))
+    .orderBy(desc(cronRuns.startedAt))
+    .limit(30);
+  return c.json({ job: row, runs: recentRuns });
+});
+
+app.patch("/cron/jobs/:id", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json<{ name?: string; scheduleCron?: string; source?: string; expectedWindowMinutes?: number; graceMinutes?: number; alertChannel?: string | null; metadata?: Record<string, unknown> }>();
+  const db = await getPgliteDb();
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (body.name !== undefined) updates.name = body.name;
+  if (body.scheduleCron !== undefined) updates.scheduleCron = body.scheduleCron;
+  if (body.source !== undefined) updates.source = body.source;
+  if (body.expectedWindowMinutes !== undefined) updates.expectedWindowMinutes = body.expectedWindowMinutes;
+  if (body.graceMinutes !== undefined) updates.graceMinutes = body.graceMinutes;
+  if (body.alertChannel !== undefined) updates.alertChannel = body.alertChannel;
+  if (body.metadata !== undefined) updates.metadata = body.metadata;
+  const [row] = await db.update(cronJobs).set(updates).where(eq(cronJobs.id, id)).returning();
+  if (!row) return c.json({ error: "Not found" }, 404);
+  return c.json({ job: row });
+});
+
+app.delete("/cron/jobs/:id", async (c) => {
+  const id = c.req.param("id");
+  const db = await getPgliteDb();
+  await db.delete(cronJobs).where(eq(cronJobs.id, id));
+  return c.json({ ok: true });
+});
+
+app.post("/cron/jobs/:id/runs", async (c) => {
+  const id = c.req.param("id");
+  const body = await c.req.json<{ status?: string; startedAt?: string; finishedAt?: string | null; durationMs?: number | null; metadata?: Record<string, unknown> }>();
+  const db = await getPgliteDb();
+  const [job] = await db.select().from(cronJobs).where(eq(cronJobs.id, id)).limit(1);
+  if (!job) return c.json({ error: "Not found" }, 404);
+  const status = body.status ?? "ok";
+  const startedAt = body.startedAt ? new Date(body.startedAt) : new Date();
+  const finishedAt = body.finishedAt ? new Date(body.finishedAt) : (body.durationMs !== undefined ? new Date(startedAt.getTime() + Number(body.durationMs ?? 0)) : new Date());
+  const [run] = await db
+    .insert(cronRuns)
+    .values({
+      jobId: id,
+      status,
+      startedAt,
+      finishedAt,
+      durationMs: body.durationMs ?? null,
+      metadata: body.metadata ?? null,
+    })
+    .returning();
+  await db
+    .update(cronJobs)
+    .set({
+      lastRunAt: startedAt,
+      lastStatus: status,
+      lastHeartbeatAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(cronJobs.id, id));
+  return c.json({ run }, 201);
+});
+
+/** Heartbeat ping — a cron job hits this URL with its token to report a run. */
+app.post("/cron/heartbeat/:token", async (c) => {
+  const token = c.req.param("token");
+  const body = await c.req.json().catch(() => ({})) as { status?: string; durationMs?: number | null; metadata?: Record<string, unknown> };
+  const db = await getPgliteDb();
+  const [job] = await db.select().from(cronJobs).where(eq(cronJobs.heartbeatToken, token)).limit(1);
+  if (!job) return c.json({ error: "Unknown heartbeat token" }, 404);
+  const status = body.status ?? "ok";
+  const now = new Date();
+  const [run] = await db
+    .insert(cronRuns)
+    .values({
+      jobId: job.id,
+      status,
+      startedAt: now,
+      finishedAt: now,
+      durationMs: body.durationMs ?? null,
+      metadata: body.metadata ?? null,
+    })
+    .returning();
+  await db
+    .update(cronJobs)
+    .set({ lastRunAt: now, lastStatus: status, lastHeartbeatAt: now, updatedAt: now })
+    .where(eq(cronJobs.id, job.id));
+  return c.json({ ok: true, run });
+});
 
 async function main() {
   await getPgliteDb();

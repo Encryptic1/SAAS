@@ -578,6 +578,78 @@ CREATE TABLE IF NOT EXISTS standup.blocker_keywords (
   created_at timestamptz DEFAULT now() NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_standup_blocker_keywords_workspace ON standup.blocker_keywords (workspace_id);
+
+-- Standard Lens (DB query optimizer + slow query detection)
+CREATE SCHEMA IF NOT EXISTS lens;
+CREATE TABLE IF NOT EXISTS lens.queries (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  owner_id text NOT NULL,
+  name text NOT NULL,
+  sql_text text NOT NULL,
+  database_label text DEFAULT 'default' NOT NULL,
+  avg_ms numeric(12, 2),
+  last_run_at timestamptz,
+  last_explain jsonb,
+  tags text[] DEFAULT '{}'::text[] NOT NULL,
+  is_pinned boolean DEFAULT false NOT NULL,
+  created_at timestamptz DEFAULT now() NOT NULL,
+  updated_at timestamptz DEFAULT now() NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_lens_queries_owner ON lens.queries (owner_id, updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_lens_queries_pinned ON lens.queries (is_pinned);
+CREATE INDEX IF NOT EXISTS idx_lens_queries_updated ON lens.queries (updated_at DESC);
+
+CREATE TABLE IF NOT EXISTS lens.slow_queries (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  owner_id text NOT NULL,
+  query_hash text NOT NULL,
+  sql_text text NOT NULL,
+  duration_ms numeric(12, 2) NOT NULL,
+  threshold_ms numeric(12, 2) NOT NULL,
+  source text DEFAULT 'postgres' NOT NULL,
+  database_label text DEFAULT 'default' NOT NULL,
+  metadata jsonb,
+  captured_at timestamptz DEFAULT now() NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_lens_slow_queries_owner ON lens.slow_queries (owner_id, captured_at DESC);
+CREATE INDEX IF NOT EXISTS idx_lens_slow_queries_captured ON lens.slow_queries (captured_at DESC);
+CREATE INDEX IF NOT EXISTS idx_lens_slow_queries_source ON lens.slow_queries (source);
+
+-- Standard Cron (cron monitor for Vercel Cron, GitHub Actions, FloodG8 runners)
+CREATE SCHEMA IF NOT EXISTS cron;
+CREATE TABLE IF NOT EXISTS cron.jobs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  owner_id text NOT NULL,
+  name text NOT NULL,
+  schedule_cron text NOT NULL,
+  source text DEFAULT 'custom' NOT NULL,
+  expected_window_minutes integer DEFAULT 5 NOT NULL,
+  grace_minutes integer DEFAULT 2 NOT NULL,
+  alert_channel text,
+  heartbeat_token text NOT NULL,
+  last_run_at timestamptz,
+  last_status text,
+  last_heartbeat_at timestamptz,
+  metadata jsonb,
+  created_at timestamptz DEFAULT now() NOT NULL,
+  updated_at timestamptz DEFAULT now() NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_cron_jobs_owner ON cron.jobs (owner_id, updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_cron_jobs_token ON cron.jobs (heartbeat_token);
+CREATE INDEX IF NOT EXISTS idx_cron_jobs_source ON cron.jobs (source);
+
+CREATE TABLE IF NOT EXISTS cron.runs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  job_id uuid NOT NULL REFERENCES cron.jobs(id) ON DELETE CASCADE,
+  status text NOT NULL,
+  started_at timestamptz DEFAULT now() NOT NULL,
+  finished_at timestamptz,
+  duration_ms integer,
+  metadata jsonb
+);
+CREATE INDEX IF NOT EXISTS idx_cron_runs_job ON cron.runs (job_id, started_at DESC);
+CREATE INDEX IF NOT EXISTS idx_cron_runs_started ON cron.runs (started_at DESC);
+CREATE INDEX IF NOT EXISTS idx_cron_runs_status ON cron.runs (status);
 `;
 
 export async function pushLocalSchema(db: Db): Promise<void> {

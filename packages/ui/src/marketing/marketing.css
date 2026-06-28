@@ -167,6 +167,45 @@ button:focus-visible {
   }
 }
 
+.ms-input {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-deep);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  color: var(--text-foam);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.ms-input::placeholder {
+  color: var(--text-fog);
+}
+
+.ms-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ms-input:focus,
+.ms-input:focus-visible {
+  outline: none;
+  border-color: var(--color-flood);
+  box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.18);
+}
+
+select.ms-input {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-mist) 50%), linear-gradient(135deg, var(--text-mist) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
+}
+
 .ms-btn {
   position: relative;
   display: inline-flex;

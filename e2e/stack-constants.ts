@@ -16,4 +16,6 @@ export const HEALTH_URLS = [
   "http://localhost:3009",
   "http://localhost:3010",
   "http://localhost:3011",
+  "http://localhost:3012",
+  "http://localhost:3013",
 ] as const;
