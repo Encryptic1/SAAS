@@ -94,6 +94,26 @@ Also fixed the stale "13 apps" / `:3001-:3005` log messages in `e2e/global-setup
 
 **How to run the full CI manually:** trigger the "CI" workflow from the GitHub Actions UI (`https://github.com/Encryptic1/SAAS/actions/workflows/ci.yml` → "Run workflow") when you want the full quality + build + E2E suite.
 
+### Fix 6: Production nav links pointing at localhost (commits `4b74fd7`, `ec9ccf1`)
+
+**Symptom:** on `https://workspace.marketstandard.app/` + `https://proof.marketstandard.app/` (and across all 14 apps), the top-nav sibling links + dashboard cross-links pointed at `http://localhost:30XX` instead of `https://<app>.marketstandard.app`.
+
+**Root cause 1 — `getPortfolioUrls()` fallback:** `packages/ui/src/marketing/portfolio-urls.ts` fell back to `http://localhost:30XX` when the `NEXT_PUBLIC_<APP>_URL` env vars were unset. Those env vars were never set on any Vercel project, so every production build inlined localhost URLs into the nav + suite-switcher + footer.
+
+**Root cause 2 — app-level `NEXT_PUBLIC_APP_URL` fallbacks:** 13 app files (dashboards, settings pages, OAuth routes, webhook displays, heartbeat URLs) used `process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:30XX"` or `process.env.NEXT_PUBLIC_X_URL ?? "http://localhost:30XX"`. With those env vars unset in production, every dashboard cross-sell link, Stripe Connect redirect URI, webhook endpoint display, + cron heartbeat URL resolved to localhost.
+
+**Root cause 3 — stale Vercel env vars:** the `standard-vault` + `standard-links` projects had `NEXT_PUBLIC_PROOF_URL` / `NEXT_PUBLIC_METRICS_URL` explicitly set to `http://localhost:3002` / `http://localhost:3003` on the **production** environment (encrypted, so not visible in the API read). These overrode even a correct fallback. All 14 projects also had a production-targeted `NEXT_PUBLIC_APP_URL` from initial setup.
+
+**Fix 1 — `portfolio-urls.ts` (commit `4b74fd7`):** rewrote the resolver so the fallback respects `NEXT_PUBLIC_LOCAL_DEV` — localhost only when `=== "true"`, otherwise `https://<app>.marketstandard.app`. Exported `resolvePortfolioUrl(app)` for single-app lookups + added it to the `@market-standard/ui` barrel.
+
+**Fix 2 — app-level files (commit `4b74fd7`):** replaced every `process.env.NEXT_PUBLIC_X_URL ?? "http://localhost:30XX"` with `getPortfolioUrls()` or `resolvePortfolioUrl("<self>")` across 13 files: workspace `health-grid.tsx` (also switched from stale `*.vercel.app` probe URLs to `*.marketstandard.app/api/health`), workspace `dashboard/page.tsx`, metrics `dashboard/page.tsx`, regex `regex-editor.tsx`, status `pipelines-list.tsx`, links `dashboard/page.tsx` + `dashboard/links/page.tsx`, hook `dashboard/page.tsx` + `dashboard/inboxes/page.tsx` + `dashboard/inboxes/[id]/page.tsx`, proof `dashboard/page.tsx`, metrics `dashboard/settings/page.tsx`, metrics `api/stripe/connect/route.ts`, cron `dashboard/[id]/page.tsx`.
+
+**Fix 3 — Vercel env-var cleanup (commit `ec9ccf1`):** `scripts/delete-stale-env.cjs` deleted 17 production-targeted env vars across all 14 projects (the stale `NEXT_PUBLIC_PROOF_URL` / `NEXT_PUBLIC_METRICS_URL` on vault + links, plus `NEXT_PUBLIC_APP_URL` on all 14). With the stale overrides gone, the `resolveAppUrl()` fallback is the single source of truth — production defaults to `https://<app>.marketstandard.app`, local dev (with `NEXT_PUBLIC_LOCAL_DEV=true`) defaults to `http://localhost:<port>`.
+
+**Operational scripts added (commit `ec9ccf1`):** `redeploy-all-apps.cjs` (trigger + poll 14 production deployments via the Vercel API), `verify-nav-links.cjs` (fetch each production homepage + assert zero localhost hrefs), `delete-stale-env.cjs` (the cleanup script), `find-localhost-hrefs.cjs` + `check-env-vars.cjs` (debugging helpers).
+
+**Post-fix result:** `verify-nav-links.cjs` reports `14/14 apps clean` — every production homepage renders 18–28 `*.marketstandard.app` hrefs + zero `localhost` hrefs. Confirmed on `https://workspace.marketstandard.app/` + `https://proof.marketstandard.app/` (the two the user reported) plus all 12 siblings.
+
 ### Verification (post-fixes)
 
 | Check | Result |
@@ -103,6 +123,7 @@ Also fixed the stale "13 apps" / `:3001-:3005` log messages in `e2e/global-setup
 | 14 custom domains `/api/health` | ✅ 14/14 returning 200 |
 | CSS probe (workspace + metrics) | ✅ all `lg:grid-cols` / `sm:flex-row` / `max-w-*` classes now present |
 | Production screenshots (14 apps, desktop) | ✅ all render with proper 2-column hero + aside cards + no local-dev banner |
+| Nav-link verification (`verify-nav-links.cjs`) | ✅ 14/14 apps clean — zero localhost hrefs, all links → `*.marketstandard.app` |
 
 ---
 
