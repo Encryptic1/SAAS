@@ -1,8 +1,12 @@
 import type { Config } from "tailwindcss";
-export default {
+import preset from "@market-standard/config/tailwind";
+
+const config: Config = {
   content: [
-    "./src/**/*.{ts,tsx}",
-    "../../packages/ui/src/**/*.{ts,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "../../packages/ui/src/**/*.{js,ts,jsx,tsx}",
   ],
-  presets: [],
-} satisfies Config;
+  presets: [preset],
+};
+
+export default config;

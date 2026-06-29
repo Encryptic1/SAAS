@@ -16,6 +16,9 @@ export function ProductHeroAside({ product }: ProductHeroAsideProps) {
   if (product === "standard-status") return <StatusAside />;
   if (product === "standard-regex") return <RegexAside />;
   if (product === "standard-postmortem") return <PostmortemAside />;
+  if (product === "standard-lens") return <LensAside />;
+  if (product === "standard-cron") return <CronAside />;
+  if (product === "standard-workspace") return <WorkspaceAside />;
   return <ReleaseAside />;
 }
 
@@ -346,6 +349,130 @@ function PostmortemAside() {
         <div className="mt-4 grid grid-cols-2 gap-3">
           <StatusPill label="Intake" value="Hook · Status · Pulse" />
           <StatusPill label="Recurrence" value="pgvector / Jaccard" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LensAside() {
+  return (
+    <div className="ms-panel relative overflow-hidden p-5 md:p-7">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(57,255,20,0.12),transparent_45%)]" />
+      <div className="relative z-10">
+        <div className="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--ms-gilt-light)]">
+          Slow query optimizer
+        </div>
+        <div className="mt-5 rounded-lg border border-white/[0.08] bg-black/40 p-4 font-mono text-xs">
+          <p className="text-[var(--ms-fog)]">EXPLAIN ANALYZE</p>
+          <pre className="mt-2 overflow-x-auto text-[var(--ms-mist)]">{`SELECT * FROM events
+WHERE user_id = $1
+  AND ts > now() - '7d'`}</pre>
+          <div className="mt-3 flex items-center justify-between rounded border border-rose-500/30 bg-rose-500/5 p-2">
+            <span className="text-rose-300">Seq scan · 4.2s</span>
+            <span className="text-[var(--ms-fog)] text-[10px]">missing idx</span>
+          </div>
+          <div className="mt-3 flex items-center justify-between rounded border border-emerald-500/30 bg-emerald-500/5 p-2">
+            <span className="text-emerald-300">Index scan · 38ms</span>
+            <span className="text-[var(--ms-fog)] text-[10px]">+ idx(user_id, ts)</span>
+          </div>
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <StatusPill label="Engine" value="Postgres + pgvector" />
+          <StatusPill label="Fix" value="index suggestion" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CronAside() {
+  const jobs = [
+    { name: "stripe-sync", schedule: "*/5 * * * *", status: "ok", last: "2.1s" },
+    { name: "digest-daily", schedule: "0 9 * * *", status: "ok", last: "12s" },
+    { name: "standup-prompt", schedule: "0 10 * * 1-5", status: "late", last: "—" },
+  ];
+  return (
+    <div className="ms-panel relative overflow-hidden p-5 md:p-7">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(197,165,90,0.12),transparent_45%)]" />
+      <div className="relative z-10">
+        <div className="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--ms-gilt-light)]">
+          Cron monitor
+        </div>
+        <div className="mt-5 space-y-2 rounded-lg border border-white/[0.08] bg-black/40 p-4 font-mono text-xs">
+          {jobs.map((job) => (
+            <div key={job.name} className="flex items-center justify-between gap-2">
+              <span className="truncate text-[var(--ms-mist)]">{job.name}</span>
+              <span className="text-[var(--ms-fog)] text-[10px]">{job.schedule}</span>
+              <span
+                className={`rounded px-1.5 py-0.5 text-[10px] ${
+                  job.status === "ok"
+                    ? "border border-emerald-500/40 text-emerald-300"
+                    : "border border-amber-500/40 text-amber-300"
+                }`}
+              >
+                {job.status === "ok" ? `OK ${job.last}` : "LATE"}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <StatusPill label="Sources" value="Vercel Cron · pg_cron" />
+          <StatusPill label="Alerts" value="Slack + email" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WorkspaceAside() {
+  const apps = [
+    { name: "polls", health: "ok" },
+    { name: "proof", health: "ok" },
+    { name: "metrics", health: "ok" },
+    { name: "hook", health: "ok" },
+    { name: "release", health: "ok" },
+    { name: "vault", health: "ok" },
+    { name: "links", health: "ok" },
+    { name: "snippets", health: "ok" },
+    { name: "status", health: "warn" },
+    { name: "regex", health: "ok" },
+    { name: "postmortem", health: "ok" },
+    { name: "lens", health: "ok" },
+    { name: "cron", health: "ok" },
+    { name: "workspace", health: "ok" },
+  ];
+  return (
+    <div className="ms-panel relative overflow-hidden p-5 md:p-7">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(57,255,20,0.12),transparent_45%)]" />
+      <div className="relative z-10">
+        <div className="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--ms-gilt-light)]">
+          14-app status grid
+        </div>
+        <div className="mt-5 rounded-lg border border-white/[0.08] bg-black/40 p-4">
+          <div className="grid grid-cols-7 gap-1.5">
+            {apps.map((app) => (
+              <div
+                key={app.name}
+                className={`flex h-7 items-center justify-center rounded text-[9px] font-mono ${
+                  app.health === "ok"
+                    ? "bg-emerald-500/15 text-emerald-300"
+                    : "bg-amber-500/15 text-amber-300"
+                }`}
+                title={app.name}
+              >
+                {app.name.slice(0, 2)}
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex items-center justify-between text-[10px] font-mono text-[var(--ms-fog)]">
+            <span>13 ok · 1 warn</span>
+            <span className="text-[var(--ms-flood)]">SSE live</span>
+          </div>
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <StatusPill label="Externals" value="FloodG8 · Supabase · Stripe" />
+          <StatusPill label="Tunnels" value="Cloudflare" />
         </div>
       </div>
     </div>
