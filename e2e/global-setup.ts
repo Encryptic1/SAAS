@@ -76,7 +76,7 @@ function spawnDetached(command: string, args: string[], env?: NodeJS.ProcessEnv)
 export default async function globalSetup(): Promise<void> {
   if (await isHealthy()) {
     fs.writeFileSync(STATE_FILE, JSON.stringify({ spawned: false }));
-    console.log("[e2e] Reusing existing dev stack on :4000, :3001-:3005");
+    console.log("[e2e] Reusing existing dev stack on :4000, :3001-:3014");
     return;
   }
 

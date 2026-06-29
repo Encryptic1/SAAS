@@ -28,7 +28,7 @@ export default async function HomePage() {
             One pane for the <span className="ms-flood-text">whole Market Standard suite.</span>
           </>
         }
-        lede="A portfolio control panel that shows live health for all 13 Market Standard apps plus FloodG8, SyncDevTime, Supabase, and Stripe. Start dev sessions, tail logs over SSE, manage webhook tunnels, and track dependency parity across repos."
+        lede="A portfolio control panel that shows live health for all 14 Market Standard apps plus FloodG8, SyncDevTime, Supabase, and Stripe. Start dev sessions, tail logs over SSE, manage webhook tunnels, and track dependency parity across repos."
         highlight={
           <>
             <strong className="text-[var(--color-flood)]">14-app status grid.</strong>{" "}
@@ -49,7 +49,7 @@ export default async function HomePage() {
         features={[
           {
             title: "14-app status grid",
-            body: "Live /api/health for all 13 apps + FloodG8 + SyncDevTime + Supabase + Stripe. Green/amber/red with latency. Click through to any app's dashboard.",
+            body: "Live /api/health for all 14 apps + FloodG8 + SyncDevTime + Supabase + Stripe. Green/amber/red with latency. Click through to any app's dashboard.",
           },
           {
             title: "Dev sessions with SSE logs",
@@ -88,7 +88,7 @@ export default async function HomePage() {
         ]}
         proofTitle="The suite, finally in one window."
         proofPoints={[
-          "14-app status grid (13 apps + FloodG8 + SyncDevTime + Supabase + Stripe)",
+          "14-app status grid (14 apps + FloodG8 + SyncDevTime + Supabase + Stripe)",
           "Dev sessions with SSE log tailing",
           "Webhook tunnels (Cloudflare / localhost)",
           "Depsync parity diff across all apps",

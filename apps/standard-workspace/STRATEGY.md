@@ -1,7 +1,7 @@
 # Standard Workspace — Product Strategy
 
 ## Product
-Portfolio control panel for the Market Standard suite. One pane shows live health for all 13 Market Standard apps plus FloodG8, SyncDevTime, Supabase, and Stripe. Start `ms-suite dev` sessions and tail logs over Server-Sent Events. Manage webhook tunnels (Cloudflare / localhost) so external webhooks reach local intake routes. Run depsync to verify every app is on the latest shared packages.
+Portfolio control panel for the Market Standard suite. One pane shows live health for all 14 Market Standard apps plus FloodG8, SyncDevTime, Supabase, and Stripe. Start `ms-suite dev` sessions and tail logs over Server-Sent Events. Manage webhook tunnels (Cloudflare / localhost) so external webhooks reach local intake routes. Run depsync to verify every app is on the latest shared packages.
 
 ## Distribution
 - **Primary**: Standalone web app at `workspace.marketstandard.app` (port 3014 local dev)
@@ -35,7 +35,7 @@ Developer-tools lane — ops/reliability buyers who run the whole suite.
 - [x] Schema `workspace`: `sessions`, `health_checks`, `tunnels`
 - [x] Dashboard: status grid, sessions, tunnels, health, depsync, billing, team
 - [x] SSE log stream (`/api/sessions/[id]/logs`)
-- [x] Health probes (13 apps + FloodG8 + SyncDevTime + Supabase + Stripe)
+- [x] Health probes (14 apps + FloodG8 + SyncDevTime + Supabase + Stripe)
 - [x] Depsync parity diff (reads every app's package.json)
 - [x] Cross-sells: Status, Snippets, Vault, Pulse
 - [x] Stripe product `standard-workspace` (free/starter/growth)

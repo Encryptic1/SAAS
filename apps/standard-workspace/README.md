@@ -2,7 +2,7 @@
 
 Portfolio control panel for the Market Standard suite, by Market Standard.
 
-One pane shows live health for all 13 Market Standard apps plus FloodG8, SyncDevTime, Supabase, and Stripe. Start dev sessions and tail logs over Server-Sent Events. Manage webhook tunnels so external webhooks reach local intake routes. Run depsync to verify every app is on the latest shared packages.
+One pane shows live health for all 14 Market Standard apps plus FloodG8, SyncDevTime, Supabase, and Stripe. Start dev sessions and tail logs over Server-Sent Events. Manage webhook tunnels so external webhooks reach local intake routes. Run depsync to verify every app is on the latest shared packages.
 
 ## Stack
 - Next.js 15 (App Router) on port 3014

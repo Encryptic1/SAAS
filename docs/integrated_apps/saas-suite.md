@@ -1,9 +1,9 @@
 # Market Standard SAAS Suite — Integration with FloodG8 + Marketing Site
 
-**Date:** 2026-06-28
+**Date:** 2026-06-28 (updated 2026-06-29)
 **Repo:** `F:\dev\SAAS` (GitHub: `Encryptic1/SAAS`)
-**Commits pushed to `origin/main`:** `a96003c` → `cfdecb6` → `bf34b1a` → `4697d1a` → `1f069f1`
-**Vercel deployments:** all 14 apps deployed to production at `https://standard-<app>.vercel.app` — all returning 200 on `/api/health` + 307 on `/auth/callback` (SSO bridge live)
+**Commits pushed to `origin/main`:** `a96003c` → `cfdecb6` → `bf34b1a` → `4697d1a` → `1f069f1` → `2f21522` → `e8c4fac` → (CI fix pending)
+**Vercel deployments:** all 14 apps deployed to production at `https://standard-<app>.vercel.app` AND `https://<app>.marketstandard.app` — all returning 200 on `/api/health` + 307 on `/auth/callback` (SSO bridge live)
 **Supabase project:** `opodtvblrelmpoaprmpr` (shared with FloodG8 + all Standard apps)
 **Plan reference:** `F:\dev\SAAS\docs\SAAS-FINISH.md` (13 phases, all complete)
 **Sibling integration docs:** `floodg8.md` + `marketstandard-app.md` in this folder
@@ -42,6 +42,53 @@ All 14 Standard apps are built, polished, tested, and deployed to Vercel product
 | standard-workspace | https://standard-workspace.vercel.app | https://workspace.marketstandard.app | 200 |
 
 **Custom domains are now wired.** 14 CNAME records created in Cloudflare (`marketstandard.app` zone `4bfe17823ce61079c5b26e8921a92341`) pointing each subdomain at `cname.vercel-dns.com` (proxied=false so Vercel manages SSL directly). 14 custom domains added to their respective Vercel projects via `PATCH /v9/projects/{name}/domains`. DNS propagation + Vercel SSL verification completes within ~15 minutes — after that the `*.marketstandard.app` URLs will serve the apps directly.
+
+---
+
+## Post-launch fixes (2026-06-29)
+
+After the custom domains went live, production screenshots revealed two issues on 7 of the 14 apps (the newer ones: `cron`, `lens`, `postmortem`, `regex`, `snippets`, `status`, `workspace`). Both are now fixed.
+
+### Fix 1: Tailwind UI-package class generation (commit `e8c4fac`)
+
+**Symptom:** the 2-column hero collapsed to 1 column with full-width stacked CTA buttons and an empty right side; the shared `MarketingLanding` component's `lg:grid-cols-[1fr_480px]`, `sm:flex-row`, `max-w-5xl`, and `mt-7` classes were absent from the built CSS.
+
+**Root cause:** the 7 affected apps had `tailwind.config.ts` files that did not import the `@market-standard/config/tailwind` preset and used a narrow content glob (`{ts,tsx}` instead of `{js,ts,jsx,tsx,mdx}`). Tailwind was not scanning the shared `@market-standard/ui` package's `marketing-landing.tsx`, so none of its utility classes were generated. A CSS probe (`scripts/diagnose-css2.cjs`) confirmed the missing classes.
+
+**Fix:** aligned all 7 configs with the 7 working apps (preset + broader content extensions). Verified post-redeploy that all previously-missing classes now generate.
+
+### Fix 2: `NEXT_PUBLIC_LOCAL_DEV` leaking into production (commit `e8c4fac`)
+
+**Symptom:** the "Local dev — PGlite database" banner was showing in production on the same 7 apps.
+
+**Root cause:** `NEXT_PUBLIC_*` env vars are inlined at build time. The 7 apps had `NEXT_PUBLIC_LOCAL_DEV=true` set on their Vercel production env at the time of their last build, so `"true"` was baked into the deployed JS bundle. The env var had since been changed to `""` but the bundles were never rebuilt.
+
+**Fix:** deleted the `NEXT_PUBLIC_LOCAL_DEV` env var from the 7 affected Vercel projects' production environment via `scripts/fix-local-dev-env.cjs`, then redeployed all 7 from `main` via `scripts/redeploy-stale-apps.cjs` so the bundles rebuild without the flag.
+
+### Fix 3: Missing hero aside cards (commit `e8c4fac`)
+
+`ProductHeroAside` in `packages/ui/src/marketing/product-hero-aside.tsx` had no case for `standard-lens`, `standard-cron`, or `standard-workspace` — they fell back to a generic "Release notes" card. Added three bespoke aside cards:
+- **Lens** — slow-query optimizer (EXPLAIN ANALYZE, seq-scan 4.2s → index scan 38ms)
+- **Cron** — cron monitor (stripe-sync OK, digest-daily OK, standup-prompt LATE)
+- **Workspace** — 14-app status grid (13 green + 1 amber, SSE live indicator)
+
+### Fix 4: CI E2E workflow missing port 3014 (this commit)
+
+**Symptom:** the `CI` GitHub Actions workflow's "E2E (local dev stack)" job was failing with `Error: Timed out waiting for: http://localhost:3001, ..., http://localhost:3014`.
+
+**Root cause:** the workflow's "Wait for all app health endpoints" step only waited for ports `3001-3013` (13 apps), but `standard-workspace` runs on port `3014` (the 14th app). The Playwright `global-setup` checks all 15 health URLs (gateway + 14 apps); when 3014 wasn't up, it tried to spawn its own dev stack, hit port conflicts with the already-running CI stack, and timed out after 240s.
+
+**Fix:** added port `3014` to the wait loop in `.github/workflows/ci.yml` + fixed the stale "13 apps" / `:3001-:3005` log messages in `e2e/global-setup.ts`.
+
+### Verification (post-fixes)
+
+| Check | Result |
+|-------|--------|
+| `pnpm -r typecheck` (16 packages) | ✅ clean |
+| `pnpm lint` (16 packages) | ✅ clean |
+| 14 custom domains `/api/health` | ✅ 14/14 returning 200 |
+| CSS probe (workspace + metrics) | ✅ all `lg:grid-cols` / `sm:flex-row` / `max-w-*` classes now present |
+| Production screenshots (14 apps, desktop) | ✅ all render with proper 2-column hero + aside cards + no local-dev banner |
 
 ---
 
@@ -359,6 +406,14 @@ scripts/set-vercel-root-dir.cjs                          # reads keyring, PATCHe
 scripts/deploy-all-final.cjs                             # deploys all 14 apps from repo root
 scripts/capture-prod-screens.ts                          # 28 production screenshots
 scripts/add-sso-callback.ts                              # one-off: patched all 14 /auth/callback routes
+scripts/cloudflare-dns.cjs                               # creates 14 CNAME records in Cloudflare zone
+scripts/add-vercel-domains.cjs                           # adds 14 custom domains to Vercel projects
+scripts/fix-local-dev-env.cjs                            # removes NEXT_PUBLIC_LOCAL_DEV from 7 prod envs
+scripts/redeploy-stale-apps.cjs                          # triggers prod redeploy of 7 apps from main
+scripts/verify-custom-domains.ts                         # HTTP health + desktop screenshots for 14 domains
+scripts/health-check.cjs                                 # quick /api/health check for 14 custom domains
+scripts/diagnose-css.cjs                                 # probes built CSS for missing Tailwind classes
+scripts/diagnose-css2.cjs                                # deeper CSS probe (metrics vs workspace)
 supabase/migrations/20260628160000_standard_workspace.sql # workspace schema (sessions + health_checks + tunnels + RLS)
 apps/standard-*/vercel.json                              # 14 files: pnpm install + build config
 ```
@@ -368,8 +423,16 @@ apps/standard-*/vercel.json                              # 14 files: pnpm instal
 ```
 packages/auth/src/supabase.ts                            # + redeemSsoCode() + createSupabaseAdminClient()
 packages/auth/src/index.ts                               # export redeemSsoCode
+packages/ui/src/marketing/product-hero-aside.tsx         # + LensAside + CronAside + WorkspaceAside
 apps/standard-*/src/app/auth/callback/route.ts           # 14 files: try SSO first, then OAuth
 apps/standard-*/package.json                             # 14 files: + packageManager: pnpm@9.15.0
+apps/standard-{cron,lens,postmortem,regex,snippets,     # 7 files: + preset + broader content glob
+  status,workspace}/tailwind.config.ts                   #   (fixes UI-package class generation)
+apps/standard-workspace/src/app/{page,layout}.tsx        # 13→14 apps copy consistency
+apps/standard-workspace/{README,STRATEGY}.md             # 13→14 apps copy consistency
+packages/db/src/schema/workspace.ts                      # 13→14 apps comment
+.github/workflows/ci.yml                                 # wait loop + port 3014 (fixes E2E timeout)
+e2e/global-setup.ts                                      # stale :3001-:3005 log → :3001-:3014
 docs/DEPLOYMENT.md                                       # + production deployment status table + URLs
 ```
 

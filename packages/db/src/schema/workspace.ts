@@ -3,7 +3,7 @@ import { pgSchema, uuid, text, timestamp, index, jsonb, integer } from "drizzle-
 /**
  * Standard Workspace — portfolio control panel for the Market Standard suite.
  *
- * Live status grid of all 13 apps + FloodG8 + SyncDevTime + Supabase + Stripe.
+ * Live status grid of all 14 apps + FloodG8 + SyncDevTime + Supabase + Stripe.
  * Tracks dev sessions (ms-suite dev), webhook tunnels, health-check history,
  * and dependency parity (depsync). Real-time logs via SSE.
  */
