@@ -72,13 +72,17 @@ After the custom domains went live, production screenshots revealed two issues o
 - **Cron** — cron monitor (stripe-sync OK, digest-daily OK, standup-prompt LATE)
 - **Workspace** — 14-app status grid (13 green + 1 amber, SSE live indicator)
 
-### Fix 4: CI E2E workflow missing port 3014 (this commit)
+### Fix 4: CI E2E workflow failing (this commit)
 
-**Symptom:** the `CI` GitHub Actions workflow's "E2E (local dev stack)" job was failing with `Error: Timed out waiting for: http://localhost:3001, ..., http://localhost:3014`.
+**Symptom:** the `CI` GitHub Actions workflow's "E2E (local dev stack)" job was failing with `Error: Timed out waiting for: http://localhost:3001, ..., http://localhost:3014` from Playwright's `global-setup.ts:61`.
 
-**Root cause:** the workflow's "Wait for all app health endpoints" step only waited for ports `3001-3013` (13 apps), but `standard-workspace` runs on port `3014` (the 14th app). The Playwright `global-setup` checks all 15 health URLs (gateway + 14 apps); when 3014 wasn't up, it tried to spawn its own dev stack, hit port conflicts with the already-running CI stack, and timed out after 240s.
+**Root cause (two parts):**
 
-**Fix:** added port `3014` to the wait loop in `.github/workflows/ci.yml` + fixed the stale "13 apps" / `:3001-:3005` log messages in `e2e/global-setup.ts`.
+1. **Missing port 3014 in the CI wait loop** — the workflow's "Wait for all app health endpoints" step only waited for ports `3001-3013` (13 apps), but `standard-workspace` runs on port `3014` (the 14th app). Fixed by adding port `3014` to the wait loop in `.github/workflows/ci.yml`.
+
+2. **`isHealthy()` checked root URLs instead of `/api/health`** — the deeper issue. Even after the CI wait-on step confirmed all 14 apps were healthy on `/api/health`, Playwright's `isHealthy()` was checking the ROOT URL `http://localhost:3001` (no path). In dev mode, the root page takes 15-30s to compile on first hit, but `isHealthy()` has an 8s timeout per request. So `isHealthy()` returned false, Playwright tried to spawn its OWN dev stack, hit port conflicts with the already-running CI stack, and timed out after 240s. Fixed by changing `HEALTH_URLS` in `e2e/stack-constants.ts` + the spawn-branch URL list in `e2e/global-setup.ts` to use `/api/health` (matching what the CI wait-on step checks). This ensures `isHealthy()` returns true when the CI stack is up, so Playwright reuses the existing stack instead of spawning a conflicting one.
+
+Also fixed the stale "13 apps" / `:3001-:3005` log messages in `e2e/global-setup.ts`.
 
 ### Verification (post-fixes)
 
