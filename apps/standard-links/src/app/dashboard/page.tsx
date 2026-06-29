@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState, KpiCard, PageHeader, PoweredByBadge } from "@market-standard/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState, KpiCard, PageHeader, PoweredByBadge, getPortfolioUrls } from "@market-standard/ui";
 import { getDashboardStats, listOwnerLinks } from "@/lib/links-data";
 import { MetricsCrossSellWidget } from "@/components/metrics-cross-sell-widget";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function DashboardOverviewPage() {
   const stats = await getDashboardStats();
   const links = await listOwnerLinks();
-  const metricsUrl = process.env.NEXT_PUBLIC_METRICS_URL ?? "http://localhost:3003";
+  const metricsUrl = getPortfolioUrls().metrics;
 
   return (
     <div className="space-y-8">

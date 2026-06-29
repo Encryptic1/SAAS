@@ -1,4 +1,4 @@
-import { Badge } from "@market-standard/ui";
+import { Badge, getPortfolioUrls } from "@market-standard/ui";
 
 export type TargetHealth = {
   target: string;
@@ -10,21 +10,37 @@ export type TargetHealth = {
   href?: string;
 };
 
-const APP_TARGETS: Array<{ target: string; label: string; port: number; href: string }> = [
-  { target: "standard-polls", label: "Polls", port: 3001, href: "http://localhost:3001" },
-  { target: "standard-proof", label: "Proof", port: 3002, href: "http://localhost:3002" },
-  { target: "standard-metrics", label: "Metrics", port: 3003, href: "http://localhost:3003" },
-  { target: "standard-hook", label: "Hook", port: 3004, href: "http://localhost:3004" },
-  { target: "standard-release", label: "Release", port: 3005, href: "http://localhost:3005" },
-  { target: "standard-vault", label: "Vault", port: 3006, href: "http://localhost:3006" },
-  { target: "standard-links", label: "Links", port: 3007, href: "http://localhost:3007" },
-  { target: "standard-snippets", label: "Snippets", port: 3008, href: "http://localhost:3008" },
-  { target: "standard-status", label: "Status", port: 3009, href: "http://localhost:3009" },
-  { target: "standard-regex", label: "Regex", port: 3010, href: "http://localhost:3010" },
-  { target: "standard-postmortem", label: "Postmortem", port: 3011, href: "http://localhost:3011" },
-  { target: "standard-lens", label: "Lens", port: 3012, href: "http://localhost:3012" },
-  { target: "standard-cron", label: "Cron", port: 3013, href: "http://localhost:3013" },
+const APP_TARGETS: Array<{ target: string; key: "polls" | "proof" | "metrics" | "hook" | "release" | "vault" | "links" | "snippets" | "status" | "regex" | "postmortem" | "lens" | "cron" }> = [
+  { target: "standard-polls", key: "polls" },
+  { target: "standard-proof", key: "proof" },
+  { target: "standard-metrics", key: "metrics" },
+  { target: "standard-hook", key: "hook" },
+  { target: "standard-release", key: "release" },
+  { target: "standard-vault", key: "vault" },
+  { target: "standard-links", key: "links" },
+  { target: "standard-snippets", key: "snippets" },
+  { target: "standard-status", key: "status" },
+  { target: "standard-regex", key: "regex" },
+  { target: "standard-postmortem", key: "postmortem" },
+  { target: "standard-lens", key: "lens" },
+  { target: "standard-cron", key: "cron" },
 ];
+
+const APP_LABELS: Record<string, string> = {
+  polls: "Polls",
+  proof: "Proof",
+  metrics: "Metrics",
+  hook: "Hook",
+  release: "Release",
+  vault: "Vault",
+  links: "Links",
+  snippets: "Snippets",
+  status: "Status",
+  regex: "Regex",
+  postmortem: "Postmortem",
+  lens: "Lens",
+  cron: "Cron",
+};
 
 const EXTERNAL_TARGETS: Array<{ target: string; label: string; url: string }> = [
   { target: "floodg8", label: "FloodG8", url: "https://api.floodg8.dev" },
@@ -34,12 +50,12 @@ const EXTERNAL_TARGETS: Array<{ target: string; label: string; url: string }> = 
 ];
 
 export function buildTargetList(): Array<{ target: string; label: string; url: string; href?: string }> {
-  const localBase = process.env.NEXT_PUBLIC_LOCAL_DEV === "true" ? "http://localhost" : "https://standard-{x}.vercel.app";
+  const urls = getPortfolioUrls();
   const apps = APP_TARGETS.map((a) => ({
     target: a.target,
-    label: a.label,
-    url: localBase === "http://localhost" ? `${localBase}:${a.port}/api/health` : `https://standard-${a.target.replace("standard-", "")}.vercel.app/api/health`,
-    href: a.href,
+    label: APP_LABELS[a.key]!,
+    url: `${urls[a.key]}/api/health`,
+    href: urls[a.key],
   }));
   return [...apps, ...EXTERNAL_TARGETS];
 }

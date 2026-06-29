@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
+import { getPortfolioUrls } from "@market-standard/ui";
 
 type ExplainNode = { token: string; explanation: string; children?: ExplainNode[] };
 type MatchResult = { match: string; index: number; groups: Record<string, string> };
@@ -301,7 +302,7 @@ export function RegexEditor({
             </div>
             <div className="flex gap-2 flex-wrap text-xs">
               <a
-                href={`${process.env.NEXT_PUBLIC_HOOK_URL ?? "http://localhost:3004"}/dashboard/inboxes?source=regex&pattern=${encodeURIComponent(pattern)}`}
+                href={`${getPortfolioUrls().hook}/dashboard/inboxes?source=regex&pattern=${encodeURIComponent(pattern)}`}
                 className="ms-btn-ghost"
                 target="_blank"
                 rel="noreferrer"
@@ -310,7 +311,7 @@ export function RegexEditor({
                 Save as Hook filter →
               </a>
               <a
-                href={`${process.env.NEXT_PUBLIC_SNIPPETS_URL ?? "http://localhost:3008"}/dashboard/new?source=regex&code=${encodeURIComponent(pattern)}&language=regex&title=${encodeURIComponent(name || "Regex pattern")}`}
+                href={`${getPortfolioUrls().snippets}/dashboard/new?source=regex&code=${encodeURIComponent(pattern)}&language=regex&title=${encodeURIComponent(name || "Regex pattern")}`}
                 className="ms-btn-ghost"
                 target="_blank"
                 rel="noreferrer"

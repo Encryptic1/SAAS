@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState, KpiCard, PageHeader } from "@market-standard/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState, KpiCard, PageHeader, resolvePortfolioUrl } from "@market-standard/ui";
 import { getDashboardStats, listOwnerCollections } from "@/lib/proof-data";
 
 export const dynamic = "force-dynamic";
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export default async function DashboardOverviewPage() {
   const stats = await getDashboardStats();
   const collections = await listOwnerCollections();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3002";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? resolvePortfolioUrl("proof");
 
   return (
     <div className="space-y-8">

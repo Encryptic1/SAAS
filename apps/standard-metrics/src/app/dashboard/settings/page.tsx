@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
   PoweredByBadge,
+  resolvePortfolioUrl,
 } from "@market-standard/ui";
 import { SettingsPanel } from "../../../components/settings-panel";
 import { loadQuotaSnapshots, loadMetricsOverview } from "../../../lib/metrics-data";
@@ -20,6 +21,7 @@ export default async function SettingsPage() {
 
   const connected = Boolean(account || overview.accountId);
   const stripeAccountId = account?.stripeAccountId ?? overview.accountId ?? null;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? resolvePortfolioUrl("metrics");
 
   return (
     <div className="space-y-8">
@@ -49,7 +51,7 @@ export default async function SettingsPage() {
         </CardHeader>
         <CardContent>
           <code className="ms-app-pre block">
-            {process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3003"}/api/webhooks/stripe
+            {appUrl}/api/webhooks/stripe
           </code>
           <p className="mt-2 text-xs text-[var(--text-mist)]">
             Events signed by your <code>STRIPE_WEBHOOK_SECRET</code> are accepted. Snapshot sync runs on the cron schedule below.

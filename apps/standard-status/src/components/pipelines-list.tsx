@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getPortfolioUrls } from "@market-standard/ui";
 
 type Pipeline = {
   id: string;
@@ -48,9 +49,10 @@ export function PipelinesList({ pipelines }: { pipelines: Pipeline[] }) {
     );
   }
 
-  const postmortemUrl = process.env.NEXT_PUBLIC_POSTMORTEM_URL ?? "http://localhost:3011";
-  const hookUrl = process.env.NEXT_PUBLIC_HOOK_URL ?? "http://localhost:3004";
-  const releaseUrl = process.env.NEXT_PUBLIC_RELEASE_URL ?? "http://localhost:3005";
+  const portfolioUrls = getPortfolioUrls();
+  const postmortemUrl = portfolioUrls.postmortem;
+  const hookUrl = portfolioUrls.hook;
+  const releaseUrl = portfolioUrls.release;
 
   return (
     <div className="space-y-3">

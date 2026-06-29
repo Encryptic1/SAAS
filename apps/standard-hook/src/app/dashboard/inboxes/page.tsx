@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState } from "@market-standard/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, EmptyState, resolvePortfolioUrl } from "@market-standard/ui";
 import { CreateInboxForm } from "@/components/create-inbox-form";
 import { listOwnerInboxes } from "@/lib/hook-data";
 
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function InboxesPage() {
   const inboxes = await listOwnerInboxes();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3004";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? resolvePortfolioUrl("hook");
 
   return (
     <>

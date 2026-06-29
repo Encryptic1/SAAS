@@ -9,6 +9,7 @@ import {
   KpiCard,
   PageHeader,
   PoweredByBadge,
+  getPortfolioUrls,
 } from "@market-standard/ui";
 import { MetricsTrendChart } from "../../components/metrics-trend-chart";
 import { formatDelta, loadMetricsOverview } from "../../lib/metrics-data";
@@ -23,6 +24,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const params = await searchParams;
   const connected = params.connected === "true" || process.env.NEXT_PUBLIC_LOCAL_DEV === "true";
   const { latest, previous, series, accountId } = await loadMetricsOverview();
+  const portfolioUrls = getPortfolioUrls();
 
   const chartData = [...series].reverse().map((s) => ({
     date: s.snapshotDate.toLocaleDateString(undefined, { month: "short", day: "numeric" }),
@@ -178,7 +180,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               instruments every payment link — then reports clicks back here.
             </p>
             <a
-              href={`${process.env.NEXT_PUBLIC_LINKS_URL ?? "http://localhost:3007"}/dashboard?source=metrics`}
+              href={`${portfolioUrls.links}/dashboard?source=metrics`}
               className="ms-btn ms-btn-secondary no-underline text-sm"
               target="_blank"
               rel="noreferrer"
@@ -195,13 +197,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           </CardHeader>
           <CardContent className="flex flex-wrap gap-3">
             <a
-              href={`${process.env.NEXT_PUBLIC_POLLS_URL ?? "http://localhost:3001"}/dashboard`}
+              href={`${portfolioUrls.polls}/dashboard`}
               className="ms-app-link text-sm no-underline hover:underline"
             >
               Polls
             </a>
             <a
-              href={`${process.env.NEXT_PUBLIC_PROOF_URL ?? "http://localhost:3002"}/dashboard`}
+              href={`${portfolioUrls.proof}/dashboard`}
               className="ms-app-link text-sm no-underline hover:underline"
             >
               Proof

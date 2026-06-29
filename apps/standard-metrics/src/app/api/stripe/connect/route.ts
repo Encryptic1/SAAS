@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
+import { resolvePortfolioUrl } from "@market-standard/ui";
 
 const STRIPE_CONNECT_BASE = "https://connect.stripe.com/oauth/authorize";
 
 export async function GET() {
   const clientId = process.env.STRIPE_CONNECT_CLIENT_ID;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3003";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? resolvePortfolioUrl("metrics");
 
   if (!clientId) {
     return NextResponse.json({ error: "Missing STRIPE_CONNECT_CLIENT_ID" }, { status: 500 });

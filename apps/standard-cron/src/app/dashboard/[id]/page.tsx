@@ -1,5 +1,5 @@
 import { CronDashboardShell } from "@/components/cron-dashboard-shell";
-import { KpiCard, PageHeader } from "@market-standard/ui";
+import { KpiCard, PageHeader, resolvePortfolioUrl } from "@market-standard/ui";
 import { getOwnerId } from "@/lib/owner";
 import { getJob } from "@/lib/cron-data";
 import { describeCron } from "@/lib/cron-parser";
@@ -28,7 +28,7 @@ export default async function JobDetailPage({ params }: PageProps) {
 
   const okRuns = runs.filter((r) => r.status === "ok").length;
   const failedRuns = runs.filter((r) => r.status === "failed" || r.status === "missed").length;
-  const heartbeatUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3013"}/api/heartbeat/${job.heartbeatToken}`;
+  const heartbeatUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? resolvePortfolioUrl("cron")}/api/heartbeat/${job.heartbeatToken}`;
 
   return (
     <CronDashboardShell>

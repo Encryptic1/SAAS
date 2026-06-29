@@ -1,6 +1,6 @@
 import { WorkspaceDashboardShell } from "@/components/workspace-dashboard-shell";
 import { HealthGrid, buildTargetList } from "@/components/health-grid";
-import { Badge, KpiCard, PageHeader } from "@market-standard/ui";
+import { Badge, KpiCard, PageHeader, getPortfolioUrls } from "@market-standard/ui";
 import { getOwnerId } from "@/lib/owner";
 import { listSessions, listHealthChecks, listTunnels } from "@/lib/workspace-data";
 import { runHealthProbes } from "@/lib/health-probes";
@@ -11,6 +11,8 @@ export const revalidate = 0;
 export default async function DashboardPage() {
   const ownerId = await getOwnerId();
   if (!ownerId) return <WorkspaceDashboardShell><div>Sign in</div></WorkspaceDashboardShell>;
+
+  const portfolioUrls = getPortfolioUrls();
 
   // Probe live health on every dashboard load (best-effort, non-blocking)
   const targets = buildTargetList();
@@ -103,9 +105,9 @@ export default async function DashboardPage() {
             <div className="ms-card p-4 space-y-2 text-xs">
               <p className="font-semibold text-sm">Cross-suite</p>
               <p className="ms-app-muted">
-                Jump to <a className="ms-app-link" href="http://localhost:3009">Standard Status</a> for build health,
-                <a className="ms-app-link" href="http://localhost:3008"> Snippets</a> for runbooks,
-                <a className="ms-app-link" href="http://localhost:3006"> Vault</a> for secrets.
+                Jump to <a className="ms-app-link" href={portfolioUrls.status}>Standard Status</a> for build health,
+                <a className="ms-app-link" href={portfolioUrls.snippets}> Snippets</a> for runbooks,
+                <a className="ms-app-link" href={portfolioUrls.vault}> Vault</a> for secrets.
               </p>
             </div>
             <div className="ms-card p-4 space-y-2 text-xs">

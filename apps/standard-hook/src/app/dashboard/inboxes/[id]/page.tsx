@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@market-standard/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, getPortfolioUrls, resolvePortfolioUrl } from "@market-standard/ui";
 import { ReplayEventButton } from "@/components/replay-event-button";
 import { getOwnerInbox } from "@/lib/hook-data";
 
@@ -16,8 +16,8 @@ export default async function InboxEventsPage({ params }: InboxEventsPageProps) 
   if (!data) notFound();
 
   const { inbox, events } = data;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3004";
-  const postmortemUrl = process.env.NEXT_PUBLIC_POSTMORTEM_URL ?? "http://localhost:3011";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? resolvePortfolioUrl("hook");
+  const postmortemUrl = getPortfolioUrls().postmortem;
 
   return (
     <>

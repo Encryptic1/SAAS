@@ -8,6 +8,7 @@ export { MarketingShell } from "./marketing/marketing-shell";
 export { AppSurface } from "./marketing/app-surface";
 export { PrivacyPage } from "./marketing/privacy-page";
 export { SuiteSwitcher, getSuiteApps, type SuiteSwitcherProps } from "./marketing/suite-switcher";
+export { getPortfolioUrls, resolvePortfolioUrl } from "./marketing/portfolio-urls";
 export {
   DashboardShell,
   type DashboardShellProps,

@@ -10,6 +10,7 @@ import {
   KpiCard,
   PageHeader,
   StatCard,
+  resolvePortfolioUrl,
 } from "@market-standard/ui";
 import { getDashboardStats, listOwnerInboxes } from "@/lib/hook-data";
 
@@ -18,7 +19,7 @@ export const dynamic = "force-dynamic";
 export default async function DashboardOverviewPage() {
   const stats = await getDashboardStats();
   const inboxes = await listOwnerInboxes();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3004";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? resolvePortfolioUrl("hook");
 
   return (
     <div className="space-y-8">
