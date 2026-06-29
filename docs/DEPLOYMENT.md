@@ -192,5 +192,44 @@ The FloodG8 portfolio hub (Vercel project `floodg8`) bundles all 14 Market Stand
 - SSO codes in `shared.sso_codes` enable cross-app login from FloodG8.
 - `standard-workspace` serves as the portfolio control panel (status grid, dev sessions, tunnels, health probes, dependency parity report).
 
+## 10. Production Deployment Status
+
+All 14 apps are deployed to Vercel and verified healthy. Each app's `rootDirectory` is set to `apps/<app-name>` so Vercel correctly detects the pnpm monorepo and resolves `@market-standard/*` workspace packages.
+
+| App | Production URL | Health |
+|-----|----------------|--------|
+| standard-polls | https://standard-polls.vercel.app | 200 |
+| standard-proof | https://standard-proof.vercel.app | 200 |
+| standard-metrics | https://standard-metrics.vercel.app | 200 |
+| standard-hook | https://standard-hook.vercel.app | 200 |
+| standard-release | https://standard-release.vercel.app | 200 |
+| standard-vault | https://standard-vault.vercel.app | 200 |
+| standard-links | https://standard-links.vercel.app | 200 |
+| standard-snippets | https://standard-snippets.vercel.app | 200 |
+| standard-status | https://standard-status.vercel.app | 200 |
+| standard-regex | https://standard-regex.vercel.app | 200 |
+| standard-postmortem | https://standard-postmortem.vercel.app | 200 |
+| standard-lens | https://standard-lens.vercel.app | 200 |
+| standard-cron | https://standard-cron.vercel.app | 200 |
+| standard-workspace | https://standard-workspace.vercel.app | 200 |
+
+### Deploy all apps (from repo root)
+
+```bash
+# Each app deploys from the repo root with --project <name>.
+# Vercel resolves rootDirectory=apps/<name> to find the app + monorepo packages.
+for /f %a in ('dir /b apps') do vercel --prod --yes --project %a --scope marketstandard
+```
+
+Or use the automated script: `node scripts/deploy-all-final.cjs`.
+
+### Setting rootDirectory programmatically
+
+The `rootDirectory` for each project was set via the Vercel REST API using the CLI's stored keyring token:
+
+```bash
+node scripts/set-vercel-root-dir.cjs   # reads keyring, PATCHes all 14 projects
+```
+
 ## No deploys without approval
 This document describes setup only. Do not deploy to production or commit secrets without explicit approval.
