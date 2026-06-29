@@ -82,6 +82,7 @@ create policy "tunnels owner delete" on workspace.tunnels for delete using (auth
 create or replace function workspace.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = now();
