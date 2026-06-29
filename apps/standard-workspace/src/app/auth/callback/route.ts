@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@market-standard/auth";
+import { createSupabaseServerClient, redeemSsoCode } from "@market-standard/auth";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -8,12 +8,21 @@ export async function GET(request: Request) {
   const error = searchParams.get("error");
   const errorDescription = searchParams.get("error_description");
 
+  // OAuth provider returned an explicit error
   if (error) {
     const reason = error.includes("expired") ? "expired" : "oauth";
     return NextResponse.redirect(`${origin}/auth/error?reason=${reason}`);
   }
 
   if (code) {
+    // 1. Try FloodG8 SSO code redemption (shared.sso_codes bridge)
+    const ssoResult = await redeemSsoCode(code);
+    if (ssoResult.success) {
+      return NextResponse.redirect(`${origin}${next}`);
+    }
+    // "code_not_found" means this isn't an SSO code — fall through to OAuth.
+
+    // 2. Fall back to standard Supabase OAuth code exchange
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
@@ -23,5 +32,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/auth/error?reason=${reason}`);
   }
 
+  // No code and no error — treat as invalid
   return NextResponse.redirect(`${origin}/auth/error?reason=invalid`);
 }

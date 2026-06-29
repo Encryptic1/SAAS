@@ -1,4 +1,9 @@
-export { createSupabaseServerClient, getSession, getUser } from "./supabase";
+export {
+  createSupabaseServerClient,
+  getSession,
+  getUser,
+  redeemSsoCode,
+} from "./supabase";
 export { createSupabaseBrowserClient } from "./browser";
 export { createAuthMiddleware, authMiddlewareConfig } from "./middleware";
 export { getOwnerId } from "./owner";
